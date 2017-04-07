@@ -31,7 +31,7 @@ import org.interpss.IpssCorePlugin;
 import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.service.train.ITrainCaseBuilder;
 import org.interpss.service.train.TrainDataBuilderFactory;
-import org.interpss.service.train.impl.TrainCaseBuilder;
+import org.interpss.service.train.impl.IEEECDFTrainCaseBuilder;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
@@ -41,7 +41,7 @@ import com.interpss.core.datatype.Mismatch;
 public class AclfFuncTest {
   	@Test 
 	public void test() {
-  		TrainCaseBuilder caseBuilder = (TrainCaseBuilder)loadCase("testdata/ieee14.ieee");
+  		IEEECDFTrainCaseBuilder caseBuilder = (IEEECDFTrainCaseBuilder)loadCase("testdata/ieee14.ieee");
   		 
   		caseBuilder.createTrainCase();
   		

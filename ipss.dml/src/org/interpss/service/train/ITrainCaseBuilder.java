@@ -1,6 +1,31 @@
+ /*
+  * @(#)ITrainCaseBuilder.java   
+  *
+  * Copyright (C) 2005-17 www.interpss.org
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE
+  * as published by the Free Software Foundation; either version 2.1
+  * of the License, or (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * @Author Mike Zhou
+  * @Version 1.0
+  * @Date 04/7/2017
+  * 
+  *   Revision History
+  *   ================
+  *
+  */
+
 package org.interpss.service.train;
 
 import com.interpss.core.aclf.AclfNetwork;
+import com.interpss.core.datatype.Mismatch;
 
 /**
  * A training case builder interface
@@ -39,10 +64,10 @@ public interface ITrainCaseBuilder {
 	double[] getNetOutputVolt();
 	
 	/**
-	 * compute AclfNetwork mismatch information
+	 * compute the network mismatch information
 	 *  
-	 * @param netVolt
-	 * @return
+	 * @param netVolt network bus voltage solution
+	 * @return the mismatch object
 	 */
-	String getMismatchInfo(double[] netVolt);
+	Mismatch calMismatch(double[] netVolt);
 }
