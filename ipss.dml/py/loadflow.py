@@ -60,9 +60,8 @@ def transfer2DblAry(tArray):
     dblAry = gateway.new_array(gateway.jvm.double, size)
     i = 0
     for x in tArray:
-            dblAry[i] = float(x)
-            i = i + 1
-    
+        dblAry[i] = float(x)
+        i = i + 1
     return dblAry
 
 # run the computation graph
@@ -76,6 +75,7 @@ with tf.Session() as sess :
     
     # run the training part
     for i in range(10000):
+        if (i % 1000 == 0) : print('Optimization steps: ', i) 
         sess.run(train, { x:train_x, y:train_y})
 
     # run the verification part
@@ -90,4 +90,5 @@ with tf.Session() as sess :
     for x in model_y[0] :
         print(x)
     '''
-    print('model solution mismatch: ', ipss_app.getMismatchInfo(transfer2DblAry(model_y[0])))
+    netVoltage = transfer2DblAry(model_y[0])
+    print('model solution mismatch: ', ipss_app.getMismatchInfo(netVoltage))
