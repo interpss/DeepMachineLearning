@@ -14,11 +14,11 @@ ipss_app = gateway.entry_point
 #
 filename = 'c:/temp/temp/ieee14.ieee'
 noBus = ipss_app.loadCase(filename)
-print(filename, ' loaded,  noBus:', noBus)
+print(filename, ' loaded,  no of Buses:', noBus)
 
 # define model size
 size = noBus * 2
-print('size: ', size)
+#print('size: ', size)
 
 # define model variables
 W1 = tf.Variable(tf.zeros([size,size]))
@@ -51,11 +51,11 @@ y = tf.placeholder(tf.float32)
 error = tf.square(nn_model(x) - y)
 loss = tf.reduce_sum(error)
 
-# define training
+# define training optimization
 optimizer = tf.train.GradientDescentOptimizer(0.0001)
 train = optimizer.minimize(loss)
 
-# transfer data from a tensor array to a double array
+# function to transfer data from a tensor array to a double array
 def transfer2DblAry(tArray):
     dblAry = gateway.new_array(gateway.jvm.double, size)
     i = 0
@@ -68,6 +68,9 @@ def transfer2DblAry(tArray):
 with tf.Session() as sess :
     sess.run(init)
     
+    # run the training part
+    # =====================
+    
     # retrieve training set
     trainSet = ipss_app.getTrainSet(100);
     train_x = np.array([trainSet])[0][0]
@@ -75,15 +78,18 @@ with tf.Session() as sess :
     
     # run the training part
     for i in range(10000):
-        if (i % 1000 == 0) : print('Optimization steps: ', i) 
-        sess.run(train, { x:train_x, y:train_y})
+        if (i % 1000 == 0) : print('Training step: ', i) 
+        sess.run(train, {x:train_x, y:train_y})
 
     # run the verification part
-    testSet = ipss_app.getTrainSet(1);
-    test_x = np.array([testSet])[0][0]
+    # =========================
+    
+    # retrieve a test case
+    testCase = ipss_app.getTestCase();
+    test_x = np.array([testCase])[0]
     #test_y = np.array([testSet])[0][1]
     
-    # compute model output (network voltage
+    # compute model output (network voltage)
     model_y = sess.run(nn_model(x), {x:test_x})
     '''
     print('model_y')
@@ -91,4 +97,4 @@ with tf.Session() as sess :
         print(x)
     '''
     netVoltage = transfer2DblAry(model_y[0])
-    print('model solution mismatch: ', ipss_app.getMismatchInfo(netVoltage))
+    print('model out mismatch: ', ipss_app.getMismatchInfo(netVoltage))

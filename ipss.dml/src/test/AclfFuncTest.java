@@ -43,7 +43,7 @@ public class AclfFuncTest {
 	public void test() {
   		IEEECDFTrainCaseBuilder caseBuilder = (IEEECDFTrainCaseBuilder)loadCase("testdata/ieee14.ieee");
   		 
-  		caseBuilder.createTrainCase();
+  		caseBuilder.createTestCase();
   		
   		double[] netVolt = caseBuilder.getNetOutputVolt();
   		

@@ -70,12 +70,24 @@ public class IEEECDFTrainCaseBuilder extends BaseTrainCaseBuilder {
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.interpss.service.ITrainCaseBuilder#createNextTrainCase()
+	 * @see org.interpss.service.ITrainCaseBuilder#createTrainCase()
 	 */
 	@Override
-	public void createTrainCase() {
-		double factor = 0.5 + new Random().nextFloat();
+	public void createTrainCase(int nth, int nTotal) {
+		double factor = 0.5 + nth/(float)nTotal;
 
+		createCase(factor);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.interpss.service.ITrainCaseBuilder#createTestCase()
+	 */
+	@Override
+	public void createTestCase() {
+		createCase(0.5 + new Random().nextFloat());
+	}
+	
+	private void createCase(double factor) {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
@@ -94,4 +106,5 @@ public class IEEECDFTrainCaseBuilder extends BaseTrainCaseBuilder {
 		String result = this.runLF();
 		//System.out.println(result);
 	}
+	
 }

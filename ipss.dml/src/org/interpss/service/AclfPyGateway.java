@@ -84,7 +84,7 @@ public class AclfPyGateway {
 		double[][][] set = new double[2][points][];
 		
 		for ( int i = 0; i < points; i++) {
-			this.trainCaseBuilder.createTrainCase();
+			this.trainCaseBuilder.createTrainCase(i, points);
 			
 			set[0][i] = this.trainCaseBuilder.getNetInputPQ();
 			set[1][i] = this.trainCaseBuilder.getNetOutputVolt();
@@ -92,6 +92,27 @@ public class AclfPyGateway {
 		
 		return set;
 	}
+	
+	/**
+	 * create and return a test case, 
+	 *   Data format: [2][2*NoBus]
+	 *              [
+	 *     (input)    [NetPQ],
+	 *     (output)   [NetVolt]
+	 *              ]         
+	 * @param points number of training cases
+	 * @return the training set
+	 */
+	public double[][] getTestCase() {
+		double[][] date = new double[2][];
+		
+		this.trainCaseBuilder.createTestCase();
+			
+		date[0] = this.trainCaseBuilder.getNetInputPQ();
+		date[1] = this.trainCaseBuilder.getNetOutputVolt();
+		
+		return date;
+	}	
 	
 	/**
 	 * compute and return the mismatch info based on the network solution 

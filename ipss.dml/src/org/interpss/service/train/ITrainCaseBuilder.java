@@ -45,10 +45,18 @@ public interface ITrainCaseBuilder {
 	int getNoBus();
 
 	/**
+	 * create a new training case, nth case out of nTotal cases
+	 * 
+	 * @param nth case number
+	 * @param nTotal total number of cases
+	 */
+	void createTrainCase(int nth, int nTotal);
+
+	/**
 	 * create a new training case
 	 */
-	void createTrainCase();
-
+	void createTestCase();
+	
 	/**
 	 * get loadflow calculation input data of the current training case
 	 * 
