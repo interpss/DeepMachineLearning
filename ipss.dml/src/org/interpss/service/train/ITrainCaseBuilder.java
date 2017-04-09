@@ -24,8 +24,8 @@
 
 package org.interpss.service.train;
 
-import com.interpss.core.aclf.AclfNetwork;
 import com.interpss.core.datatype.Mismatch;
+import com.interpss.core.net.Network;
 
 /**
  * A training case builder interface
@@ -35,11 +35,8 @@ import com.interpss.core.datatype.Mismatch;
  */ 
 public interface ITrainCaseBuilder {
 	/**
-	 * @return the aclfNet
-	 */
-	AclfNetwork getAclfNet();
- 
-	/**
+	 * get number of buses in the power network model
+	 * 
 	 * @return the noBus
 	 */
 	int getNoBus();
@@ -48,14 +45,21 @@ public interface ITrainCaseBuilder {
 	 * create a new training case, nth case out of nTotal cases
 	 * 
 	 * @param nth case number
-	 * @param nTotal total number of cases
+	 * @param nTotal total number of cases to be created
 	 */
 	void createTrainCase(int nth, int nTotal);
 
 	/**
-	 * create a new training case
+	 * create a new test case
 	 */
 	void createTestCase();
+
+	/**
+	 * create a new test case based on a factor value
+	 * 
+	 * @param factor a number to be used in the case creation
+	 */
+	void createTestCase(double factor);
 	
 	/**
 	 * get loadflow calculation input data of the current training case

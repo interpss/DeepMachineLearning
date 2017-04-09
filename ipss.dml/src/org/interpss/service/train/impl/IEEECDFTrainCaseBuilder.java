@@ -74,6 +74,7 @@ public class IEEECDFTrainCaseBuilder extends BaseTrainCaseBuilder {
 	 */
 	@Override
 	public void createTrainCase(int nth, int nTotal) {
+		//double factor = 0.5 + new Random().nextFloat();
 		double factor = 0.5 + nth/(float)nTotal;
 
 		createCase(factor);
@@ -86,6 +87,14 @@ public class IEEECDFTrainCaseBuilder extends BaseTrainCaseBuilder {
 	public void createTestCase() {
 		createCase(0.5 + new Random().nextFloat());
 	}
+
+	/* (non-Javadoc)
+	 * @see org.interpss.service.ITrainCaseBuilder#createTestCase()
+	 */
+	@Override
+	public void createTestCase(double factor) {
+		createCase(factor);
+	}	
 	
 	private void createCase(double factor) {
 		int i = 0;

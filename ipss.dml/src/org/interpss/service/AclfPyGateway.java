@@ -92,6 +92,26 @@ public class AclfPyGateway {
 		
 		return set;
 	}
+
+	/**
+	 * create and return a random test case, 
+	 *   Data format: [2][2*NoBus]
+	 *              [
+	 *     (input)    [NetPQ],
+	 *     (output)   [NetVolt]
+	 *              ]         
+	 * @return the training set
+	 */
+	public double[][] getTestCase() {
+		double[][] data = new double[2][];
+		
+		this.trainCaseBuilder.createTestCase();
+			
+		data[0] = this.trainCaseBuilder.getNetInputPQ();
+		data[1] = this.trainCaseBuilder.getNetOutputVolt();
+		
+		return data;
+	}	
 	
 	/**
 	 * create and return a test case, 
@@ -100,18 +120,18 @@ public class AclfPyGateway {
 	 *     (input)    [NetPQ],
 	 *     (output)   [NetVolt]
 	 *              ]         
-	 * @param points number of training cases
+	 * @param factor some value for creating the test case
 	 * @return the training set
 	 */
-	public double[][] getTestCase() {
-		double[][] date = new double[2][];
+	public double[][] getTestCase(double factor) {
+		double[][] data = new double[2][];
 		
-		this.trainCaseBuilder.createTestCase();
+		this.trainCaseBuilder.createTestCase(factor);
 			
-		date[0] = this.trainCaseBuilder.getNetInputPQ();
-		date[1] = this.trainCaseBuilder.getNetOutputVolt();
+		data[0] = this.trainCaseBuilder.getNetInputPQ();
+		data[1] = this.trainCaseBuilder.getNetOutputVolt();
 		
-		return date;
+		return data;
 	}	
 	
 	/**

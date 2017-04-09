@@ -145,10 +145,6 @@ public abstract class BaseTrainCaseBuilder implements ITrainCaseBuilder {
 		return this.aclfNet.maxMismatch(AclfMethod.NR);
 	};
 	
-	/* (non-Javadoc)
-	 * @see org.interpss.service.ITrainCaseBuilder#getAclfNet()
-	 */
-	@Override
 	public AclfNetwork getAclfNet() {
 		return aclfNet;
 	}
