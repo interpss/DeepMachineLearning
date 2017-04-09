@@ -21,15 +21,29 @@ In the DML approach, neural network (nn) model is used to represent power system
 
 ## Neural Network Model
 
-![nn_model](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_nn_layer.png)
+
 
 ## Training Data Generation
 
-![](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus_small.jpg)
 
-[IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg)
 ## Sample Case
 
+![nn_model](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_nn_layer.png)
+
+The [IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg) is used to demonstrate how to apply TensorFlow to power system analysis. As shown in the above figure, in the sample case power flow is flowing from the Gen Area to the Load Area. We wand to train a nn model to predict network bus voltage when the power flow from the Gen Area to the Load Area is adjusted, for example, 20% increase.
+
+ * NN Model
+
+A 3-larer nn model 
+
+```      
+   [P,Q] => Layer1(28) => Layer2(28) => Output(28) => [Vmsg, Vang]
+```
+
+ * Traing Case Generator
+ 
+ * Model Testing
+ 
 
 ## Links and References
 
