@@ -44,7 +44,7 @@ In Loadflow study, network bus voltage is solved for a set of bus power (P,Q) as
 
 As shown in the above figure, in the sample case, power flow is flowing from the Gen Area to the Load Area. We wand to train a nn model to predict network bus voltage when the power flow from the Gen Area to the Load Area is adjusted, for example, by a scaling factor of 20% increase.
 
- * NN Model
+ * **NN Model**
 
 A 3-larer nn model (dimension 28) is used for the network bus voltage prediction, see the define model section in the [Python File](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/py/loadflow.py) for details.
 
@@ -53,23 +53,28 @@ A 3-larer nn model (dimension 28) is used for the network bus voltage prediction
    [P,Q] =>  [ Layer1(28) -> Layer2(28) - Output(28) ]  => [Vmsg, Vang]
 ```
 
- * Traing Case
+ * **Traing Case**
  
-Bus load [P,Q] in the sample network is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases. In the sample case, total 100 training cases are used to train the nn model. 
+Bus load [P,Q] in the sample network is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases. In the sample case, total 100 training cases are used to train the nn model. The TensorFlow [Gradient Descent Optimizer](https://www.tensorflow.org/api_docs/python/tf/train/GradientDescentOptimizer) is used with a learning rate of 0.0001, and 10,000 training steps are used to train the nn model. 
 
- * Model Testing
+ * **Model Testing**
 
 To test the accuracy of the NN model bus voltage prediction, a random scaling factor in range (0.5~1.5) is used to create bus power [P,Q] as the input. The bus power [P, Q] is fed into the NN model to get a bus voltage [Vmsg, Vang] prediction.   
 
 ```      
    [P,Q] => [ NN Model] => [Vmsg, Vang]
 ```
-
 Then the bus voltage predition is appled to the power system analysis model to calculation bus mismatch info, as follows: 
 
 ```
    dPmax :  0.00602 (pu) at Bus : Bus4,     dQmax :  0.00454 (pu) at Bus : Bus5
 ```
+
+* **Model Accuracy**
+
+![Bus mismatch info](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_busmismatch.png)
+
+After the training, the nn model is used to predict network bus voltage when network bus power is given. Network bus voltage prediction accuracy using the nn model is summarized in the above figure.
 
 ## Links and References
 
