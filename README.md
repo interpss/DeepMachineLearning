@@ -12,7 +12,11 @@ TensorFlow is an open source software library by Google for numerical computatio
 
 * **InterPSS Power System Analysis Model Service**
 
+Our purpose is to apply DML to power system analysis. The Power System Model Service module provide power system analysis model service to the DML engine for model training purpose. The analysis model is based on the [InterPSS object model](www.interpss.org) written in Java. The default TensorFlow programming language is Python. [Py4J](https://www.py4j.org/) is used to bridge communication between TensorFlow Python runtime env and InterPSS Java runtime env. 
+
 * **Pluggable Training Data Generator**
+
+In the DML approach, neural network (nn) model is used to represent power system for analysis purpose. The nn_model is first trained and then used for power system analysis. nn_model is trained for certain application context using a set of training data relevent to the context. The system architecture allows different traning case generator to be plugged-in for different model training purpose. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
 
 
 ## Neural Network Model
