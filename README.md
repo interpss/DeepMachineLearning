@@ -35,9 +35,6 @@ where, [W] - weight matrix
        [b] - bias vector
 ```
 
-## Training Data Generation
-
-
 ## Sample Case
 
 In Loadflow study, network bus voltage is solved for a set of bus power (P,Q) as the input. Here the [IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg) is used to demonstrate how to apply TensorFlow to power system analysis to predict network bus voltage based on the bus power input.
