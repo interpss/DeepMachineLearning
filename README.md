@@ -25,7 +25,7 @@ In the DML approach, neural network (nn) model is used to represent power system
 
 ## Training Data Generation
 
-## Sample Tutorial Case
+## Sample Case
 
 ## Links and References
 
