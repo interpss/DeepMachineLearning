@@ -1,4 +1,6 @@
-# TensorFlow Based Deep Machine Learning (DML) For Power System Analysis
+# TensorFlow Based Deep Machine Learning (ML) For Power System Analysis
+
+The purpose of this InterPSS project is to explore the possibility to apply the Deep Machine Learning (ML) approach to power system analysis. Google's [TensorFlow](https://www.tensorflow.org/) is used as the ML engine, while InterPSS object model is used as the power system analysis/simulation model. 
 
 ## System Architecture
 
@@ -6,7 +8,7 @@
 
 InterPSS DML system includes the following three main components:
 
-* **Google [TensorFlow](https://www.tensorflow.org/) DML engine**
+* **Google [TensorFlow](https://www.tensorflow.org/) ML engine**
 
 TensorFlow is an open source software library by Google for numerical computation using data flow graphs. Nodes in the graph represent mathematical operations, while the graph edges represent the multidimensional data arrays (tensors) communicated between them. The flexible architecture allows you to deploy computation to one or more CPUs or GPUs. See the [Installation and Configuration](https://github.com/interpss/DeepMachineLearning/wiki/Runtime-Env-Setup#installation-and-configuration) page for instructions to install and configure TensorFlow on a Windows environment.   
 
@@ -48,8 +50,8 @@ As shown in the above figure, in the sample case, power flow is flowing from the
 A 3-larer nn model (dimension 28) is used for the network bus voltage prediction, see the define model section in the [Python File](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/py/loadflow.py) for details.
 
 ```      
-             [ -----  Nuetral Network Model  ----- ]
-   [P,Q] =>   Layer1(28) -> Layer2(28) - Output(28) => [Vmsg, Vang]
+             [ ------  Nuetral Network Model  ------ ]
+   [P,Q] =>  [ Layer1(28) -> Layer2(28) - Output(28) ]  => [Vmsg, Vang]
 ```
 
  * Traing Case
