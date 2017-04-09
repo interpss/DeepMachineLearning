@@ -19,9 +19,21 @@ Our purpose is to apply DML to power system analysis. The Power System Model Ser
 In the DML approach, neural network (nn) model is used to represent power system for analysis purpose. The nn_model is first trained and then used for power system analysis. A nn model is in general trained for certain application purpose using a set of training data relevent to the context. The system architecture allows different traning case generator to be plugged-in for different model training purposes. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
 
 
-## Neural Network Model
+## Neural Network (nn) Model
+
+Neural networks typically consist of multiple layers, and the signal path traverses from the input, to the output layer of neural units. Back propagation is the use of forward stimulation to reset weights on the "front" neural units and this is sometimes done in combination with training or optimization where the correct result is known.
 
 ![nn_model](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_nn_layer.png)
+
+A typical nn model is shown in the above figure. The output of a previous layer [x] is weighted-summarised [y] to feed the next layer.  
+
+
+```      
+   [y] = [W][x] + [b]
+
+where, [W] - weight matrix
+       [b] - bias vector
+```
 
 ## Training Data Generation
 
