@@ -4,7 +4,7 @@
 
 ![architecture](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_architecture.png)
 
-InterPSS DML system includes three main components:
+InterPSS DML system includes the following three main components:
 
 * **Google [TensorFlow](https://www.tensorflow.org/) DML engine**
 
@@ -16,7 +16,7 @@ Our purpose is to apply DML to power system analysis. The Power System Model Ser
 
 * **Pluggable Training Data Generator**
 
-In the DML approach, neural network (nn) model is used to represent power system for analysis purpose. The nn_model is first trained and then used for power system analysis. nn_model is trained for certain application context using a set of training data relevent to the context. The system architecture allows different traning case generator to be plugged-in for different model training purpose. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
+In the DML approach, neural network (nn) model is used to represent power system for analysis purpose. The nn_model is first trained and then used for power system analysis. A nn model is in general trained for certain application purpose using a set of training data relevent to the context. The system architecture allows different traning case generator to be plugged-in for different model training purposes. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
 
 
 ## Neural Network Model
