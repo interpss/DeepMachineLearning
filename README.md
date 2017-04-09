@@ -28,9 +28,11 @@ In the DML approach, neural network (nn) model is used to represent power system
 
 ## Sample Case
 
+In Loadflow study, network bus voltage is solved for a set of bus power (P,Q) as the input. Here the [IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg) is used to demonstrate how to apply TensorFlow to power system analysis to predict network bus voltage based on the bus power input.
+
 ![net diagram](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus_small.jpg)
 
-The [IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg) is used to demonstrate how to apply TensorFlow to power system analysis. As shown in the above figure, in the sample case power flow is flowing from the Gen Area to the Load Area. We wand to train a nn model to predict network bus voltage when the power flow from the Gen Area to the Load Area is adjusted, for example, 20% increase.
+As shown in the above figure, in the sample case, power flow is flowing from the Gen Area to the Load Area. We wand to train a nn model to predict network bus voltage when the power flow from the Gen Area to the Load Area is adjusted, for example, by a scaling factor of 20% increase.
 
  * NN Model
 
@@ -43,11 +45,11 @@ A 3-larer nn model (dimension 28) is used for the network bus voltage prediction
 
  * Traing Case
  
-The bus load [P,Q] is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases. In the sample case, total 100 training cases are used to train the nn model. 
+Bus load [P,Q] in the sample network is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases. In the sample case, total 100 training cases are used to train the nn model. 
 
  * Model Testing
 
-To test the accuracy of the NN model network voltage prediction, a random scaling factor in range (0.5~1.5) to create bus power [P,Q] as the input. The bus power [P, Q] is fed into the NN model to get a bus voltage [Vmsg, Vang] prediction.   
+To test the accuracy of the NN model bus voltage prediction, a random scaling factor in range (0.5~1.5) is used to create bus power [P,Q] as the input. The bus power [P, Q] is fed into the NN model to get a bus voltage [Vmsg, Vang] prediction.   
 
 ```      
    [P,Q] => [ NN Model] => [Vmsg, Vang]
