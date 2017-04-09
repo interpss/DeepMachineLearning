@@ -31,8 +31,7 @@ A typical nn model is shown in the above figure. The output of a previous layer 
 
 
 ```      
-   [y] = [W][x] + [b]
-
+      [y] = [W][x] + [b]
 where, [W] - weight matrix
        [b] - bias vector
 ```
