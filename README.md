@@ -25,7 +25,11 @@ In the DML approach, neural network (nn) model is used to represent power system
 
 ## Training Data Generation
 
+![](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus_small.jpg)
+
+[IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg)
 ## Sample Case
+
 
 ## Links and References
 
