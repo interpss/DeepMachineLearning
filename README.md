@@ -21,29 +21,43 @@ In the DML approach, neural network (nn) model is used to represent power system
 
 ## Neural Network Model
 
-
+![nn_model](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_nn_layer.png)
 
 ## Training Data Generation
 
 
 ## Sample Case
 
-![nn_model](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_nn_layer.png)
+![net diagram](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus_small.jpg)
 
 The [IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg) is used to demonstrate how to apply TensorFlow to power system analysis. As shown in the above figure, in the sample case power flow is flowing from the Gen Area to the Load Area. We wand to train a nn model to predict network bus voltage when the power flow from the Gen Area to the Load Area is adjusted, for example, 20% increase.
 
  * NN Model
 
-A 3-larer nn model 
+A 3-larer nn model (dimension 28) is used for the network bus voltage prediction, see the define model section in the [Python File](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/py/loadflow.py) for details.
 
 ```      
-   [P,Q] => Layer1(28) => Layer2(28) => Output(28) => [Vmsg, Vang]
+             [ -----  Nuetral Network Model  ----- ]
+   [P,Q] =>   Layer1(28) -> Layer2(28) - Output(28) => [Vmsg, Vang]
 ```
 
- * Traing Case Generator
+ * Traing Case
  
+The bus load [P,Q] is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases. In the sample case, total 100 training cases are used to train the nn model. 
+
  * Model Testing
- 
+
+To test the accuracy of the NN model network voltage prediction, a random scaling factor in range (0.5~1.5) to create bus power [P,Q] as the input. The bus power [P, Q] is fed into the NN model to get a bus voltage [Vmsg, Vang] prediction.   
+
+```      
+   [P,Q] => [ NN Model] => [Vmsg, Vang]
+```
+
+Then the bus voltage predition is appled to the power system analysis model to calculation bus mismatch info, as follows: 
+
+```
+   dPmax :  0.00602 (pu) at Bus : Bus4,     dQmax :  0.00454 (pu) at Bus : Bus5
+```
 
 ## Links and References
 
