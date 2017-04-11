@@ -71,6 +71,8 @@ Then the bus voltage predition is appled to the power system analysis model to c
 
 * **Model Accuracy**
 
+![Result Comparison](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_busresult.png)
+
 ![Bus mismatch info](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_busmismatch.png)
 
 After the training, the nn model is used to predict network bus voltage when network bus power is given. Network bus voltage prediction accuracy using the nn model is summarized in the above figure.
