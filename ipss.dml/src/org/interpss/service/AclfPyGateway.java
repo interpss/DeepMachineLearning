@@ -46,12 +46,13 @@ public class AclfPyGateway {
 	private ITrainCaseBuilder trainCaseBuilder;
 	
 	/**
-	 * Load a loadflow case and crete the TrainCaseBuilder object
+	 * Load a loadflow case and create the TrainCaseBuilder object
 	 * 
 	 * @param filename
-	 * @return no of active buses in the network
+	 * @param buildername training set builder Java class name
+	 * @return [no of active buses, no of active branches] in the network
 	 */
-	public int loadCase(String filename) {
+	public int[] loadCase(String filename, String buildername) {
 		IpssCorePlugin.init();
 		
 		try {
@@ -60,23 +61,22 @@ public class AclfPyGateway {
 					.load()
 					.getImportedObj();
 			
-			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(aclfNet);
+			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(aclfNet, buildername);
 			System.out.println(filename + " aclfNet case loaded");
 		} catch ( InterpssException e) {
 			e.printStackTrace();
-			return 0;
+			return new int[] {0, 0};
 		}
 
-		return this.trainCaseBuilder.getNoBus();
+		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};
 	}
 
 	/**
 	 * create and return a set of training cases, 
-	 *   Data format: [2][points][2*NoBus]
-	 *              [
-	 *     (input)    [[NetPQ]   ... [NetPQ]   ],
-	 *     (output)   [[NetVolt] ... [NetVolt] ]
-	 *              ]         
+	 *   Data format: [2][points][]
+	 *       [
+	 *         [[input], [output]], ... [[input],[output] ]
+	 *       ]         
 	 * @param points number of training cases
 	 * @return the training set
 	 */
@@ -86,8 +86,8 @@ public class AclfPyGateway {
 		for ( int i = 0; i < points; i++) {
 			this.trainCaseBuilder.createTrainCase(i, points);
 			
-			set[0][i] = this.trainCaseBuilder.getNetInputPQ();
-			set[1][i] = this.trainCaseBuilder.getNetOutputVolt();
+			set[0][i] = this.trainCaseBuilder.getNetInput();
+			set[1][i] = this.trainCaseBuilder.getNetOutput();
 		}
 		
 		return set;
@@ -95,10 +95,9 @@ public class AclfPyGateway {
 
 	/**
 	 * create and return a random test case, 
-	 *   Data format: [2][2*NoBus]
+	 *   Data format: [2][]
 	 *              [
-	 *     (input)    [NetPQ],
-	 *     (output)   [NetVolt]
+	 *                 [input], [output]
 	 *              ]         
 	 * @return the training set
 	 */
@@ -107,18 +106,17 @@ public class AclfPyGateway {
 		
 		this.trainCaseBuilder.createTestCase();
 			
-		data[0] = this.trainCaseBuilder.getNetInputPQ();
-		data[1] = this.trainCaseBuilder.getNetOutputVolt();
+		data[0] = this.trainCaseBuilder.getNetInput();
+		data[1] = this.trainCaseBuilder.getNetOutput();
 		
 		return data;
 	}	
 	
 	/**
 	 * create and return a test case, 
-	 *   Data format: [2][2*NoBus]
+	 *   Data format: [2][]
 	 *              [
-	 *     (input)    [NetPQ],
-	 *     (output)   [NetVolt]
+	 *                [input], [output]
 	 *              ]         
 	 * @param factor some value for creating the test case
 	 * @return the training set
@@ -128,8 +126,8 @@ public class AclfPyGateway {
 		
 		this.trainCaseBuilder.createTestCase(factor);
 			
-		data[0] = this.trainCaseBuilder.getNetInputPQ();
-		data[1] = this.trainCaseBuilder.getNetOutputVolt();
+		data[0] = this.trainCaseBuilder.getNetInput();
+		data[1] = this.trainCaseBuilder.getNetOutput();
 		
 		return data;
 	}	

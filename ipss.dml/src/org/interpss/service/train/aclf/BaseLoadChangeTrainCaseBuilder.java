@@ -1,5 +1,5 @@
  /*
-  * @(#)IEEECDFTrainCaseBuilder.java   
+  * @(#)BaseLoadChangeTrainCaseBuilder.java   
   *
   * Copyright (C) 2005-17 www.interpss.org
   *
@@ -21,7 +21,7 @@
   *   ================
   *
   */
-package org.interpss.service.train.impl;
+package org.interpss.service.train.aclf;
 
 import java.util.Random;
 
@@ -32,21 +32,17 @@ import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;
 
 /**
- * Load bus P,Q are modified to create training cases
- *     
- *     type      input          output
- *     swing   Vang, Vmag     Q,    P
- *     pv      P,    Vmag     Q,    Vang
- *     pq      P,    Q        Vmag, Vang
+ * Base class for creating training case for : Load bus P,Q are modified to create training cases
  * 
  */  
 
-public class IEEECDFTrainCaseBuilder extends BaseTrainCaseBuilder {
+public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder {
 	private double[] baseCaseData;
 	
-	public IEEECDFTrainCaseBuilder(AclfNetwork net) {
+	public BaseLoadChangeTrainCaseBuilder(AclfNetwork net) {
 		this.aclfNet = net;
 		this.noBus = aclfNet.getNoActiveBus();
+		this.noBranch = aclfNet.getNoActiveBranch();
 		
 		this.baseCaseData = new double[2*this.noBus];	
 		int i = 0;
@@ -124,5 +120,4 @@ public class IEEECDFTrainCaseBuilder extends BaseTrainCaseBuilder {
 		String result = this.runLF();
 		//System.out.println(result);
 	}
-	
 }

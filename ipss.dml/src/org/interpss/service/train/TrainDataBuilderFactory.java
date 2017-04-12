@@ -24,7 +24,8 @@
 
 package org.interpss.service.train;
 
-import org.interpss.service.train.impl.IEEECDFTrainCaseBuilder;
+import org.interpss.service.train.aclf.BranchPLoadChangeTrainCaseBuilder;
+import org.interpss.service.train.aclf.BusVoltLoadChangeTrainCaseBuilder;
 
 import com.interpss.core.aclf.AclfNetwork;
 
@@ -39,10 +40,14 @@ public class TrainDataBuilderFactory {
 	 * create a training data builder object
 	 * 
 	 * @param aclfNet AclfNetwork object
+	 * @param buidlername training case builder class name
 	 * @return the builder object
 	 */
-	public static ITrainCaseBuilder createITrainCaseBuilder(AclfNetwork aclfNet) {
-		return new IEEECDFTrainCaseBuilder(aclfNet);
+	public static ITrainCaseBuilder createITrainCaseBuilder(AclfNetwork aclfNet, String builderName) {
+		if (builderName.equals("BranchPLoadChangeTrainCaseBuilder"))
+			return new BranchPLoadChangeTrainCaseBuilder(aclfNet);
+		else
+			return new BusVoltLoadChangeTrainCaseBuilder(aclfNet);
 	}
 }
  

@@ -25,7 +25,6 @@
 package org.interpss.service.train;
 
 import com.interpss.core.datatype.Mismatch;
-import com.interpss.core.net.Network;
 
 /**
  * A training case builder interface
@@ -40,6 +39,13 @@ public interface ITrainCaseBuilder {
 	 * @return the noBus
 	 */
 	int getNoBus();
+	
+	/**
+	 * get number of branches in the power network model
+	 * 
+	 * @return the noBranch
+	 */
+	int getNoBranch();
 
 	/**
 	 * create a new training case, nth case out of nTotal cases
@@ -62,18 +68,18 @@ public interface ITrainCaseBuilder {
 	void createTestCase(double factor);
 	
 	/**
-	 * get loadflow calculation input data of the current training case
+	 * get input data of the current training case
 	 * 
-	 * @return Loadflow calculation input: [P/Vang, Q/Vmag]
+	 * @return training input, for example, [P/Vang, Q/Vmag]
 	 */
-	double[] getNetInputPQ();
+	double[] getNetInput();
 
 	/**
-	 * get loadflow calculation output data of the current training case
+	 * get output data of the current training case
 	 *  
-	 * @return Loadflow calculation output: [Vmag/Q, Vang/P]
+	 * @return training output, for example, [Vmag/Q, Vang/P]
 	 */
-	double[] getNetOutputVolt();
+	double[] getNetOutput();
 	
 	/**
 	 * compute the network mismatch information

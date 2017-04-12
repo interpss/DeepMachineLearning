@@ -1,5 +1,5 @@
  /*
-  * @(#)BaseTrainCaseBuilder.java   
+  * @(#)BaseAclfTrainCaseBuilder.java   
   *
   * Copyright (C) 2005-17 www.interpss.org
   *
@@ -21,7 +21,7 @@
   *   ================
   *
   */
-package org.interpss.service.train.impl;
+package org.interpss.service.train.aclf;
 
 import org.apache.commons.math3.complex.Complex;
 import org.interpss.CorePluginFunction;
@@ -30,6 +30,7 @@ import org.interpss.pssl.simu.IpssAclf;
 import org.interpss.service.train.ITrainCaseBuilder;
 
 import com.interpss.common.exp.InterpssException;
+import com.interpss.core.aclf.AclfBranch;
 import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;
 import com.interpss.core.aclf.adpter.AclfPVGenBus;
@@ -38,7 +39,9 @@ import com.interpss.core.algo.AclfMethod;
 import com.interpss.core.datatype.Mismatch;
 
 /**
- * Base class for implementing training case creation builder.
+ * Base class for implementing Aclf training case creation builder.
+ *     
+ * for predicting bus voltage:
  *     
  *     type      input          output
  *     swing   Vang, Vmag     Q,    P
@@ -47,15 +50,12 @@ import com.interpss.core.datatype.Mismatch;
  * 
  */ 
  
-public abstract class BaseTrainCaseBuilder implements ITrainCaseBuilder {
+public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	protected AclfNetwork aclfNet;
 	protected int noBus;
+	protected int noBranch;
 	
-	/* (non-Javadoc)
-	 * @see org.interpss.service.ITrainCaseBuilder#getNetInputPQ()
-	 */
-	@Override
-	public double[] getNetInputPQ() {
+	protected double[] getNetInputPQ() {
 		double[] input = new double[2*this.noBus];
 		
 		int i = 0;
@@ -81,11 +81,7 @@ public abstract class BaseTrainCaseBuilder implements ITrainCaseBuilder {
 		return input;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.interpss.service.ITrainCaseBuilder#getNetOutputVolt()
-	 */
-	@Override
-	public double[] getNetOutputVolt() {
+	protected double[] getNetOutputVoltage() {
 		double[] output = new double[2*this.noBus];
 		
 		int i = 0;
@@ -107,6 +103,19 @@ public abstract class BaseTrainCaseBuilder implements ITrainCaseBuilder {
 					output[i] = bus.getVoltageMag();
 					output[this.noBus+i] = bus.getVoltageAng();
 				}				
+				i++;
+			}
+		}
+		return output;
+	}
+
+	protected double[] getNetBranchP() {
+		double[] output = new double[this.noBranch];
+		
+		int i = 0;
+		for (AclfBranch branch : aclfNet.getBranchList()) {
+			if (aclfNet.isActive()) {
+				output[i] = branch.powerFrom2To().getReal();
 				i++;
 			}
 		}
@@ -157,6 +166,13 @@ public abstract class BaseTrainCaseBuilder implements ITrainCaseBuilder {
 		return noBus;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.interpss.service.ITrainCaseBuilder#getNoBranch()
+	 */
+	@Override
+	public int getNoBranch() {
+		return noBranch;
+	}	
 	/**
 	 * Run Loadlow
 	 * 

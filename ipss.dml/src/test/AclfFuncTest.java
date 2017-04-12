@@ -31,7 +31,7 @@ import org.interpss.IpssCorePlugin;
 import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.service.train.ITrainCaseBuilder;
 import org.interpss.service.train.TrainDataBuilderFactory;
-import org.interpss.service.train.impl.IEEECDFTrainCaseBuilder;
+import org.interpss.service.train.aclf.BusVoltLoadChangeTrainCaseBuilder;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
@@ -41,11 +41,11 @@ import com.interpss.core.datatype.Mismatch;
 public class AclfFuncTest {
   	@Test 
 	public void test() {
-  		IEEECDFTrainCaseBuilder caseBuilder = (IEEECDFTrainCaseBuilder)loadCase("testdata/ieee14.ieee");
+  		BusVoltLoadChangeTrainCaseBuilder caseBuilder = (BusVoltLoadChangeTrainCaseBuilder)loadCase("testdata/ieee14.ieee");
   		 
   		caseBuilder.createTestCase();
   		
-  		double[] netVolt = caseBuilder.getNetOutputVolt();
+  		double[] netVolt = caseBuilder.getNetOutput();
   		
   		Mismatch mis = caseBuilder.calMismatch(netVolt);
   		assertTrue("", mis.maxMis.abs() < 0.0001);
@@ -62,7 +62,7 @@ public class AclfFuncTest {
 					.getImportedObj();
 			
 			System.out.println(filename + " aclfNet case loaded");
-			return TrainDataBuilderFactory.createITrainCaseBuilder(aclfNet);
+			return TrainDataBuilderFactory.createITrainCaseBuilder(aclfNet, "BusVoltageTrainCaseBuilder");
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 		}
