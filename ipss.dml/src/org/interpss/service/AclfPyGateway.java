@@ -28,8 +28,8 @@ import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
 
 import org.interpss.IpssCorePlugin;
 import org.interpss.pssl.plugin.IpssAdapter;
-import org.interpss.service.train.ITrainCaseBuilder;
-import org.interpss.service.train.TrainDataBuilderFactory;
+import org.interpss.service.train_data.ITrainCaseBuilder;
+import org.interpss.service.train_data.TrainDataBuilderFactory;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfNetwork;

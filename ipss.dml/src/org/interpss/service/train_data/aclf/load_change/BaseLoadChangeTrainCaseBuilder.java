@@ -21,12 +21,13 @@
   *   ================
   *
   */
-package org.interpss.service.train.aclf;
+package org.interpss.service.train_data.aclf.load_change;
 
 import java.util.Random;
 
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
+import org.interpss.service.train_data.aclf.BaseAclfTrainCaseBuilder;
 
 import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;

@@ -22,7 +22,7 @@
   *
   */
 
-package org.interpss.service.train;
+package org.interpss.service.train_data;
 
 import com.interpss.core.datatype.Mismatch;
 

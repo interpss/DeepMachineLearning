@@ -21,13 +21,13 @@
   *   ================
   *
   */
-package org.interpss.service.train.aclf;
+package org.interpss.service.train_data.aclf;
 
 import org.apache.commons.math3.complex.Complex;
 import org.interpss.CorePluginFunction;
 import org.interpss.numeric.datatype.Unit.UnitType;
 import org.interpss.pssl.simu.IpssAclf;
-import org.interpss.service.train.ITrainCaseBuilder;
+import org.interpss.service.train_data.ITrainCaseBuilder;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBranch;

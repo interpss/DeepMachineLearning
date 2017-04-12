@@ -21,7 +21,7 @@
   *   ================
   *
   */
-package org.interpss.service.train.aclf;
+package org.interpss.service.train_data.aclf.load_change;
 
 import com.interpss.core.aclf.AclfNetwork;
 

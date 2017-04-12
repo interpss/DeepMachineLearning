@@ -22,10 +22,10 @@
   *
   */
 
-package org.interpss.service.train;
+package org.interpss.service.train_data;
 
-import org.interpss.service.train.aclf.BranchPLoadChangeTrainCaseBuilder;
-import org.interpss.service.train.aclf.BusVoltLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.aclf.load_change.BranchPLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
 
 import com.interpss.core.aclf.AclfNetwork;
 

@@ -29,9 +29,9 @@ import static org.junit.Assert.*;
 
 import org.interpss.IpssCorePlugin;
 import org.interpss.pssl.plugin.IpssAdapter;
-import org.interpss.service.train.ITrainCaseBuilder;
-import org.interpss.service.train.TrainDataBuilderFactory;
-import org.interpss.service.train.aclf.BusVoltLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.ITrainCaseBuilder;
+import org.interpss.service.train_data.TrainDataBuilderFactory;
+import org.interpss.service.train_data.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
