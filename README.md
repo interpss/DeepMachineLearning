@@ -38,7 +38,7 @@ where, [W] - weight matrix
 
 ## Sample Case
 
-In Loadflow study, network bus voltage is solved for a set of bus power (P,Q) as the input. Here we the [IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg) to demonstrate how to apply TensorFlow to power system analysis to predict network bus voltage or branch active power flow based on the bus power input.
+In Loadflow study, network bus voltage is solved for a set of bus power (P,Q) as the input. Here we the [IEEE 14-Bus System](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus.jpg) to demonstrate how to apply TensorFlow to power system analysis to predict network bus voltage or branch active power flow using bus power as the input.
 
 ![net diagram](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/IEEE14Bus_small.jpg)
 
@@ -48,11 +48,7 @@ In the sample case, power is flowing from the Gen Area to the Load Area, as show
            [P,Q] =>  [  NN Model ]  => [Bus Voltage] or [Branch P Flow]
 ```
 
-In the sample bus load [P,Q] in the sample network is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases to train the NN model. To test the accuracy of the NN model bus voltage prediction, a random scaling factor in range (0.5~1.5) is used to create bus power [P,Q] as the input. The bus power [P, Q] is fed into the NN model to get a bus voltage [Vmsg, Vang] prediction.   Then the bus voltage predition is appled to the power system analysis model to calculation bus mismatch info, as follows: 
-
-```
-   dPmax :  0.00602 (pu) at Bus : Bus4,     dQmax :  0.00454 (pu) at Bus : Bus5
-```
+The bus load [P,Q] is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases to train the NN model. Then the trained NN model is used to predict bus voltage. 
 
 * **Bus Voltage Prediction**
 
