@@ -1,12 +1,12 @@
 # TensorFlow Based Deep Machine Learning (ML) For Power System Analysis
 
-The purpose of this InterPSS project is to explore the possibility to apply the Deep Machine Learning (ML) approach to power system analysis. Google's [TensorFlow](https://www.tensorflow.org/) is used as the ML engine, while InterPSS object model is used as the power system analysis/simulation model to 1) generate training data to train the neural network model; 2) provide service for checking model prediction accuracy. 
+The purpose of this InterPSS project is to explore the possibility to apply the Deep Machine Learning (ML) approach to power system analysis. Google's [TensorFlow](https://www.tensorflow.org/) is used as the ML engine, while InterPSS is used to provide power system analysis/simulation model service: 1) to generate training data to train the neural network model; 2) provide service for checking model prediction accuracy. 
 
 ## System Architecture
 
 ![architecture](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_architecture.png)
 
-InterPSS ML system includes the following three main components:
+InterPSS ML system architecture is shown in the above figure. It includes the following three main components:
 
 * **Google [TensorFlow](https://www.tensorflow.org/) ML engine**
 
@@ -14,11 +14,11 @@ TensorFlow is an open source software library by Google for numerical computatio
 
 * **InterPSS Power System Analysis Model Service**
 
-Our purpose is to apply ML to power system analysis. The Power System Model Service module provide power system analysis model service to the TensorFlow ML engine for model training purpose. The analysis model is based on the [InterPSS object model](www.interpss.org) written in Java. The default TensorFlow programming language is Python. [Py4J](https://www.py4j.org/) is used to bridge the communication between TensorFlow Python runtime env and InterPSS Java runtime env. 
+The purpose is to apply ML to power system analysis. The Power System Model Service module provides service to the TensorFlow ML engine. The analysis model is based on the [InterPSS object model](www.interpss.org) written in Java. The default TensorFlow programming language is Python. [Py4J](https://www.py4j.org/) is used to bridge the communication between TensorFlow Python runtime env and InterPSS Java runtime env. 
 
 * **Pluggable Training Data Generator**
 
-In the ML approach, neural network (nn) model is used to represent power system for analysis purpose. The nn_model is first trained and then used for power system analysis, for example, predicting bus voltage. A nn model is in general trained for certain application purpose using a set of training data relevent to the context. The system architecture allows different traning case generator to be plugged-in for different model training purposes. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
+The NN model is first trained and then used for power system analysis, for example, predicting bus voltage. An NN model is in general trained for certain application purpose using a set of training data relevent to the problem to solve. The system architecture allows different traning case generator to be plugged-in for different model training purposes. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
 
 
 ## Neural Network (NN) Model
