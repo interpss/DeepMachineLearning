@@ -110,11 +110,13 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	}
 
 	protected double[] getNetBranchP() {
-		double[] output = new double[this.noBranch];
+		// TODO fix the following bug
+		double[] output = new double[2*this.noBus];   
+		//double[] output = new double[this.noBranch];
 		
 		int i = 0;
 		for (AclfBranch branch : aclfNet.getBranchList()) {
-			if (aclfNet.isActive()) {
+			if (branch.isActive()) {
 				output[i] = branch.powerFrom2To().getReal();
 				i++;
 			}
