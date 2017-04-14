@@ -46,11 +46,10 @@ As shown in the above figure, in the sample case, power flow is flowing from the
 
  * **NN Model**
 
-A 3-larer nn model (dimension 28) is used for the network bus voltage prediction, see the define model section in the [Python File](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/py/loadflow.py) for details.
+A simple one-layer nn model (dimension 28) is used for the network bus voltage prediction, see the define model section in the [Python File](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/py/predict_voltage.py) for details.
 
 ```      
-             [ ------  Nuetral Network Model  ------ ]
-   [P,Q] =>  [ Layer1(28) -> Layer2(28) - Output(28) ]  => [Vmsg, Vang]
+   [P,Q] =>  [  Nuetral Network Model ]  => [Vmsg, Vang]
 ```
 
  * **Traing Case**
@@ -71,6 +70,8 @@ Then the bus voltage predition is appled to the power system analysis model to c
 ```
 
 * **Model Accuracy**
+
+![Result Comparison](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_busresult.png)
 
 ![Bus mismatch info](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_busmismatch.png)
 
