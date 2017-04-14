@@ -1,12 +1,12 @@
 # TensorFlow Based Deep Machine Learning (ML) For Power System Analysis
 
-The purpose of this InterPSS project is to explore the possibility to apply the Deep Machine Learning (ML) approach to power system analysis. Google's [TensorFlow](https://www.tensorflow.org/) is used as the ML engine, while InterPSS is used to provide power system analysis/simulation model service: 1) to generate training data to train the neural network model; 2) provide service for checking model prediction accuracy. 
+This project is for exploring the application of Deep Machine Learning (ML) to power system analysis. Google's [TensorFlow](https://www.tensorflow.org/) is used as the ML engine, while InterPSS is used to provide power system analysis/simulation model service: 1) to generate training data to train the neural network model; 2) provide service for checking model prediction accuracy. 
 
 ## System Architecture
 
 ![architecture](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_architecture.png)
 
-InterPSS ML system architecture is shown in the above figure. It includes the following three main components:
+The project software system architecture is shown in the above figure. It includes the following three main components:
 
 * **Google [TensorFlow](https://www.tensorflow.org/) ML engine**
 
@@ -14,7 +14,7 @@ TensorFlow is an open source software library by Google for numerical computatio
 
 * **InterPSS Power System Analysis Model Service**
 
-The purpose is to apply ML to power system analysis. The Power System Model Service module provides service to the TensorFlow ML engine. The analysis model is based on the [InterPSS object model](www.interpss.org) written in Java. The default TensorFlow programming language is Python. [Py4J](https://www.py4j.org/) is used to bridge the communication between TensorFlow Python runtime env and InterPSS Java runtime env. 
+The Power System Model Service module provides service to the TensorFlow ML engine. The analysis model is based on the [InterPSS object model](www.interpss.org) written in Java. The default TensorFlow programming language is Python. [Py4J](https://www.py4j.org/) is used to bridge the communication between TensorFlow Python runtime env and InterPSS Java runtime env. 
 
 * **Pluggable Training Data Generator**
 
@@ -27,11 +27,11 @@ Neural networks typically consist of multiple layers, and the signal path traver
 
 ![nn_model](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_nn_layer.png)
 
-A typical NN model is shown in the above figure. The output of a previous layer [x] is weighted-summarised to produce [y], and then feed the next layer.  
+A typical NN model is shown in the above figure. The output of previous layer [x] is weighted-summarised to produce [y], and then feed the next layer.  
 
 
 ```      
-                [y] = [W][x] + [b]
+    [y] = [W][x] + [b]
 where, [W] - weight matrix
        [b] - bias vector
 ```
