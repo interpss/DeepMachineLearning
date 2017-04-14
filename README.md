@@ -48,17 +48,22 @@ In the sample case, power is flowing from the Gen Area to the Load Area, as show
            [P,Q] =>  [  NN Model ]  => [Bus Voltage] or [Branch P Flow]
 ```
 
-The bus load [P,Q] is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases to train the NN model. Then the trained NN model is used to predict bus voltage. 
+The bus load [P,Q] is scaled by multipling a factor in range (0.5~1.5) to create a set of traning cases to train two NN models, one for bus voltage prediction and the other one for branch active power prediction. 
 
 * **Bus Voltage Prediction**
 
+After the training, the NN model is used to predict network bus voltage when network bus power is given. Network bus voltage prediction accuracy using the NN model is summarized in the figure below.
+
 ![Result Comparison](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_busresult.png)
+
+Comparison of bus voltage prediction by the NN model with the accurate Loadflow results are shown in the following table: 
 
 ![Bus mismatch info](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_busmismatch.png)
 
-After the training, the nn model is used to predict network bus voltage when network bus power is given. Network bus voltage prediction accuracy using the nn model is summarized in the above figure.
 
 * **Branch Active Power Flow Prediction**
+
+Comparison of branch active power flow prediction by the NN model with the accurate Loadflow results are shown in the following table: 
 
 ![Result Comparison](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/image/dmp_branchresult.png)
 
