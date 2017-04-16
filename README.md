@@ -18,7 +18,7 @@ The Power System Model Service module provides service to the TensorFlow ML engi
 
 * **Training Case Generator**
 
-The NN model is first trained and then used for power system analysis, for example, predicting network bus voltage. for Loadflow analysus An NN model is in general trained for certain purpose using a set of training data relevant to the problem to solve. The system architecture allows different traning case generator to be plugged-in for different model training purposes. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
+The NN model is first trained and then used for power system analysis, for example, predicting network bus voltage for Loadflow analysis. An NN model is in general trained for certain purpose using a set of training data relevant to the problem to solve. The system architecture allows different traning case generators to be plugged-in for different model training purposes. A  [Training Case Generator Interface](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/src/org/interpss/service/train_data/ITrainCaseBuilder.java) is defined for the traning case generator implementation.    
 
 
 ## Neural Network (NN) Model
