@@ -24,9 +24,9 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,size]))
+W1 = tf.Variable(tf.zeros([size,noBranch]))
 
-b1 = tf.Variable(tf.zeros([size]))
+b1 = tf.Variable(tf.zeros([noBranch]))
 
 init = tf.initialize_all_variables()
 
@@ -57,8 +57,9 @@ with tf.Session() as sess :
     print('Begin training: ', datetime.now())
      
     # retrieve training set
-    trainSet = ipss_app.getTrainSet(train_points);
-    train_x, train_y = np.array([trainSet])[0]
+    trainSet = ipss_app.getTrainSet(train_points)
+    train_x = np.array([trainSet[0]])[0]
+    train_y = np.array([trainSet[1]])[0]
     
     #print2DArray(train_x, 'train_xSet', 'train_x')
     #print2DArray(train_y, 'train_ySet', 'train_y')
@@ -78,9 +79,9 @@ with tf.Session() as sess :
     
     for factor in [0.7, 1.0, 1.2] :
         # retrieve a test case
-        testCase = ipss_app.getTestCase(factor);
-        test_x, test_y = np.array([testCase])[0]
-
+        testCase = ipss_app.getTestCase(factor)
+        test_x = np.array([testCase[0]])[0]
+        test_y = np.array([testCase[1]])[0]
         #printArray(test_x, 'test_x')
         #printArray(test_y, 'test_y')
     

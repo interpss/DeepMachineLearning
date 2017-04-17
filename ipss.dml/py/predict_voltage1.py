@@ -23,8 +23,8 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,size]))
-b1 = tf.Variable(tf.zeros([size]))
+W1 = tf.Variable(tf.zeros([size,noBranch]))
+b1 = tf.Variable(tf.zeros([noBranch]))
 
 init = tf.initialize_all_variables()
 
@@ -32,7 +32,6 @@ init = tf.initialize_all_variables()
 
 def nn_model(data):
     output = tf.matmul(data, W1) + b1
-    
     return output
 
 # define loss 
@@ -57,7 +56,8 @@ with tf.Session() as sess :
     
     # retrieve training set
     trainSet = ipss_app.getTrainSet(train_points);
-    train_x, train_y = np.array([trainSet])[0]
+    train_x = np.array([trainSet[0]])[0]
+    train_y = np.array([trainSet[1]])[0]
     
     # run the training part
     for i in range(train_steps):
@@ -77,10 +77,9 @@ with tf.Session() as sess :
     # retrieve a test case
     for factor in [0.45, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.55] :
     #for factor in [0.45, 1.0, 1.55] :
-        testCase = ipss_app.getTestCase(factor);
-        
-        test_x, test_y = np.array([testCase])[0]
-        #printArray(test_y, 'test_y')
+        testCase = ipss_app.getTestCase(factor)
+        test_x = np.array([testCase[0]])[0]
+        test_y = np.array([testCase[1]])[0]        
            
         # compute model output (network voltage)
         model_y = sess.run(nn_model(x), {x:[test_x]})

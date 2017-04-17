@@ -57,7 +57,8 @@ with tf.Session() as sess :
      
     # retrieve training set
     trainSet = ipss_app.getTrainSet(train_points);
-    train_x, train_y = np.array([trainSet])[0]
+    train_x = np.array([trainSet[0]])[0]
+    train_y = np.array([trainSet[1]])[0]
     
     #print2DArray(train_x, 'train_xSet', 'train_x')
     #print2DArray(train_y, 'train_ySet', 'train_y')
@@ -78,7 +79,8 @@ with tf.Session() as sess :
     
     # retrieve a test case
     testCase = ipss_app.getTestCase();
-    test_x, test_y = np.array([testCase])[0]
+    test_x = np.array([testCase[0]])[0]
+    test_y = np.array([testCase[1]])[0]
     #printArray(test_x, 'test_x')
     #printArray(test_y, 'test_y')
     
