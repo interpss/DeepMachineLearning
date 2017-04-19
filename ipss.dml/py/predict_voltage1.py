@@ -1,13 +1,28 @@
+'''
+    Copyright (C) 2005-17 www.interpss.org
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+'''
+
 from datetime import datetime
 
 import tensorflow as tf
-import numpy as np
 
 from common_func import ipss_app
 from common_func import learning_rate
 from common_func import train_steps
 from common_func import transfer2JavaDblAry
-from common_func import printArray
+from common_func import transfer2PyArrays
 
 train_points = 50
 
@@ -23,8 +38,8 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,noBranch]))
-b1 = tf.Variable(tf.zeros([noBranch]))
+W1 = tf.Variable(tf.zeros([size,size]))
+b1 = tf.Variable(tf.zeros([size]))
 
 init = tf.initialize_all_variables()
 
@@ -55,9 +70,8 @@ with tf.Session() as sess :
     print('Begin training: ', datetime.now())
     
     # retrieve training set
-    trainSet = ipss_app.getTrainSet(train_points);
-    train_x = np.array([trainSet[0]])[0]
-    train_y = np.array([trainSet[1]])[0]
+    trainSet = ipss_app.getTrainSet(train_points)
+    train_x, train_y = transfer2PyArrays(trainSet)
     
     # run the training part
     for i in range(train_steps):
@@ -78,8 +92,7 @@ with tf.Session() as sess :
     for factor in [0.45, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.55] :
     #for factor in [0.45, 1.0, 1.55] :
         testCase = ipss_app.getTestCase(factor)
-        test_x = np.array([testCase[0]])[0]
-        test_y = np.array([testCase[1]])[0]        
+        test_x, test_y = transfer2PyArrays(testCase)        
            
         # compute model output (network voltage)
         model_y = sess.run(nn_model(x), {x:[test_x]})
