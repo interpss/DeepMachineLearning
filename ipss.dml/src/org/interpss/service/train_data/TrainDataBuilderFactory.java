@@ -26,6 +26,7 @@
 
 package org.interpss.service.train_data;
 
+import org.interpss.service.train_data.aclf.load_change.BranchContingencyMaxPLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.aclf.load_change.BranchPLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
 
@@ -48,6 +49,8 @@ public class TrainDataBuilderFactory {
 	public static ITrainCaseBuilder createITrainCaseBuilder(AclfNetwork aclfNet, String builderName) {
 		if (builderName.equals("BranchPLoadChangeTrainCaseBuilder"))
 			return new BranchPLoadChangeTrainCaseBuilder(aclfNet);
+		if (builderName.equals("BranchContingencyMaxPLoadChangeTrainCaseBuilder"))
+			return new BranchContingencyMaxPLoadChangeTrainCaseBuilder(aclfNet);
 		else
 			return new BusVoltLoadChangeTrainCaseBuilder(aclfNet);
 	}
