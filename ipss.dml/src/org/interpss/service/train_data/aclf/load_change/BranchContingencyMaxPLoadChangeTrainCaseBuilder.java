@@ -54,7 +54,7 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 	@Override
 	public double[] getNetOutput() {
 		double[] output = new double[this.noBranch];
-		IpssCorePlugin.init();
+		//IpssCorePlugin.init();  this statement should put in the main function
 		try {
 			DclfAlgorithmDSL algoDsl = IpssDclf.createDclfAlgorithm(aclfNet).runDclfAnalysis();
 			aclfNet.getBranchList().stream()
