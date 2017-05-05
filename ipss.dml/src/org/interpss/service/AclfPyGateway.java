@@ -48,11 +48,11 @@ public class AclfPyGateway {
 	private ITrainCaseBuilder trainCaseBuilder;
 	
 	/**
-	 * Load a loadflow case and create the TrainCaseBuilder object
+	 * Load a loadflow case in IEEE CMD format and create the TrainCaseBuilder object
 	 * 
 	 * @param filename
-	 * @param buildername training set builder Java class name
-	 * @return [no of active buses, no of active branches] in the network
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java
+	 * @return an int[2] array, [no of active buses, no of active branches] in the network
 	 */
 	public int[] loadCase(String filename, String buildername) {
 		IpssCorePlugin.init();
@@ -75,10 +75,12 @@ public class AclfPyGateway {
 
 	/**
 	 * create and return a set of training cases, 
+	 * 
 	 *   Data format: [2][points][]
 	 *       [
 	 *         [[input], [output]], ... [[input],[output] ]
-	 *       ]         
+	 *       ]
+	 *                
 	 * @param points number of training cases
 	 * @return the training set
 	 */
@@ -97,10 +99,12 @@ public class AclfPyGateway {
 
 	/**
 	 * create and return a random test case, 
+	 * 
 	 *   Data format: [2][]
 	 *              [
 	 *                 [input], [output]
-	 *              ]         
+	 *              ]
+	 *                       
 	 * @return the training set
 	 */
 	public double[][] getTestCase() {
@@ -115,11 +119,13 @@ public class AclfPyGateway {
 	}	
 	
 	/**
-	 * create and return a test case, 
+	 * create and return a test case using the factor to generate the case,
+	 *   
 	 *   Data format: [2][]
 	 *              [
 	 *                [input], [output]
-	 *              ]         
+	 *              ]  
+	 *                     
 	 * @param factor some value for creating the test case
 	 * @return the training set
 	 */
