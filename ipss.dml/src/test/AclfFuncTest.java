@@ -27,13 +27,12 @@
 package test;
 
 import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.interpss.IpssCorePlugin;
 import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.TrainDataBuilderFactory;
-import org.interpss.service.train_data.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
@@ -43,18 +42,19 @@ import com.interpss.core.datatype.Mismatch;
 public class AclfFuncTest {
   	@Test 
 	public void test() {
-  		BusVoltLoadChangeTrainCaseBuilder caseBuilder = (BusVoltLoadChangeTrainCaseBuilder)loadCase("testdata/ieee14.ieee");
+  		ITrainCaseBuilder caseBuilder = createCaseBuilder("testdata/ieee14.ieee");
   		 
   		caseBuilder.createTestCase();
   		
   		double[] netVolt = caseBuilder.getNetOutput();
   		
   		Mismatch mis = caseBuilder.calMismatch(netVolt);
-  		assertTrue("", mis.maxMis.abs() < 0.0001);
+  		assertTrue("netVolt is a Loadflow solution, therefore the mismatch should be very small! ", 
+  				   mis.maxMis.abs() < 0.0001);
   		//System.out.println(caseBuilder.calMismatch(netVolt));
    	}
   	
-  	private ITrainCaseBuilder loadCase(String filename) {
+  	private ITrainCaseBuilder createCaseBuilder(String filename) {
 		IpssCorePlugin.init();
 		
 		try {
