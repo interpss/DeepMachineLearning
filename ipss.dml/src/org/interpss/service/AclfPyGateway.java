@@ -84,17 +84,16 @@ public class AclfPyGateway {
 	 * @param points number of training cases
 	 * @return the training set
 	 */
-	public double[][][] getTrainSet(int points) {
-		double[][][] set = new double[2][points][];
-		
-		for ( int i = 0; i < points; i++) {
+	public String[][] getTrainSet(int points) {
+		String[][] trainSet = new String[2][points];
+		for (int i = 0; i < points; i++) {
 			this.trainCaseBuilder.createTrainCase(i, points);
-			
-			set[0][i] = this.trainCaseBuilder.getNetInput();
-			set[1][i] = this.trainCaseBuilder.getNetOutput();
+			double[] input = this.trainCaseBuilder.getNetInput();
+			double[] output = this.trainCaseBuilder.getNetOutput();
+			trainSet[0][i] = this.array2String(input);
+			trainSet[1][i] = this.array2String(output);
 		}
-		
-		return set;
+		return trainSet;
 	}
 
 	/**
@@ -107,13 +106,14 @@ public class AclfPyGateway {
 	 *                       
 	 * @return the training set
 	 */
-	public double[][] getTestCase() {
-		double[][] data = new double[2][];
+	public String[][] getTestCase() {
+		String [][] data = new String[2][1];
 		
 		this.trainCaseBuilder.createTestCase();
-			
-		data[0] = this.trainCaseBuilder.getNetInput();
-		data[1] = this.trainCaseBuilder.getNetOutput();
+		double[] input = this.trainCaseBuilder.getNetInput();
+		double[] output = this.trainCaseBuilder.getNetOutput();	
+		data[0][0] = this.array2String(input);
+		data[1][0] = this.array2String(output);
 		
 		return data;
 	}	
@@ -129,17 +129,27 @@ public class AclfPyGateway {
 	 * @param factor some value for creating the test case
 	 * @return the training set
 	 */
-	public double[][] getTestCase(double factor) {
-		double[][] data = new double[2][];
+	public String[][] getTestCase(double factor) {
+		String [][] data = new String[2][1];
 		
 		this.trainCaseBuilder.createTestCase(factor);
 			
-		data[0] = this.trainCaseBuilder.getNetInput();
-		data[1] = this.trainCaseBuilder.getNetOutput();
+		double[] input = this.trainCaseBuilder.getNetInput();
+		double[] output = this.trainCaseBuilder.getNetOutput();	
+		data[0][0] = this.array2String(input);
+		data[1][0] = this.array2String(output);
 		
 		return data;
 	}	
 	
+	public String array2String(double[] array){
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < array.length; i++) {
+			sb.append(String.valueOf(array[i]) + " ");
+		}
+		return sb.toString();
+		
+	}
 	/**
 	 * compute and return the mismatch info based on the network solution 
 	 * for bus voltage

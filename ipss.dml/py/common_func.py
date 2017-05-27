@@ -44,9 +44,15 @@ def transfer2JavaDblAry(tArray, size):
 #
 # function to transfer a Java [[x], [y]] to two Python arrays [x], [y]
 #
-def transfer2PyArrays(ary) :
-    x = np.array([ary[0]])[0]
-    y = np.array([ary[1]])[0]
+def transfer2PyArrays(ary) : 
+    xSize = len(ary[0][0].split()) 
+    ySize = len(ary[1][0].split())
+    point = len(ary[0])
+    x = np.zeros((point,xSize))
+    y = np.zeros((point,ySize))
+    for i in range(point):
+        x[i] = np.array([ary[0][0].split()])
+        y[i] = np.array([ary[1][0].split()])
     return x, y
     
 #
