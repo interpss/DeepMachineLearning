@@ -100,7 +100,7 @@ with tf.Session() as sess :
         printArray(test_y, 'test_y')
     
         # compute model output (network voltage)
-        model_y = sess.run(nn_model(x), {x:[test_x]})
+        model_y = sess.run(nn_model(x), {x:test_x})
         #printArray(model_y[0], 'model_y')
 
         print('max error(pu): ', np.max(np.abs(model_y - test_y)))
