@@ -74,6 +74,24 @@ public class AclfPyGateway {
 	}
 
 	/**
+	 * Load a loadflow case in IEEE CMD format and create the TrainCaseBuilder object
+	 * 
+	 * @param filename
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java
+	 * @param busIdMappingFile
+	 * @param branchIdMappingFile
+	 * @return an int[2] array, [no of active buses, no of active branches] in the network
+	 */	
+	public int[] loadCase(String filename, String buildername, String busIdMappingFile, String branchIdMappingFile) {
+		int[] intAry = loadCase(filename, buildername);
+		
+		this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
+		this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
+		
+		return intAry;
+	}
+	
+	/**
 	 * create and return a set of training cases, 
 	 * 
 	 *   Data format: [2][points][]

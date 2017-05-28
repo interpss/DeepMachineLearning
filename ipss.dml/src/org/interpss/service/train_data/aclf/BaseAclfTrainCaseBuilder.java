@@ -25,6 +25,13 @@
   */
 package org.interpss.service.train_data.aclf;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+
 import org.apache.commons.math3.complex.Complex;
 import org.interpss.CorePluginFunction;
 import org.interpss.numeric.datatype.Unit.UnitType;
@@ -57,12 +64,16 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	protected int noBus;
 	protected int noBranch;
 	
+	protected HashMap<String,Integer> busId2NoMapping;
+	protected HashMap<String,Integer> branchId2NoMapping;
+	
 	protected double[] getNetInputPQ() {
 		double[] input = new double[2*this.noBus];
 		
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
+				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;
 				if (bus.isSwing()) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					input[i] = swing.getDesiredVoltAng(UnitType.Rad);
@@ -89,6 +100,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
+				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;
 				if (bus.isSwing()) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					Complex gen = swing.getGenResults(UnitType.PU);
@@ -117,6 +129,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBranch branch : aclfNet.getBranchList()) {
 			if (branch.isActive()) {
+				i = this.branchId2NoMapping != null? this.branchId2NoMapping.get(branch.getId()) : i;
 				output[i] = branch.powerFrom2To().getReal();
 				i++;
 			}
@@ -133,6 +146,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
+				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;
 				if (bus.isSwing()) {  // Swing Bus
 					//AclfSwingBus swing = bus.toSwingBus();
 					//Complex gen = swing.getGenResults(UnitType.PU);
@@ -192,11 +206,54 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		  			+ this.aclfNet.maxMismatch(AclfMethod.NR).toString());
 		  	
 		  	rntStr = CorePluginFunction.aclfResultSummary.apply(this.aclfNet).toString();
+		  	//System.out.println(rntStr);
+		  	/*
+		  	int cnt = 0;
+			for (AclfBranch branch : aclfNet.getBranchList()) {
+				if (branch.isActive()) {
+					System.out.println(branch.getId() + " " + cnt++);
+				}
+			}
+			*/
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 			rntStr = "Error in LF calculation";
 		}
 		
 		return rntStr;
-	}	
+	}
+
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createBusId2NoMapping(java.lang.String)
+	 */
+	@Override
+	public void createBusId2NoMapping(String filename) {
+		this.busId2NoMapping = new HashMap<>();
+		loadFile(filename, line -> {
+			// Bus1 0
+			String[] strAry = line.split(" ");
+			this.busId2NoMapping.put(strAry[0], new Integer(strAry[1]));
+		});
+	}
+
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createBranchId2NoMapping(java.lang.String)
+	 */
+	@Override
+	public void createBranchId2NoMapping(String filename) {
+		this.branchId2NoMapping = new HashMap<>();
+		loadFile(filename, line -> {
+			// Bus1->Bus2(1) 0
+			String[] strAry = line.split(" ");
+			this.branchId2NoMapping.put(strAry[0], new Integer(strAry[1]));
+		});	}
+	
+	private void loadFile(String filename, Consumer<String> processor) {
+		try (Stream<String> stream = Files.lines(Paths.get(filename))) {
+			stream.forEach(processor);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

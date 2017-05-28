@@ -51,6 +51,7 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
+				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;
 				if (bus.isGen()) {
 					bus.getGenPQ();
 					bus.getContributeGenList().clear();
@@ -108,6 +109,7 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
+				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;				
 				if (!bus.isSwing() && !bus.isGenPV()) {  
 					bus.setLoadP(this.baseCaseData[i] * factor);
 					bus.setLoadQ(this.baseCaseData[this.noBus+i] * factor);

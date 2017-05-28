@@ -36,6 +36,22 @@ import com.interpss.core.datatype.Mismatch;
  */ 
 public interface ITrainCaseBuilder {
 	/**
+	 * create BusId to model array number mapping relationship 
+	 * by loading the mapping info stored in the mapping file
+	 * 
+	 * @param filename BusId to model array number mapping filename
+	 */
+	void createBusId2NoMapping(String filename);
+	
+	/**
+	 * create BranchId to model array number mapping relationship 
+	 * by loading the mapping info stored in the mapping file
+	 * 
+	 * @param filename BranchId to model array number mapping filename
+	 */
+	void createBranchId2NoMapping(String filename);
+	
+	/**
 	 * get number of buses in the power network model
 	 * 
 	 * @return the noBus
