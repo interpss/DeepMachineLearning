@@ -99,7 +99,7 @@ with tf.Session() as sess :
     #printArray(test_y, 'test_y')
     
     # compute model output (network voltage)
-    model_y = sess.run(nn_model(x), {x:[test_x]})
+    model_y = sess.run(nn_model(x), {x:[test_x[0]]})
     #printArray(model_y[0], 'model_y')
 
     print('max error: ', np.sqrt(np.max(np.abs(np.square(model_y - test_y)))))

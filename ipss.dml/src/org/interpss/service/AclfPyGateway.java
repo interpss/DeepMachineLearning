@@ -78,8 +78,11 @@ public class AclfPyGateway {
 	 * 
 	 *   Data format: [2][points][]
 	 *       [
-	 *         [[input], [output]], ... [[input],[output] ]
+	 *         [input, output], ... [input,output ]
 	 *       ]
+	 * 
+	 * input/output is a string of "x1 x2 ...", representing
+	 * a double[] for the large-scale array performance reason. 
 	 *                
 	 * @param points number of training cases
 	 * @return the training set
@@ -101,9 +104,12 @@ public class AclfPyGateway {
 	 * 
 	 *   Data format: [2][]
 	 *              [
-	 *                 [input], [output]
+	 *                 input, output
 	 *              ]
-	 *                       
+	 *                
+	 *	input/output is a string of "x1 x2 ...", representing
+	 *  a double[] for the large-scale array performance reason.                        
+
 	 * @return the training set
 	 */
 	public String[][] getTestCase() {
@@ -123,8 +129,11 @@ public class AclfPyGateway {
 	 *   
 	 *   Data format: [2][]
 	 *              [
-	 *                [input], [output]
+	 *                input, output
 	 *              ]  
+
+	 *	input/output is a string of "x1 x2 ...", representing
+	 *  a double[] for the large-scale array performance reason.                        
 	 *                     
 	 * @param factor some value for creating the test case
 	 * @return the training set
@@ -142,7 +151,7 @@ public class AclfPyGateway {
 		return data;
 	}	
 	
-	public String array2String(double[] array){
+	private String array2String(double[] array){
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < array.length; i++) {
 			sb.append(String.valueOf(array[i]) + " ");

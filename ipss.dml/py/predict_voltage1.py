@@ -95,7 +95,7 @@ with tf.Session() as sess :
         test_x, test_y = transfer2PyArrays(testCase)        
            
         # compute model output (network voltage)
-        model_y = sess.run(nn_model(x), {x:[test_x]})
+        model_y = sess.run(nn_model(x), {x:[test_x[0]]})
         #printArray(model_y, 'model_y')
        
         netVoltage = transfer2JavaDblAry(model_y[0], size)
