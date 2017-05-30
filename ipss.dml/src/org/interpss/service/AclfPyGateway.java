@@ -78,11 +78,13 @@ public class AclfPyGateway {
 			
 			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(buildername);
 			
+			// load busId/BranchId mapping files, if exist
 			if (busIdMappingFile != null)
 				this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
 			if (branchIdMappingFile != null)
 				this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
 			
+			// set the AclfNetwork object
 			this.trainCaseBuilder.setAclfNet(aclfNet);
 			System.out.println(filename + " aclfNet case loaded");
 		} catch ( InterpssException e) {

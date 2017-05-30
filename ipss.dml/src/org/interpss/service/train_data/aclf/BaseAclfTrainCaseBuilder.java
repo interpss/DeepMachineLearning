@@ -73,7 +73,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
-				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;
+				i = this.busId2NoMapping != null? 
+						this.busId2NoMapping.get(bus.getId()) : i;
 				if (bus.isSwing()) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					input[i] = swing.getDesiredVoltAng(UnitType.Rad);
@@ -100,7 +101,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
-				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;
+				i = this.busId2NoMapping != null? 
+						this.busId2NoMapping.get(bus.getId()) : i;
 				if (bus.isSwing()) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					Complex gen = swing.getGenResults(UnitType.PU);
@@ -129,7 +131,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBranch branch : aclfNet.getBranchList()) {
 			if (branch.isActive()) {
-				i = this.branchId2NoMapping != null? this.branchId2NoMapping.get(branch.getId()) : i;
+				i = this.branchId2NoMapping != null? 
+						this.branchId2NoMapping.get(branch.getId()) : i;
 				output[i] = branch.powerFrom2To().getReal();
 				i++;
 			}
@@ -146,7 +149,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
-				i = this.busId2NoMapping != null? this.busId2NoMapping.get(bus.getId()) : i;
+				i = this.busId2NoMapping != null? 
+						this.busId2NoMapping.get(bus.getId()) : i;
 				if (bus.isSwing()) {  // Swing Bus
 					//AclfSwingBus swing = bus.toSwingBus();
 					//Complex gen = swing.getGenResults(UnitType.PU);
@@ -234,6 +238,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			String[] strAry = line.split(" ");
 			this.busId2NoMapping.put(strAry[0], new Integer(strAry[1]));
 		});
+		// in the case of is mapping file, NN model size is determined by the info in the file
 		this.noBus = this.busId2NoMapping.size();
 	}
 
@@ -248,6 +253,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			String[] strAry = line.split(" ");
 			this.branchId2NoMapping.put(strAry[0], new Integer(strAry[1]));
 		});
+		// in the case of is mapping file, NN model size is determined by the info in the file
 		this.noBranch = this.branchId2NoMapping.size();
 	}
 	
