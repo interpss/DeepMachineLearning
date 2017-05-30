@@ -35,8 +35,7 @@ import com.interpss.core.aclf.AclfNetwork;
 
 public class BranchPLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder {
 	
-	public BranchPLoadChangeTrainCaseBuilder(AclfNetwork net) {
-		super(net);	
+	public BranchPLoadChangeTrainCaseBuilder() {
 	}
 	
 	/* (non-Javadoc)

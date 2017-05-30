@@ -42,10 +42,15 @@ import com.interpss.core.aclf.AclfNetwork;
 public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder {
 	private double[] baseCaseData;
 	
-	public BaseLoadChangeTrainCaseBuilder(AclfNetwork net) {
+	public BaseLoadChangeTrainCaseBuilder() {
+	}
+	
+	public void setAclfNet(AclfNetwork net) {
 		this.aclfNet = net;
-		this.noBus = aclfNet.getNoActiveBus();
-		this.noBranch = aclfNet.getNoActiveBranch();
+		if (this.busId2NoMapping == null)
+			this.noBus = aclfNet.getNoActiveBus();
+		if (this.branchId2NoMapping == null)
+			this.noBranch = aclfNet.getNoActiveBranch();
 		
 		this.baseCaseData = new double[2*this.noBus];	
 		int i = 0;

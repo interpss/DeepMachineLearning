@@ -234,6 +234,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			String[] strAry = line.split(" ");
 			this.busId2NoMapping.put(strAry[0], new Integer(strAry[1]));
 		});
+		this.noBus = this.busId2NoMapping.size();
 	}
 
 	/* (non-Javadoc)
@@ -246,7 +247,9 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			// Bus1->Bus2(1) 0
 			String[] strAry = line.split(" ");
 			this.branchId2NoMapping.put(strAry[0], new Integer(strAry[1]));
-		});	}
+		});
+		this.noBranch = this.branchId2NoMapping.size();
+	}
 	
 	private void loadFile(String filename, Consumer<String> processor) {
 		try (Stream<String> stream = Files.lines(Paths.get(filename))) {
@@ -255,5 +258,4 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			e.printStackTrace();
 		}
 	}
-	
 }

@@ -39,8 +39,7 @@ import com.interpss.core.aclf.AclfNetwork;
 
 public class BusVoltLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder {
 	
-	public BusVoltLoadChangeTrainCaseBuilder(AclfNetwork net) {
-		super(net);	
+	public BusVoltLoadChangeTrainCaseBuilder() {
 	}
 	
 	/* (non-Javadoc)

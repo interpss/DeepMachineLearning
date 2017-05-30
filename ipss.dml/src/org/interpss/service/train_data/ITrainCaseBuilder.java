@@ -26,6 +26,7 @@
 
 package org.interpss.service.train_data;
 
+import com.interpss.core.aclf.AclfNetwork;
 import com.interpss.core.datatype.Mismatch;
 
 /**
@@ -35,6 +36,13 @@ import com.interpss.core.datatype.Mismatch;
  *
  */ 
 public interface ITrainCaseBuilder {
+	/**
+	 * set AclfNetwork object
+	 *  
+	 * @param net
+	 */
+	void setAclfNet(AclfNetwork net);
+	
 	/**
 	 * create BusId to model array number mapping relationship 
 	 * by loading the mapping info stored in the mapping file

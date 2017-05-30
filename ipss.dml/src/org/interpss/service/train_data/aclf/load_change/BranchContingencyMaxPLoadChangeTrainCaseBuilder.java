@@ -22,8 +22,7 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 
 	private static int i;
 
-	public BranchContingencyMaxPLoadChangeTrainCaseBuilder(AclfNetwork net) {
-		super(net);
+	public BranchContingencyMaxPLoadChangeTrainCaseBuilder() {
 	}
 
 	/*

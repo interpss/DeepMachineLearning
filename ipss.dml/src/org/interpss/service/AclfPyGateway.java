@@ -55,22 +55,7 @@ public class AclfPyGateway {
 	 * @return an int[2] array, [no of active buses, no of active branches] in the network
 	 */
 	public int[] loadCase(String filename, String buildername) {
-		IpssCorePlugin.init();
-		
-		try {
-			AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
-					.setFormat(IEEECommonFormat)
-					.load()
-					.getImportedObj();
-			
-			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(aclfNet, buildername);
-			System.out.println(filename + " aclfNet case loaded");
-		} catch ( InterpssException e) {
-			e.printStackTrace();
-			return new int[] {0, 0};
-		}
-
-		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};
+		return loadCase(filename, buildername, null, null);
 	}
 
 	/**
@@ -83,12 +68,29 @@ public class AclfPyGateway {
 	 * @return an int[2] array, [no of active buses, no of active branches] in the network
 	 */	
 	public int[] loadCase(String filename, String buildername, String busIdMappingFile, String branchIdMappingFile) {
-		int[] intAry = loadCase(filename, buildername);
+		IpssCorePlugin.init();
 		
-		this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
-		this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
-		
-		return intAry;
+		try {
+			AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
+					.setFormat(IEEECommonFormat)
+					.load()
+					.getImportedObj();
+			
+			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(buildername);
+			
+			if (busIdMappingFile != null)
+				this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
+			if (branchIdMappingFile != null)
+				this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
+			
+			this.trainCaseBuilder.setAclfNet(aclfNet);
+			System.out.println(filename + " aclfNet case loaded");
+		} catch ( InterpssException e) {
+			e.printStackTrace();
+			return new int[] {0, 0};
+		}		
+	
+		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};
 	}
 	
 	/**
