@@ -60,18 +60,23 @@ import com.interpss.core.datatype.Mismatch;
  */ 
  
 public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
-	protected AclfNetwork aclfNet;
+	protected AclfNetwork[] aclfNet;
+	
+	/** NN model bus array dimension */
 	protected int noBus;
+	/** NN model branch array dimension */
 	protected int noBranch;
 	
+	/** Bus id to NN model bus array index mapping */
 	protected HashMap<String,Integer> busId2NoMapping;
+	/** Branch id to NN model branch array index mapping */
 	protected HashMap<String,Integer> branchId2NoMapping;
 	
 	protected double[] getNetInputPQ() {
 		double[] input = new double[2*this.noBus];
 		
 		int i = 0;
-		for (AclfBus bus : aclfNet.getBusList()) {
+		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
 				if (this.busId2NoMapping != null) 
 					i = this.busId2NoMapping.get(bus.getId());
@@ -99,7 +104,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		double[] output = new double[2*this.noBus];
 		
 		int i = 0;
-		for (AclfBus bus : aclfNet.getBusList()) {
+		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null ) 
 					i = this.busId2NoMapping.get(bus.getId());
@@ -129,7 +134,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		double[] output = new double[this.noBranch];
 		
 		int i = 0;
-		for (AclfBranch branch : aclfNet.getBranchList()) {
+		for (AclfBranch branch : getAclfNet().getBranchList()) {
 			if (branch.isActive()) {
 				if ( this.branchId2NoMapping != null ) 
 					i = this.branchId2NoMapping.get(branch.getId());
@@ -147,7 +152,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	public Mismatch calMismatch(double[] netVolt) {
 		
 		int i = 0;
-		for (AclfBus bus : aclfNet.getBusList()) {
+		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null ) 
 					i = this.busId2NoMapping.get(bus.getId());
@@ -171,13 +176,17 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			}
 		}
 		
-		return this.aclfNet.maxMismatch(AclfMethod.NR);
+		return this.getAclfNet().maxMismatch(AclfMethod.NR);
 	};
 	
 	public AclfNetwork getAclfNet() {
-		return aclfNet;
+		return aclfNet[0];
 	}
 
+	public void setAclfNet(AclfNetwork aclfNet) {
+		this.aclfNet[0] = aclfNet;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.interpss.service.ITrainCaseBuilder#getNoBus()
 	 */
@@ -201,15 +210,15 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	protected String runLF() {
 		String rntStr = "";
 		try {
-		  	IpssAclf.createAclfAlgo(this.aclfNet)
+		  	IpssAclf.createAclfAlgo(this.getAclfNet())
   					.lfMethod(AclfMethod.NR)
   					.nonDivergent(true)
   					.runLoadflow();	
 		  	
-		  	System.out.println("Run Aclf " + (this.aclfNet.isLfConverged()? " converged, " : " diverged, ") 
-		  			+ this.aclfNet.maxMismatch(AclfMethod.NR).toString());
+		  	System.out.println("Run Aclf " + (this.getAclfNet().isLfConverged()? " converged, " : " diverged, ") 
+		  			+ this.getAclfNet().maxMismatch(AclfMethod.NR).toString());
 		  	
-		  	rntStr = CorePluginFunction.aclfResultSummary.apply(this.aclfNet).toString();
+		  	rntStr = CorePluginFunction.aclfResultSummary.apply(this.getAclfNet()).toString();
 		  	//System.out.println(rntStr);
 		  	/*
 		  	int cnt = 0;

@@ -76,7 +76,7 @@ public class AclfPyGateway {
 					.load()
 					.getImportedObj();
 			
-			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(buildername);
+			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(buildername, 1);
 			
 			// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch
 			// are calculated in the loading process
@@ -87,7 +87,7 @@ public class AclfPyGateway {
 			
 			// set the AclfNetwork object. This step should be placed after the
 			// mapping relationship loading steps.
-			this.trainCaseBuilder.setAclfNet(aclfNet);
+			this.trainCaseBuilder.setAclfNetConfig(aclfNet);
 			System.out.println(filename + " aclfNet case loaded, no buses/branches: " + this.trainCaseBuilder.getNoBus() +
 					", " + this.trainCaseBuilder.getNoBranch());
 		} catch ( InterpssException e) {

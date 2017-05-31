@@ -46,13 +46,13 @@ public class TrainDataBuilderFactory {
 	 * @param buidlername training case builder class name
 	 * @return the builder object
 	 */
-	public static ITrainCaseBuilder createITrainCaseBuilder(String builderName) {
+	public static ITrainCaseBuilder createITrainCaseBuilder(String builderName, int noAclfNet) {
 		if (builderName.equals("BranchPLoadChangeTrainCaseBuilder"))
-			return new BranchPLoadChangeTrainCaseBuilder();
+			return new BranchPLoadChangeTrainCaseBuilder(noAclfNet);
 		if (builderName.equals("BranchContingencyMaxPLoadChangeTrainCaseBuilder"))
-			return new BranchContingencyMaxPLoadChangeTrainCaseBuilder();
+			return new BranchContingencyMaxPLoadChangeTrainCaseBuilder(noAclfNet);
 		else
-			return new BusVoltLoadChangeTrainCaseBuilder();
+			return new BusVoltLoadChangeTrainCaseBuilder(noAclfNet);
 	}
 }
  

@@ -37,11 +37,11 @@ import com.interpss.core.datatype.Mismatch;
  */ 
 public interface ITrainCaseBuilder {
 	/**
-	 * set AclfNetwork object
+	 * set AclfNetwork object and configure the builder
 	 *  
 	 * @param net the AclfNetwork object to be set
 	 */
-	void setAclfNet(AclfNetwork net);
+	void setAclfNetConfig(AclfNetwork net);
 	
 	/**
 	 * create BusId to model array number mapping relationship 

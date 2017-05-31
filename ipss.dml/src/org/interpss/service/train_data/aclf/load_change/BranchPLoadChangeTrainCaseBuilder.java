@@ -33,7 +33,8 @@ package org.interpss.service.train_data.aclf.load_change;
 
 public class BranchPLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder {
 	
-	public BranchPLoadChangeTrainCaseBuilder() {
+	public BranchPLoadChangeTrainCaseBuilder(int noAclfNet) {
+		super(noAclfNet);
 	}
 	
 	/* (non-Javadoc)

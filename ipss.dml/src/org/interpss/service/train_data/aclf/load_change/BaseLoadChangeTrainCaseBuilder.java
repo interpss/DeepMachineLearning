@@ -42,22 +42,28 @@ import com.interpss.core.aclf.AclfNetwork;
 public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder {
 	private double[] baseCaseData;
 	
-	public BaseLoadChangeTrainCaseBuilder() {
+	/**
+	 * 
+	 * 
+	 * @param noAclfNet number of AclfNetwork objects
+	 */
+	public BaseLoadChangeTrainCaseBuilder(int noAclfNet) {
+		this.aclfNet = new AclfNetwork[noAclfNet];
 	}
 	
-	public void setAclfNet(AclfNetwork net) {
-		this.aclfNet = net;
+	public void setAclfNetConfig(AclfNetwork net) {
+		this.setAclfNet(net);
 		
 		// set noBus/Branch in case the mapping relationships
 		// are not defined
 		if (this.busId2NoMapping == null)
-			this.noBus = aclfNet.getNoActiveBus();
+			this.noBus = getAclfNet().getNoActiveBus();
 		if (this.branchId2NoMapping == null)
-			this.noBranch = aclfNet.getNoActiveBranch();
+			this.noBranch = getAclfNet().getNoActiveBranch();
 		
 		this.baseCaseData = new double[2*this.noBus];	
 		int i = 0;
-		for (AclfBus bus : aclfNet.getBusList()) {
+		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null )
 					i = this.busId2NoMapping.get(bus.getId());
@@ -116,7 +122,7 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 	 */
 	private void createCase(double factor) {
 		int i = 0;
-		for (AclfBus bus : aclfNet.getBusList()) {
+		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null )
 					i = this.busId2NoMapping.get(bus.getId());				
@@ -127,7 +133,7 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 				i++;
 			}
 		}
-		System.out.println("Total system load: " + ComplexFunc.toStr(aclfNet.totalLoad(UnitType.PU)) +
+		System.out.println("Total system load: " + ComplexFunc.toStr(getAclfNet().totalLoad(UnitType.PU)) +
 						   ", factor: " + factor);
 		
 		//System.out.println(aclfNet.net2String());

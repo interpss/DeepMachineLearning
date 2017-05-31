@@ -22,7 +22,8 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 
 	private static int i;
 
-	public BranchContingencyMaxPLoadChangeTrainCaseBuilder() {
+	public BranchContingencyMaxPLoadChangeTrainCaseBuilder(int noAclfNet) {
+		super(noAclfNet);
 	}
 
 	/*
@@ -45,17 +46,17 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 		double[] output = new double[this.noBranch];
 		//IpssCorePlugin.init();  this statement should put in the main function
 		try {
-			DclfAlgorithmDSL algoDsl = IpssDclf.createDclfAlgorithm(aclfNet).runDclfAnalysis();
-			aclfNet.getBranchList().stream()
+			DclfAlgorithmDSL algoDsl = IpssDclf.createDclfAlgorithm(getAclfNet()).runDclfAnalysis();
+			getAclfNet().getBranchList().stream()
 					.filter(branch -> !branch.getFromAclfBus().isRefBus() && !branch.getToAclfBus().isRefBus())
 					.forEach(branch -> CoreObjectFactory.createContingency(branch.getId(), branch.getId(),
-							BranchOutageType.OPEN, aclfNet));
+							BranchOutageType.OPEN, getAclfNet()));
 
-			aclfNet.getContingencyList().forEach(cont -> {
+			getAclfNet().getContingencyList().forEach(cont -> {
 				i = 0;
 				algoDsl.contingencyAanlysis((Contingency) cont, (contBranch, postContFlow) -> {
-					if (output[i] < Math.abs(postContFlow/aclfNet.getBaseMva()))
-						output[i] = Math.abs(postContFlow/aclfNet.getBaseMva());
+					if (output[i] < Math.abs(postContFlow/getAclfNet().getBaseMva()))
+						output[i] = Math.abs(postContFlow/getAclfNet().getBaseMva());
 					i++;
 				});
 			});

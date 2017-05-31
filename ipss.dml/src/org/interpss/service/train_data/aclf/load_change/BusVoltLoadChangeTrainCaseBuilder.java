@@ -37,7 +37,8 @@ package org.interpss.service.train_data.aclf.load_change;
 
 public class BusVoltLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder {
 	
-	public BusVoltLoadChangeTrainCaseBuilder() {
+	public BusVoltLoadChangeTrainCaseBuilder(int noAclfNet) {
+		super(noAclfNet);
 	}
 	
 	/* (non-Javadoc)

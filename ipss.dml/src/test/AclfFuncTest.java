@@ -64,8 +64,8 @@ public class AclfFuncTest {
 					.getImportedObj();
 			
 			System.out.println(filename + " aclfNet case loaded");
-			ITrainCaseBuilder builder = TrainDataBuilderFactory.createITrainCaseBuilder("BusVoltageTrainCaseBuilder");
-			builder.setAclfNet(aclfNet);
+			ITrainCaseBuilder builder = TrainDataBuilderFactory.createITrainCaseBuilder("BusVoltageTrainCaseBuilder", 1);
+			builder.setAclfNetConfig(aclfNet);
 			
 			return builder;
 		} catch ( InterpssException e) {
