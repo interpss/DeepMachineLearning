@@ -25,8 +25,6 @@
   */
 package org.interpss.service.train_data.aclf.load_change;
 
-import com.interpss.core.aclf.AclfNetwork;
-
 /**
  * Load bus P,Q are modified to create training cases for predicting branch active power flow
  *     

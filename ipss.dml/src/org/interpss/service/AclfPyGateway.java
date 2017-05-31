@@ -51,8 +51,8 @@ public class AclfPyGateway {
 	 * Load a loadflow case in IEEE CMD format and create the TrainCaseBuilder object
 	 * 
 	 * @param filename
-	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java
-	 * @return an int[2] array, [no of active buses, no of active branches] in the network
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
+	 * @return an int[2] array, [bus nn　model dimension, branch nn　model dimension]
 	 */
 	public int[] loadCase(String filename, String buildername) {
 		return loadCase(filename, buildername, null, null);
@@ -62,10 +62,10 @@ public class AclfPyGateway {
 	 * Load a loadflow case in IEEE CMD format and create the TrainCaseBuilder object
 	 * 
 	 * @param filename
-	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
 	 * @param busIdMappingFile
 	 * @param branchIdMappingFile
-	 * @return an int[2] array, [no of active buses, no of active branches] in the network
+	 * @return an int[2] array, [bus nn　model dimension, branch nn　model dimension]
 	 */	
 	public int[] loadCase(String filename, String buildername, String busIdMappingFile, String branchIdMappingFile) {
 		IpssCorePlugin.init();
@@ -78,15 +78,18 @@ public class AclfPyGateway {
 			
 			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(buildername);
 			
-			// load busId/BranchId mapping files, if exist
+			// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch
+			// are calculated in the loading process
 			if (busIdMappingFile != null)
 				this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
 			if (branchIdMappingFile != null)
 				this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
 			
-			// set the AclfNetwork object
+			// set the AclfNetwork object. This step should be placed after the
+			// mapping relationship loading steps.
 			this.trainCaseBuilder.setAclfNet(aclfNet);
-			System.out.println(filename + " aclfNet case loaded");
+			System.out.println(filename + " aclfNet case loaded, no buses/branches: " + this.trainCaseBuilder.getNoBus() +
+					", " + this.trainCaseBuilder.getNoBranch());
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 			return new int[] {0, 0};
@@ -100,7 +103,7 @@ public class AclfPyGateway {
 	 * 
 	 *   Data format: [2][points][]
 	 *       [
-	 *         [input, output], ... [input,output ]
+	 *         [input, output], ... [input, output]
 	 *       ]
 	 * 
 	 * input/output is a string of "x1 x2 ...", representing

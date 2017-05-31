@@ -39,7 +39,7 @@ public interface ITrainCaseBuilder {
 	/**
 	 * set AclfNetwork object
 	 *  
-	 * @param net
+	 * @param net the AclfNetwork object to be set
 	 */
 	void setAclfNet(AclfNetwork net);
 	

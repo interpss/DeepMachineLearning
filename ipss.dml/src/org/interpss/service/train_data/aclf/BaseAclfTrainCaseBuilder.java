@@ -73,8 +73,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
-				i = this.busId2NoMapping != null? 
-						this.busId2NoMapping.get(bus.getId()) : i;
+				if (this.busId2NoMapping != null) 
+					i = this.busId2NoMapping.get(bus.getId());
 				if (bus.isSwing()) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					input[i] = swing.getDesiredVoltAng(UnitType.Rad);
@@ -101,8 +101,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
-				i = this.busId2NoMapping != null? 
-						this.busId2NoMapping.get(bus.getId()) : i;
+				if ( this.busId2NoMapping != null ) 
+					i = this.busId2NoMapping.get(bus.getId());
 				if (bus.isSwing()) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					Complex gen = swing.getGenResults(UnitType.PU);
@@ -131,8 +131,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBranch branch : aclfNet.getBranchList()) {
 			if (branch.isActive()) {
-				i = this.branchId2NoMapping != null? 
-						this.branchId2NoMapping.get(branch.getId()) : i;
+				if ( this.branchId2NoMapping != null ) 
+					i = this.branchId2NoMapping.get(branch.getId());
 				output[i] = branch.powerFrom2To().getReal();
 				i++;
 			}
@@ -149,8 +149,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
-				i = this.busId2NoMapping != null? 
-						this.busId2NoMapping.get(bus.getId()) : i;
+				if ( this.busId2NoMapping != null ) 
+					i = this.busId2NoMapping.get(bus.getId());
 				if (bus.isSwing()) {  // Swing Bus
 					//AclfSwingBus swing = bus.toSwingBus();
 					//Complex gen = swing.getGenResults(UnitType.PU);
