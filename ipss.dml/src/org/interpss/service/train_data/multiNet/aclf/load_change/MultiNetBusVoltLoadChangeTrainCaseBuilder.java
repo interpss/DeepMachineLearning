@@ -1,5 +1,5 @@
  /*
-  * @(#)BusVoltLoadChangeTrainCaseBuilder.java   
+  * @(#)MultiNetBusVoltLoadChangeTrainCaseBuilder.java   
   *
   * Copyright (C) 2005-17 www.interpss.org
   *

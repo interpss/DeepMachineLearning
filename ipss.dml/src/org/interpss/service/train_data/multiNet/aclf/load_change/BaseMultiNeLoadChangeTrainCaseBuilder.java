@@ -1,5 +1,5 @@
  /*
-  * @(#)BusVoltLoadChangeTrainCaseBuilder.java   
+  * @(#)BaseMultiNeLoadChangeTrainCaseBuilder.java   
   *
   * Copyright (C) 2005-17 www.interpss.org
   *
@@ -39,7 +39,6 @@ import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;
 
 /**
- * Load bus P,Q are modified to create training cases for predicting bus voltage
  * 
  */  
 
@@ -119,13 +118,6 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfMul
 		createCase(factor);
 	}	
 	
-	private String getRandomName() {
-		int minvalue = 0,
-			maxValue = this.filenames.length;
-		int n = minvalue + new Random().nextInt(maxValue - minvalue + 1);
-		return this.filenames[n];
-	}
-	
 	/**
 	 * The bus load is scaled by the scaling factor
 	 * 
@@ -138,7 +130,8 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfMul
 		 * improved in the real-world situations. 
 		 */
 		try {
-			loadConfigureAclfNet(this.getRandomName());
+			int n = new Random().nextInt(this.filenames.length);
+			loadConfigureAclfNet(this.filenames[n]);
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 		}		

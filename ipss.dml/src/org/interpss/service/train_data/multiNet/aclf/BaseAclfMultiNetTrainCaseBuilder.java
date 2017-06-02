@@ -1,5 +1,5 @@
  /*
-  * @(#)BaseAclfTrainCaseBuilder.java   
+  * @(#)BaseAclfMultiNetTrainCaseBuilder.java   
   *
   * Copyright (C) 2005-17 www.interpss.org
   *
@@ -25,31 +25,13 @@
   */
 package org.interpss.service.train_data.multiNet.aclf;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-
-import org.apache.commons.math3.complex.Complex;
-import org.interpss.CorePluginFunction;
-import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.pssl.simu.IpssAclf;
 import org.interpss.service.train_data.BaseAclfTrainCaseBuilder;
 
-import com.interpss.common.exp.InterpssException;
-import com.interpss.core.aclf.AclfBranch;
-import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;
-import com.interpss.core.aclf.adpter.AclfPVGenBus;
-import com.interpss.core.aclf.adpter.AclfSwingBus;
-import com.interpss.core.algo.AclfMethod;
 import com.interpss.core.datatype.Mismatch;
 
 /**
- * Base class for implementing Aclf training case creation builder.
- *     
+ * Base class for implementing multi-net Aclf training case creation builder.
  * 
  */ 
  
