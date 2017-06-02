@@ -23,7 +23,7 @@
   *   ================
   *
   */
-package org.interpss.service.train_data.aclf.load_change;
+package org.interpss.service.train_data.singleNet.aclf.load_change;
 
 /**
  * Load bus P,Q are modified to create training cases for predicting branch active power flow
@@ -33,16 +33,12 @@ package org.interpss.service.train_data.aclf.load_change;
 
 public class BranchPLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder {
 	
-	public BranchPLoadChangeTrainCaseBuilder(int noAclfNet) {
-		super(noAclfNet);
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.interpss.service.ITrainCaseBuilder#getNetInputPQ()
 	 */
 	@Override
 	public double[] getNetInput() {
-		return this.getNetInputPQ();
+		return this.getNetInputPQ(this.getAclfNet());
 	}	
 	
 	/* (non-Javadoc)
@@ -50,6 +46,6 @@ public class BranchPLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBu
 	 */
 	@Override
 	public double[] getNetOutput() {
-		return this.getNetBranchP();
+		return this.getNetBranchP(this.getAclfNet());
 	}
 }

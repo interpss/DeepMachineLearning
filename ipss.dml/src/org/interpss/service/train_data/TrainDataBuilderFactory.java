@@ -26,11 +26,10 @@
 
 package org.interpss.service.train_data;
 
-import org.interpss.service.train_data.aclf.load_change.BranchContingencyMaxPLoadChangeTrainCaseBuilder;
-import org.interpss.service.train_data.aclf.load_change.BranchPLoadChangeTrainCaseBuilder;
-import org.interpss.service.train_data.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
-
-import com.interpss.core.aclf.AclfNetwork;
+import org.interpss.service.train_data.multiNet.aclf.load_change.MultiNetBusVoltLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change.BranchContingencyMaxPLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change.BranchPLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
 
 /**
  * Training data builder factory
@@ -42,17 +41,27 @@ public class TrainDataBuilderFactory {
 	/**
 	 * create a training data builder object
 	 * 
-	 * @param aclfNet AclfNetwork object
 	 * @param buidlername training case builder class name
 	 * @return the builder object
 	 */
-	public static ITrainCaseBuilder createITrainCaseBuilder(String builderName, int noAclfNet) {
+	public static ITrainCaseBuilder createTrainCaseBuilder(String builderName) {
 		if (builderName.equals("BranchPLoadChangeTrainCaseBuilder"))
-			return new BranchPLoadChangeTrainCaseBuilder(noAclfNet);
+			return new BranchPLoadChangeTrainCaseBuilder();
 		if (builderName.equals("BranchContingencyMaxPLoadChangeTrainCaseBuilder"))
-			return new BranchContingencyMaxPLoadChangeTrainCaseBuilder(noAclfNet);
+			return new BranchContingencyMaxPLoadChangeTrainCaseBuilder();
 		else
-			return new BusVoltLoadChangeTrainCaseBuilder(noAclfNet);
+			return new BusVoltLoadChangeTrainCaseBuilder();
 	}
+	
+	/**
+	 * create a multi-net training data builder object
+	 * 
+	 * @param aryNames file name array
+	 * @param buidlername training case builder class name
+	 * @return the builder object
+	 */
+	public static ITrainCaseBuilder createMultiNetTrainCaseBuilder(String[] aryNames, String builderName) {
+		return new MultiNetBusVoltLoadChangeTrainCaseBuilder(aryNames);
+	}	
 }
  

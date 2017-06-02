@@ -1,4 +1,4 @@
-package org.interpss.service.train_data.aclf.load_change;
+package org.interpss.service.train_data.singleNet.aclf.load_change;
 
 import org.interpss.numeric.exp.IpssNumericException;
 import org.interpss.pssl.simu.IpssDclf;
@@ -22,10 +22,6 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 
 	private static int i;
 
-	public BranchContingencyMaxPLoadChangeTrainCaseBuilder(int noAclfNet) {
-		super(noAclfNet);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -33,7 +29,7 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 	 */
 	@Override
 	public double[] getNetInput() {
-		return this.getNetInputPQ();
+		return this.getNetInputPQ(this.getAclfNet());
 	}
 
 	/*

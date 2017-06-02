@@ -23,7 +23,7 @@
   *   ================
   *
   */
-package org.interpss.service.train_data.aclf.load_change;
+package org.interpss.service.train_data.singleNet.aclf.load_change;
 
 /**
  * Load bus P,Q are modified to create training cases for predicting bus voltage
@@ -36,17 +36,12 @@ package org.interpss.service.train_data.aclf.load_change;
  */  
 
 public class BusVoltLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder {
-	
-	public BusVoltLoadChangeTrainCaseBuilder(int noAclfNet) {
-		super(noAclfNet);
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.interpss.service.ITrainCaseBuilder#getNetOutputVolt()
 	 */
 	@Override
 	public double[] getNetOutput() {
-		return this.getNetOutputVoltage();
+		return this.getNetOutputVoltage(this.getAclfNet());
 	}
 	
 	/* (non-Javadoc)
@@ -54,6 +49,6 @@ public class BusVoltLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBu
 	 */
 	@Override
 	public double[] getNetInput() {
-		return this.getNetInputPQ();
+		return this.getNetInputPQ(this.getAclfNet());
 	}
 }

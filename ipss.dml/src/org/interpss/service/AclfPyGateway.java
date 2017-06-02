@@ -26,15 +26,11 @@
 
 package org.interpss.service;
 
-import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
-
 import org.interpss.IpssCorePlugin;
-import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.TrainDataBuilderFactory;
 
 import com.interpss.common.exp.InterpssException;
-import com.interpss.core.aclf.AclfNetwork;
 
 import py4j.GatewayServer;
 
@@ -46,6 +42,41 @@ import py4j.GatewayServer;
  */ 
 public class AclfPyGateway {
 	private ITrainCaseBuilder trainCaseBuilder;
+	
+	/*
+	 *  Multi-Network object functions
+	 *  ============================== 
+	 */
+	/**
+	 * Load multiple loadflow cases in IEEE CMD format and create the TrainCaseBuilder object
+	 * 
+	 * @param filenames Loadflow case filesnames "file1,file2,..." 
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
+	 * @param busIdMappingFile
+	 * @param branchIdMappingFile
+	 * @return an int[2] array, [bus nn¡¡model dimension, branch nn¡¡model dimension]
+	 */	
+	public int[] loadMultiCases(String filenames, String buildername, String busIdMappingFile, String branchIdMappingFile) {
+		IpssCorePlugin.init();
+		
+		String[] aryNmes = filenames.split(",");
+		this.trainCaseBuilder = TrainDataBuilderFactory.createMultiNetTrainCaseBuilder(aryNmes, buildername);
+		
+		// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch
+		// are calculated in the loading process
+		if (busIdMappingFile != null)
+			this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
+		if (branchIdMappingFile != null)
+			this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
+		
+		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};
+	}
+	
+	
+	/*
+	 *  Single Network object functions
+	 *  =============================== 
+	 */
 	
 	/**
 	 * Load a loadflow case in IEEE CMD format and create the TrainCaseBuilder object
@@ -70,24 +101,19 @@ public class AclfPyGateway {
 	public int[] loadCase(String filename, String buildername, String busIdMappingFile, String branchIdMappingFile) {
 		IpssCorePlugin.init();
 		
+		this.trainCaseBuilder = TrainDataBuilderFactory.createTrainCaseBuilder(buildername);
+			
+		// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch
+		// are calculated in the loading process
+		if (busIdMappingFile != null)
+			this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
+		if (branchIdMappingFile != null)
+			this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
+			
 		try {
-			AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
-					.setFormat(IEEECommonFormat)
-					.load()
-					.getImportedObj();
-			
-			this.trainCaseBuilder = TrainDataBuilderFactory.createITrainCaseBuilder(buildername, 1);
-			
-			// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch
-			// are calculated in the loading process
-			if (busIdMappingFile != null)
-				this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
-			if (branchIdMappingFile != null)
-				this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
-			
 			// set the AclfNetwork object. This step should be placed after the
 			// mapping relationship loading steps.
-			this.trainCaseBuilder.setAclfNetConfig(aclfNet);
+			this.trainCaseBuilder.loadConfigureAclfNet(filename);
 			System.out.println(filename + " aclfNet case loaded, no buses/branches: " + this.trainCaseBuilder.getNoBus() +
 					", " + this.trainCaseBuilder.getNoBranch());
 		} catch ( InterpssException e) {
@@ -97,6 +123,11 @@ public class AclfPyGateway {
 	
 		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};
 	}
+	
+	/*
+	 *  Common functions
+	 *  ================ 
+	 */
 	
 	/**
 	 * create and return a set of training cases, 

@@ -1,5 +1,5 @@
  /*
-  * @(#)BaseLoadChangeTrainCaseBuilder.java   
+  * @(#)BusVoltLoadChangeTrainCaseBuilder.java   
   *
   * Copyright (C) 2005-17 www.interpss.org
   *
@@ -23,43 +23,46 @@
   *   ================
   *
   */
-package org.interpss.service.train_data.aclf.load_change;
+package org.interpss.service.train_data.multiNet.aclf.load_change;
+
+import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
 
 import java.util.Random;
 
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.service.train_data.aclf.BaseAclfTrainCaseBuilder;
+import org.interpss.pssl.plugin.IpssAdapter;
+import org.interpss.service.train_data.multiNet.aclf.BaseAclfMultiNetTrainCaseBuilder;
 
+import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;
 
 /**
- * Base class for creating training case for : Load bus P,Q are modified to create training cases
+ * Load bus P,Q are modified to create training cases for predicting bus voltage
  * 
  */  
 
-public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder {
+public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfMultiNetTrainCaseBuilder {
+	/** cached base case data for creating training cases*/
 	private double[] baseCaseData;
 	
-	/**
-	 * 
-	 * 
-	 * @param noAclfNet number of AclfNetwork objects
-	 */
-	public BaseLoadChangeTrainCaseBuilder(int noAclfNet) {
-		this.aclfNet = new AclfNetwork[noAclfNet];
+	public BaseMultiNeLoadChangeTrainCaseBuilder(String[] names) {
+		super(names);
 	}
 	
-	public void setAclfNetConfig(AclfNetwork net) {
-		this.setAclfNet(net);
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createTrainCase(int, int)
+	 */
+	@Override
+	public void loadConfigureAclfNet(String filename) throws InterpssException {
+		AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
+				.setFormat(IEEECommonFormat)
+				.load()
+				.getImportedObj();
+		System.out.println(filename + " loaded");
 		
-		// set noBus/Branch in case the mapping relationships
-		// are not defined
-		if (this.busId2NoMapping == null)
-			this.noBus = getAclfNet().getNoActiveBus();
-		if (this.branchId2NoMapping == null)
-			this.noBranch = getAclfNet().getNoActiveBranch();
+		this.setAclfNet(aclfNet);
 		
 		this.baseCaseData = new double[2*this.noBus];	
 		int i = 0;
@@ -83,19 +86,20 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 		
 		//System.out.println(this.runLF());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.interpss.service.ITrainCaseBuilder#createTrainCase()
 	 */
 	@Override
 	public void createTrainCase(int nth, int nTotal) {
-		//double factor = 0.5 + new Random().nextFloat();
 		/*
 		 * We scale the bus load (P,Q) by a factor in the 
 		 * range [0.5, 1.5]
 		 */
 		double factor = 0.5 + nth/(float)nTotal;
 
+		// load LF case
+		
 		createCase(factor);
 	}
 	
@@ -115,12 +119,30 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 		createCase(factor);
 	}	
 	
+	private String getRandomName() {
+		int minvalue = 0,
+			maxValue = this.filenames.length;
+		int n = minvalue + new Random().nextInt(maxValue - minvalue + 1);
+		return this.filenames[n];
+	}
+	
 	/**
 	 * The bus load is scaled by the scaling factor
 	 * 
 	 * @param factor the scaling factor
 	 */
 	private void createCase(double factor) {
+		// load LF case.
+		/*
+		 * this is not an efficient implementation. It should be
+		 * improved in the real-world situations. 
+		 */
+		try {
+			loadConfigureAclfNet(this.getRandomName());
+		} catch ( InterpssException e) {
+			e.printStackTrace();
+		}		
+		
 		int i = 0;
 		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
@@ -138,7 +160,7 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 		
 		//System.out.println(aclfNet.net2String());
 		
-		String result = this.runLF();
+		String result = this.runLF(this.getAclfNet());
 		//System.out.println(result);
 	}
 }

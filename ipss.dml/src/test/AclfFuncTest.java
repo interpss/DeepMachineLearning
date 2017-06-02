@@ -1,5 +1,5 @@
  /*
-  * @(#)NetContainerTest.java   
+  * @(#)AclfFuncTest.java   
   *
   * Copyright (C) 2006-2014 www.interpss.org
   *
@@ -26,17 +26,14 @@
 
 package test;
 
-import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
 import static org.junit.Assert.assertTrue;
 
 import org.interpss.IpssCorePlugin;
-import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.TrainDataBuilderFactory;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
-import com.interpss.core.aclf.AclfNetwork;
 import com.interpss.core.datatype.Mismatch;
 
 public class AclfFuncTest {
@@ -58,14 +55,9 @@ public class AclfFuncTest {
 		IpssCorePlugin.init();
 		
 		try {
-			AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
-					.setFormat(IEEECommonFormat)
-					.load()
-					.getImportedObj();
-			
 			System.out.println(filename + " aclfNet case loaded");
-			ITrainCaseBuilder builder = TrainDataBuilderFactory.createITrainCaseBuilder("BusVoltageTrainCaseBuilder", 1);
-			builder.setAclfNetConfig(aclfNet);
+			ITrainCaseBuilder builder = TrainDataBuilderFactory.createTrainCaseBuilder("BusVoltageTrainCaseBuilder");
+			builder.loadConfigureAclfNet(filename);
 			
 			return builder;
 		} catch ( InterpssException e) {

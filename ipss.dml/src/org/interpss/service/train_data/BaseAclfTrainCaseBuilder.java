@@ -23,7 +23,7 @@
   *   ================
   *
   */
-package org.interpss.service.train_data.aclf;
+package org.interpss.service.train_data;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,8 +60,6 @@ import com.interpss.core.datatype.Mismatch;
  */ 
  
 public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
-	protected AclfNetwork[] aclfNet;
-	
 	/** NN model bus array dimension */
 	protected int noBus;
 	/** NN model branch array dimension */
@@ -72,11 +70,11 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	/** Branch id to NN model branch array index mapping */
 	protected HashMap<String,Integer> branchId2NoMapping;
 	
-	protected double[] getNetInputPQ() {
+	protected double[] getNetInputPQ(AclfNetwork aclfNet) {
 		double[] input = new double[2*this.noBus];
 		
 		int i = 0;
-		for (AclfBus bus : getAclfNet().getBusList()) {
+		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
 				if (this.busId2NoMapping != null) 
 					i = this.busId2NoMapping.get(bus.getId());
@@ -100,11 +98,11 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		return input;
 	}
 
-	protected double[] getNetOutputVoltage() {
+	protected double[] getNetOutputVoltage(AclfNetwork aclfNet) {
 		double[] output = new double[2*this.noBus];
 		
 		int i = 0;
-		for (AclfBus bus : getAclfNet().getBusList()) {
+		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null ) 
 					i = this.busId2NoMapping.get(bus.getId());
@@ -130,11 +128,11 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		return output;
 	}
 
-	protected double[] getNetBranchP() {
+	protected double[] getNetBranchP(AclfNetwork aclfNet) {
 		double[] output = new double[this.noBranch];
 		
 		int i = 0;
-		for (AclfBranch branch : getAclfNet().getBranchList()) {
+		for (AclfBranch branch : aclfNet.getBranchList()) {
 			if (branch.isActive()) {
 				if ( this.branchId2NoMapping != null ) 
 					i = this.branchId2NoMapping.get(branch.getId());
@@ -145,14 +143,10 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		return output;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.interpss.service.ITrainCaseBuilder#calMismatch()
-	 */
-	@Override
-	public Mismatch calMismatch(double[] netVolt) {
+	protected Mismatch calMismatch(double[] netVolt, AclfNetwork aclfNet) {
 		
 		int i = 0;
-		for (AclfBus bus : getAclfNet().getBusList()) {
+		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null ) 
 					i = this.busId2NoMapping.get(bus.getId());
@@ -176,16 +170,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			}
 		}
 		
-		return this.getAclfNet().maxMismatch(AclfMethod.NR);
+		return aclfNet.maxMismatch(AclfMethod.NR);
 	};
-	
-	public AclfNetwork getAclfNet() {
-		return aclfNet[0];
-	}
-
-	public void setAclfNet(AclfNetwork aclfNet) {
-		this.aclfNet[0] = aclfNet;
-	}
 	
 	/* (non-Javadoc)
 	 * @see org.interpss.service.ITrainCaseBuilder#getNoBus()
@@ -207,18 +193,18 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	 * 
 	 * @return
 	 */
-	protected String runLF() {
+	protected String runLF(AclfNetwork aclfNet) {
 		String rntStr = "";
 		try {
-		  	IpssAclf.createAclfAlgo(this.getAclfNet())
+		  	IpssAclf.createAclfAlgo(aclfNet)
   					.lfMethod(AclfMethod.NR)
   					.nonDivergent(true)
   					.runLoadflow();	
 		  	
-		  	System.out.println("Run Aclf " + (this.getAclfNet().isLfConverged()? " converged, " : " diverged, ") 
-		  			+ this.getAclfNet().maxMismatch(AclfMethod.NR).toString());
+		  	System.out.println("Run Aclf " + (aclfNet.isLfConverged()? " converged, " : " diverged, ") 
+		  			+ aclfNet.maxMismatch(AclfMethod.NR).toString());
 		  	
-		  	rntStr = CorePluginFunction.aclfResultSummary.apply(this.getAclfNet()).toString();
+		  	rntStr = CorePluginFunction.aclfResultSummary.apply(aclfNet).toString();
 		  	//System.out.println(rntStr);
 		  	/*
 		  	int cnt = 0;
@@ -242,7 +228,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	@Override
 	public void createBusId2NoMapping(String filename) {
 		this.busId2NoMapping = new HashMap<>();
-		loadFile(filename, line -> {
+		loadMappingFile(filename, line -> {
 			// Bus1 0
 			String[] strAry = line.split(" ");
 			this.busId2NoMapping.put(strAry[0], new Integer(strAry[1]));
@@ -257,7 +243,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	@Override
 	public void createBranchId2NoMapping(String filename) {
 		this.branchId2NoMapping = new HashMap<>();
-		loadFile(filename, line -> {
+		loadMappingFile(filename, line -> {
 			// Bus1->Bus2(1) 0
 			String[] strAry = line.split(" ");
 			this.branchId2NoMapping.put(strAry[0], new Integer(strAry[1]));
@@ -266,7 +252,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		this.noBranch = this.branchId2NoMapping.size();
 	}
 	
-	private void loadFile(String filename, Consumer<String> processor) {
+	private void loadMappingFile(String filename, Consumer<String> processor) {
 		try (Stream<String> stream = Files.lines(Paths.get(filename))) {
 			stream.forEach(processor);
 		} catch (IOException e) {
