@@ -50,7 +50,7 @@ public class AclfPyGateway {
 	/**
 	 * Load multiple loadflow cases in IEEE CMD format and create the TrainCaseBuilder object
 	 * 
-	 * @param filenames Loadflow case filesnames "file1,file2,..." 
+	 * @param filenames Loadflow case filesnames "file1,file2,...". It could be a dir path.
 	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
 	 * @param busIdMappingFile
 	 * @param branchIdMappingFile
@@ -59,7 +59,7 @@ public class AclfPyGateway {
 	public int[] loadMultiCases(String filenames, String buildername, String busIdMappingFile, String branchIdMappingFile) {
 		IpssCorePlugin.init();
 		
-		String[] aryNmes = filenames.split(",");
+		String[] aryNmes = UtilFunc.getFilenames(filenames);
 		this.trainCaseBuilder = TrainDataBuilderFactory.createMultiNetTrainCaseBuilder(aryNmes, buildername);
 		
 		// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch

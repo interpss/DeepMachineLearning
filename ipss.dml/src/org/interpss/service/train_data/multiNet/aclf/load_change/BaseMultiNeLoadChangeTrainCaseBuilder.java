@@ -61,6 +61,7 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfMul
 				.getImportedObj();
 		System.out.println(filename + " loaded");
 		
+		aclfNet.setId(filename);
 		this.setAclfNet(aclfNet);
 		
 		this.baseCaseData = new double[2*this.noBus];	

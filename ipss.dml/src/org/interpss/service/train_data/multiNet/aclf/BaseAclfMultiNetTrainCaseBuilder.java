@@ -49,6 +49,7 @@ public abstract class BaseAclfMultiNetTrainCaseBuilder extends BaseAclfTrainCase
 	 */
 	@Override
 	public Mismatch calMismatch(double[] netVolt) {
+		System.out.println("Mismatch calculation for " + this.getAclfNet().getId());
 		return calMismatch(netVolt, this.getAclfNet());
 	};
 	
