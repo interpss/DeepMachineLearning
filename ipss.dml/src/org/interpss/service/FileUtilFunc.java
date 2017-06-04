@@ -70,10 +70,10 @@ public class FileUtilFunc {
 	}
 
 	/**
-	 * 
+	 * create a training case builder for the single network case
 	 * 
 	 * @param filename
-	 * @param buildername
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
 	 * @return
 	 * @throws InterpssException
 	 */
@@ -82,7 +82,16 @@ public class FileUtilFunc {
 
 	}
 	
-
+	/**
+	 * create a training case builder for the single network case
+	 * 
+	 * @param filename
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
+	 * @param busIdMappingFile
+	 * @param branchIdMappingFile
+	 * @return
+	 * @throws InterpssException
+	 */
 	public static ITrainCaseBuilder createSingleNetBuilder(String filename, String buildername, 
 	           		String busIdMappingFile, String branchIdMappingFile) throws InterpssException {
 		ITrainCaseBuilder trainCaseBuilder = TrainDataBuilderFactory.createTrainCaseBuilder(buildername);
@@ -103,6 +112,16 @@ public class FileUtilFunc {
 		return trainCaseBuilder;	
 	}
 	
+	/**
+	 * create a training case builder for the multi-network case
+	 * 
+	 * @param filenames Loadflow case filesnames "file1,file2,...". It could be a dir path.
+	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
+	 * @param busIdMappingFile
+	 * @param branchIdMappingFile
+	 * @return
+	 * @throws InterpssException
+	 */
 	public static ITrainCaseBuilder createMultiNetBuilder(String filenames, String buildername, 
 	           String busIdMappingFile, String branchIdMappingFile) throws InterpssException {
 		String[] aryNmes = FileUtilFunc.getFilenames(filenames);
