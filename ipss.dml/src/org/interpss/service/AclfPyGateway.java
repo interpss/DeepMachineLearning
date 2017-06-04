@@ -59,15 +59,12 @@ public class AclfPyGateway {
 	public int[] loadMultiCases(String filenames, String buildername, String busIdMappingFile, String branchIdMappingFile) {
 		IpssCorePlugin.init();
 		
-		String[] aryNmes = UtilFunc.getFilenames(filenames);
-		this.trainCaseBuilder = TrainDataBuilderFactory.createMultiNetTrainCaseBuilder(aryNmes, buildername);
-		
-		// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch
-		// are calculated in the loading process
-		if (busIdMappingFile != null)
-			this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
-		if (branchIdMappingFile != null)
-			this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
+		try {
+			this.trainCaseBuilder = FileUtilFunc.createMultiNetBuilder(filenames, buildername, busIdMappingFile, branchIdMappingFile);
+		} catch ( InterpssException e) {
+			e.printStackTrace();
+			return new int[] {0, 0};
+		}
 		
 		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};
 	}
@@ -86,7 +83,16 @@ public class AclfPyGateway {
 	 * @return an int[2] array, [bus nn¡¡model dimension, branch nn¡¡model dimension]
 	 */
 	public int[] loadCase(String filename, String buildername) {
-		return loadCase(filename, buildername, null, null);
+		IpssCorePlugin.init();
+		
+		try {
+			this.trainCaseBuilder = FileUtilFunc.createSingleNetBuilder(filename, buildername);
+		} catch ( InterpssException e) {
+			e.printStackTrace();
+			return new int[] {0, 0};
+		}	
+		
+		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};		
 	}
 
 	/**
@@ -101,21 +107,8 @@ public class AclfPyGateway {
 	public int[] loadCase(String filename, String buildername, String busIdMappingFile, String branchIdMappingFile) {
 		IpssCorePlugin.init();
 		
-		this.trainCaseBuilder = TrainDataBuilderFactory.createTrainCaseBuilder(buildername);
-			
-		// load busId/BranchId mapping files, if exist. trainCaseBuilder.noBus, trainCaseBuilder.noBranch
-		// are calculated in the loading process
-		if (busIdMappingFile != null)
-			this.trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
-		if (branchIdMappingFile != null)
-			this.trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
-			
 		try {
-			// set the AclfNetwork object. This step should be placed after the
-			// mapping relationship loading steps.
-			this.trainCaseBuilder.loadConfigureAclfNet(filename);
-			System.out.println(filename + " aclfNet case loaded, no buses/branches: " + this.trainCaseBuilder.getNoBus() +
-					", " + this.trainCaseBuilder.getNoBranch());
+			this.trainCaseBuilder = FileUtilFunc.createSingleNetBuilder(filename, buildername, busIdMappingFile, branchIdMappingFile);
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 			return new int[] {0, 0};

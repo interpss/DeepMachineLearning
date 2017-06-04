@@ -29,7 +29,7 @@ package test;
 import static org.junit.Assert.assertTrue;
 
 import org.interpss.IpssCorePlugin;
-import org.interpss.service.UtilFunc;
+import org.interpss.service.FileUtilFunc;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.TrainDataBuilderFactory;
 import org.junit.Test;
@@ -40,12 +40,12 @@ import com.interpss.core.datatype.Mismatch;
 public class UtilFuncTest {
   	@Test 
 	public void test() {
-  		String[] aryStr = UtilFunc.getFilenames("s1, s2, s3");
+  		String[] aryStr = FileUtilFunc.getFilenames("s1, s2, s3");
   		
   		assertTrue("", aryStr.length == 3);
   		assertTrue("", aryStr[1].equals("s2"));
   		
-  		aryStr = UtilFunc.getFilenames("c:/temp/temp/cases");
+  		aryStr = FileUtilFunc.getFilenames("c:/temp/temp/cases");
   		assertTrue("", aryStr.length == 2);
   		assertTrue("", aryStr[0].equals("c:/temp/temp/cases/ieee14-1.ieee"));
   		assertTrue("", aryStr[1].equals("c:/temp/temp/cases/ieee14.ieee"));

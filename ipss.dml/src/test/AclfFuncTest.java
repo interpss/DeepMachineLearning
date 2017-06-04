@@ -29,8 +29,8 @@ package test;
 import static org.junit.Assert.assertTrue;
 
 import org.interpss.IpssCorePlugin;
+import org.interpss.service.FileUtilFunc;
 import org.interpss.service.train_data.ITrainCaseBuilder;
-import org.interpss.service.train_data.TrainDataBuilderFactory;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
@@ -38,8 +38,10 @@ import com.interpss.core.datatype.Mismatch;
 
 public class AclfFuncTest {
   	@Test 
-	public void test() {
-  		ITrainCaseBuilder caseBuilder = createCaseBuilder("testdata/ieee14.ieee");
+	public void testSingleNet() throws InterpssException {
+		IpssCorePlugin.init();
+		
+  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder");
   		 
   		caseBuilder.createTestCase();
   		
@@ -51,20 +53,65 @@ public class AclfFuncTest {
   		//System.out.println(caseBuilder.calMismatch(netVolt));
    	}
   	
-  	private ITrainCaseBuilder createCaseBuilder(String filename) {
+  	@Test 
+	public void testSingleNet1() throws InterpssException {
 		IpssCorePlugin.init();
 		
-		try {
-			System.out.println(filename + " aclfNet case loaded");
-			ITrainCaseBuilder builder = TrainDataBuilderFactory.createTrainCaseBuilder("BusVoltageTrainCaseBuilder");
-			builder.loadConfigureAclfNet(filename);
-			
-			return builder;
-		} catch ( InterpssException e) {
-			e.printStackTrace();
-		}
+  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
+  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  		 
+  		caseBuilder.createTestCase();
+  		
+  		double[] netVolt = caseBuilder.getNetOutput();
+  		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 15*2); 
+  		
+  		Mismatch mis = caseBuilder.calMismatch(netVolt);
+  		assertTrue("netVolt is a Loadflow solution, therefore the mismatch should be very small! ", 
+  				   mis.maxMis.abs() < 0.0001);
+  		//System.out.println(caseBuilder.calMismatch(netVolt));
+   	}
 
-		return null;
-	}
+  	@Test 
+	public void testMultiNet() throws InterpssException {
+		IpssCorePlugin.init();
+		
+  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createMultiNetBuilder("testdata/ieee14.ieee, testdata/ieee14-1.ieee", 
+  				"BusVoltageTrainCaseBuilder",
+  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  		
+  		for (int i = 0; i < 5; i++) {
+  	 		caseBuilder.createTestCase();
+  	  		
+  	  		double[] netVolt = caseBuilder.getNetOutput();
+  	  		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 15*2); 
+  	  		
+  	  		Mismatch mis = caseBuilder.calMismatch(netVolt);
+  	  		assertTrue("netVolt is a Loadflow solution, therefore the mismatch should be very small! ", 
+  	  				   mis.maxMis.abs() < 0.0001);
+  	  		//System.out.println(caseBuilder.calMismatch(netVolt));
+  		}
+   	}
+  	
+ 	@Test 
+	public void testMultiNetDir() throws InterpssException {
+		IpssCorePlugin.init();
+		
+  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createMultiNetBuilder("testdata/cases", 
+  				"BusVoltageTrainCaseBuilder",
+  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  		
+  		for (int i = 0; i < 5; i++) {
+  	 		caseBuilder.createTestCase();
+  	  		
+  	  		double[] netVolt = caseBuilder.getNetOutput();
+  	  		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 15*2); 
+  	  		
+  	  		Mismatch mis = caseBuilder.calMismatch(netVolt);
+  	  		assertTrue("netVolt is a Loadflow solution, therefore the mismatch should be very small! ", 
+  	  				   mis.maxMis.abs() < 0.0001);
+  	  		//System.out.println(caseBuilder.calMismatch(netVolt));
+  		}
+   	}
+  	
 }
 

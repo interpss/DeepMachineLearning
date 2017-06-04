@@ -100,6 +100,13 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		aclfNet.setId(filename);
 		this.setAclfNet(aclfNet);
 		
+		// set noBus/Branch in case the mapping relationships
+		// are not defined
+		if (this.busId2NoMapping == null)
+			this.noBus = getAclfNet().getNoActiveBus();
+		if (this.branchId2NoMapping == null)
+			this.noBranch = getAclfNet().getNoActiveBranch();
+		
 		this.baseCaseData = new double[2*this.noBus];	
 		int i = 0;
 		for (AclfBus bus : getAclfNet().getBusList()) {
