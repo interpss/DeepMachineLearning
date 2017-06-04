@@ -25,66 +25,24 @@
   */
 package org.interpss.service.train_data.multiNet.aclf.load_change;
 
-import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
-
 import java.util.Random;
 
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.pssl.plugin.IpssAdapter;
-import org.interpss.service.train_data.multiNet.aclf.BaseAclfMultiNetTrainCaseBuilder;
+import org.interpss.service.train_data.BaseAclfTrainCaseBuilder;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBus;
-import com.interpss.core.aclf.AclfNetwork;
 
 /**
  * 
  */  
 
-public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfMultiNetTrainCaseBuilder {
-	/** cached base case data for creating training cases*/
-	private double[] baseCaseData;
+public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder {
+	protected String[] filenames;
 	
 	public BaseMultiNeLoadChangeTrainCaseBuilder(String[] names) {
-		super(names);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createTrainCase(int, int)
-	 */
-	@Override
-	public void loadConfigureAclfNet(String filename) throws InterpssException {
-		AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
-				.setFormat(IEEECommonFormat)
-				.load()
-				.getImportedObj();
-		System.out.println(filename + " loaded");
-		
-		aclfNet.setId(filename);
-		this.setAclfNet(aclfNet);
-		
-		this.baseCaseData = new double[2*this.noBus];	
-		int i = 0;
-		for (AclfBus bus : getAclfNet().getBusList()) {
-			if (bus.isActive()) {
-				if ( this.busId2NoMapping != null )
-					i = this.busId2NoMapping.get(bus.getId());
-				if (bus.isGen()) {
-					bus.getGenPQ();
-					bus.getContributeGenList().clear();
-				}
-				
-				if (!bus.isSwing() && !bus.isGenPV()) { 
-					this.baseCaseData[i] = bus.getLoadP();
-					this.baseCaseData[this.noBus+i] = bus.getLoadQ();
-					bus.getContributeLoadList().clear();
-				}
-				i++;
-			}
-		}
-		
-		//System.out.println(this.runLF());
+		this.filenames = names;
 	}
 
 	/* (non-Javadoc)

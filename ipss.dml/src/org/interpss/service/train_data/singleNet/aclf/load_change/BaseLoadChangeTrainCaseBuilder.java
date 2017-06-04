@@ -25,66 +25,20 @@
   */
 package org.interpss.service.train_data.singleNet.aclf.load_change;
 
-import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
-
 import java.util.Random;
 
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.pssl.plugin.IpssAdapter;
-import org.interpss.service.train_data.singleNet.aclf.BaseAclf1NetTrainCaseBuilder;
+import org.interpss.service.train_data.BaseAclfTrainCaseBuilder;
 
 import com.interpss.core.aclf.AclfBus;
-import com.interpss.core.aclf.AclfNetwork;
-import com.interpss.common.exp.InterpssException;
 /**
  * Base class for creating training case for : Load bus P,Q are modified to create training cases
  * 
  */  
 
-public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclf1NetTrainCaseBuilder {
-	/** cached base case data for creating training cases*/
-	private double[] baseCaseData;
-	
+public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder {
 	public BaseLoadChangeTrainCaseBuilder() {
-	}
-	
-	public void loadConfigureAclfNet(String filename) throws InterpssException {
-		AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
-				.setFormat(IEEECommonFormat)
-				.load()
-				.getImportedObj();
-		
-		this.setAclfNet(aclfNet);
-		
-		// set noBus/Branch in case the mapping relationships
-		// are not defined
-		if (this.busId2NoMapping == null)
-			this.noBus = getAclfNet().getNoActiveBus();
-		if (this.branchId2NoMapping == null)
-			this.noBranch = getAclfNet().getNoActiveBranch();
-		
-		this.baseCaseData = new double[2*this.noBus];	
-		int i = 0;
-		for (AclfBus bus : getAclfNet().getBusList()) {
-			if (bus.isActive()) {
-				if ( this.busId2NoMapping != null )
-					i = this.busId2NoMapping.get(bus.getId());
-				if (bus.isGen()) {
-					bus.getGenPQ();
-					bus.getContributeGenList().clear();
-				}
-				
-				if (!bus.isSwing() && !bus.isGenPV()) { 
-					this.baseCaseData[i] = bus.getLoadP();
-					this.baseCaseData[this.noBus+i] = bus.getLoadQ();
-					bus.getContributeLoadList().clear();
-				}
-				i++;
-			}
-		}
-		
-		//System.out.println(this.runLF());
 	}
 	
 	/* (non-Javadoc)

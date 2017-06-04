@@ -25,6 +25,8 @@
   */
 package org.interpss.service.train_data;
 
+import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -35,6 +37,7 @@ import java.util.stream.Stream;
 import org.apache.commons.math3.complex.Complex;
 import org.interpss.CorePluginFunction;
 import org.interpss.numeric.datatype.Unit.UnitType;
+import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.pssl.simu.IpssAclf;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 
@@ -60,6 +63,8 @@ import com.interpss.core.datatype.Mismatch;
  */ 
  
 public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
+	protected AclfNetwork aclfNet;
+	
 	/** NN model bus array dimension */
 	protected int noBus;
 	/** NN model branch array dimension */
@@ -69,6 +74,54 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	protected HashMap<String,Integer> busId2NoMapping;
 	/** Branch id to NN model branch array index mapping */
 	protected HashMap<String,Integer> branchId2NoMapping;
+	
+	/** cached base case data for creating training cases*/
+	protected double[] baseCaseData;
+	
+	public AclfNetwork getAclfNet() {
+		return aclfNet;
+	}
+
+	public void setAclfNet(AclfNetwork aclfNet) {
+		this.aclfNet = aclfNet;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createTrainCase(int, int)
+	 */
+	@Override
+	public void loadConfigureAclfNet(String filename) throws InterpssException {
+		AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
+				.setFormat(IEEECommonFormat)
+				.load()
+				.getImportedObj();
+		System.out.println(filename + " loaded");
+		
+		aclfNet.setId(filename);
+		this.setAclfNet(aclfNet);
+		
+		this.baseCaseData = new double[2*this.noBus];	
+		int i = 0;
+		for (AclfBus bus : getAclfNet().getBusList()) {
+			if (bus.isActive()) {
+				if ( this.busId2NoMapping != null )
+					i = this.busId2NoMapping.get(bus.getId());
+				if (bus.isGen()) {
+					bus.getGenPQ();
+					bus.getContributeGenList().clear();
+				}
+				
+				if (!bus.isSwing() && !bus.isGenPV()) { 
+					this.baseCaseData[i] = bus.getLoadP();
+					this.baseCaseData[this.noBus+i] = bus.getLoadQ();
+					bus.getContributeLoadList().clear();
+				}
+				i++;
+			}
+		}
+		
+		//System.out.println(this.runLF());
+	}
 	
 	protected double[] getNetInputPQ(AclfNetwork aclfNet) {
 		double[] input = new double[2*this.noBus];
@@ -143,8 +196,11 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		return output;
 	}
 	
-	protected Mismatch calMismatch(double[] netVolt, AclfNetwork aclfNet) {
-		
+	/* (non-Javadoc)
+	 * @see org.interpss.service.ITrainCaseBuilder#calMismatch()
+	 */
+	@Override
+	public Mismatch calMismatch(double[] netVolt) {
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
