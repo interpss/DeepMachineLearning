@@ -52,17 +52,11 @@ import com.interpss.core.datatype.Mismatch;
 
 /**
  * Base class for implementing Aclf training case creation builder.
- *     
- * for predicting bus voltage:
- *     
- *     type      input          output
- *     swing   Vang, Vmag     Q,    P
- *     pv      P,    Vmag     Q,    Vang
- *     pq      P,    Q        Vmag, Vang
  * 
  */ 
  
 public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
+	/** AclfNetwork object*/
 	protected AclfNetwork aclfNet;
 	
 	/** NN model bus array dimension */
@@ -76,29 +70,38 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	protected HashMap<String,Integer> branchId2NoMapping;
 	
 	/** cached base case data for creating training cases*/
-	protected double[] baseCaseData;
+	protected BusData[] baseCaseData;
 	
+	/**
+	 * get the AclfNetwork object 
+	 * 
+	 * @return
+	 */
 	public AclfNetwork getAclfNet() {
 		return aclfNet;
 	}
-
-	public void setAclfNet(AclfNetwork aclfNet) {
-		this.aclfNet = aclfNet;
-	}	
 	
+	/**
+	 * get the cached based case bus data
+	 * 
+	 * @return the baseCaseData
+	 */
+	public BusData[] getBaseCaseData() {
+		return baseCaseData;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createTrainCase(int, int)
 	 */
 	@Override
 	public void loadConfigureAclfNet(String filename) throws InterpssException {
-		AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
+		this.aclfNet = IpssAdapter.importAclfNet(filename)
 				.setFormat(IEEECommonFormat)
 				.load()
 				.getImportedObj();
-		System.out.println(filename + " loaded");
+		//System.out.println(filename + " loaded");
 		
-		aclfNet.setId(filename);
-		this.setAclfNet(aclfNet);
+		this.aclfNet.setId(filename);
 		
 		// set noBus/Branch in case the mapping relationships
 		// are not defined
@@ -107,22 +110,32 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		if (this.branchId2NoMapping == null)
 			this.noBranch = getAclfNet().getNoActiveBranch();
 		
-		this.baseCaseData = new double[2*this.noBus];	
+		System.out.println(filename + " aclfNet case loaded, no buses/branches: " + this.noBus + ", " + this.noBranch);
+		
+		// cache the base case bus data 
+		this.baseCaseData = new BusData[this.noBus];	
+		for (int i = 0; i < this.noBus; i++ ) 
+			this.baseCaseData[i] = new BusData();
+		
 		int i = 0;
 		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null )
 					i = this.busId2NoMapping.get(bus.getId());
+				BusData busdata = this.baseCaseData[i];
+				busdata.id = bus.getId();
 				if (bus.isGen()) {
 					bus.getGenPQ();
 					bus.getContributeGenList().clear();
 				}
 				
 				if (!bus.isSwing() && !bus.isGenPV()) { 
-					this.baseCaseData[i] = bus.getLoadP();
-					this.baseCaseData[this.noBus+i] = bus.getLoadQ();
+					busdata.loadP = bus.getLoadP();
+					busdata.loadQ = bus.getLoadQ();
 					bus.getContributeLoadList().clear();
 				}
+				else 
+					busdata.type = bus.isSwing()? BusData.Swing : BusData.PV; 
 				i++;
 			}
 		}
@@ -138,12 +151,13 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			if (bus.isActive()) {
 				if (this.busId2NoMapping != null) 
 					i = this.busId2NoMapping.get(bus.getId());
-				if (bus.isSwing()) {  // Swing Bus
+				BusData busdata = this.baseCaseData[i];
+				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					input[i] = swing.getDesiredVoltAng(UnitType.Rad);
 					input[this.noBus+i] = swing.getDesiredVoltMag(UnitType.PU);
 				}
-				else if (bus.isGenPV()) {  // PV bus
+				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
 					AclfPVGenBus pv = bus.toPVBus();
 					input[i] = bus.getGenP() - bus.getLoadP();
 					input[this.noBus+i] = pv.getDesiredVoltMag();
@@ -166,13 +180,14 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null ) 
 					i = this.busId2NoMapping.get(bus.getId());
-				if (bus.isSwing()) {  // Swing Bus
+				BusData busdata = this.baseCaseData[i];
+				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
 					AclfSwingBus swing = bus.toSwingBus();
 					Complex gen = swing.getGenResults(UnitType.PU);
 					output[i] = gen.getImaginary();
 					output[this.noBus+i] = gen.getReal();
 				}
-				else if (bus.isGenPV()) {  // PV bus
+				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
 					AclfPVGenBus pv = bus.toPVBus();
 					Complex gen = pv.getGenResults(UnitType.PU);
 					output[i] = gen.getImaginary() - bus.getLoadQ();;
@@ -213,13 +228,14 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null ) 
 					i = this.busId2NoMapping.get(bus.getId());
-				if (bus.isSwing()) {  // Swing Bus
+				BusData busdata = this.baseCaseData[i];
+				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
 					//AclfSwingBus swing = bus.toSwingBus();
 					//Complex gen = swing.getGenResults(UnitType.PU);
 					//output[i] = gen.getImaginary();
 					//output[this.noBus+i] = gen.getReal();
 				}
-				else if (bus.isGenPV()) {  // PV bus
+				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
 					//AclfPVGenBus pv = bus.toPVBus();
 					//Complex gen = pv.getGenResults(UnitType.PU);
 					//output[i] = gen.getImaginary() - bus.getLoadQ();;

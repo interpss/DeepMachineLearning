@@ -37,11 +37,38 @@ import com.interpss.core.datatype.Mismatch;
  */ 
 public interface ITrainCaseBuilder {
 	/**
+	 * Bus data structure to hold cached base case bus data
+	 *
+	 */
+	public static class BusData {
+		public final static int Swing = 0;
+		public final static int PV = 1;
+		public final static int PQ = 2;
+		
+		public String id;
+		public double loadP = 0.0, loadQ = 0.0;
+		public int type = PQ;
+		
+		public boolean isSwing() { return this.type == Swing; }
+		public boolean isPV() { return this.type == PV; }
+		public boolean isPQ() { return this.type == PQ; }
+		
+		@Override public String toString() { return "BusData: " + id + ", " + type + ", " + loadP + ", " + loadQ;}
+	}
+	
+	/**
 	 * load an AclfNetwork object from a file and configure the builder
 	 *  
 	 * @param filename the filename
 	 */
 	void loadConfigureAclfNet(String filename) throws InterpssException;
+	
+	/**
+	 * get the cached based case bus data
+	 * 
+	 * @return the baseCaseData
+	 */
+	BusData[] getBaseCaseData();
 	
 	/**
 	 * create BusId to model array number mapping relationship 
@@ -82,12 +109,12 @@ public interface ITrainCaseBuilder {
 	void createTrainCase(int nth, int nTotal);
 
 	/**
-	 * create a new test case
+	 * create a new test case for evaluating the model accuracy
 	 */
 	void createTestCase();
 
 	/**
-	 * create a new test case based on a factor value
+	 * create a new test case based on a factor value for evaluating the model accuracy
 	 * 
 	 * @param factor a number to be used in the case creation
 	 */

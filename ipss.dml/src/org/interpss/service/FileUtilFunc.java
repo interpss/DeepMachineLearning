@@ -106,8 +106,8 @@ public class FileUtilFunc {
 		// set the AclfNetwork object. This step should be placed after the
 		// mapping relationship loading steps.
 		trainCaseBuilder.loadConfigureAclfNet(filename);
-		System.out.println(filename + " aclfNet case loaded, no buses/branches: " + trainCaseBuilder.getNoBus() +
-					", " + trainCaseBuilder.getNoBranch());
+		//System.out.println(filename + " aclfNet case loaded, no buses/branches: " + trainCaseBuilder.getNoBus() +
+		//			", " + trainCaseBuilder.getNoBranch());
 
 		return trainCaseBuilder;	
 	}

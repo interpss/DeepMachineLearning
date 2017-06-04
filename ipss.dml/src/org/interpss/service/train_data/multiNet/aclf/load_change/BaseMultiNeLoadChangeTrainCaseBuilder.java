@@ -101,8 +101,8 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTra
 				if ( this.busId2NoMapping != null )
 					i = this.busId2NoMapping.get(bus.getId());				
 				if (!bus.isSwing() && !bus.isGenPV()) {  
-					bus.setLoadP(this.baseCaseData[i] * factor);
-					bus.setLoadQ(this.baseCaseData[this.noBus+i] * factor);
+					bus.setLoadP(this.baseCaseData[i].loadP * factor);
+					bus.setLoadQ(this.baseCaseData[i].loadQ * factor);
 				}
 				i++;
 			}

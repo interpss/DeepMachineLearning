@@ -41,8 +41,33 @@ public class AclfFuncTest {
 	public void testSingleNet() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder");
-  		 
+  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createSingleNetBuilder(
+  				       "testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder");
+  		
+  		// at this point, the caseBuilder.loadConfigureAclfNet() has been called and the 
+  		// base case bus data has been cached
+  		/*
+  		System.out.println(caseBuilder.getBaseCaseData()[0]);
+  		System.out.println(caseBuilder.getBaseCaseData()[2]);
+  		System.out.println(caseBuilder.getBaseCaseData()[10]);
+  		BusData: Bus1, 0, 0.0, 0.0
+		BusData: Bus3, 1, 0.0, 0.0
+		BusData: Bus11, 2, 0.035, 0.018
+  		*/ 
+  		ITrainCaseBuilder.BusData busdata = caseBuilder.getBaseCaseData()[0];
+  		assertTrue("", busdata.id.equals("Bus1"));
+  		assertTrue("", busdata.type == ITrainCaseBuilder.BusData.Swing);
+
+  		busdata = caseBuilder.getBaseCaseData()[2];
+  		assertTrue("", busdata.id.equals("Bus3"));
+  		assertTrue("", busdata.type == ITrainCaseBuilder.BusData.PV);
+
+  		busdata = caseBuilder.getBaseCaseData()[10];
+  		assertTrue("", busdata.id.equals("Bus11"));
+  		assertTrue("", busdata.type == ITrainCaseBuilder.BusData.PQ);
+  		assertTrue("", busdata.loadP == 0.035);
+  		assertTrue("", busdata.loadQ == 0.018);
+  		
   		caseBuilder.createTestCase();
   		
   		double[] netVolt = caseBuilder.getNetOutput();
@@ -112,6 +137,5 @@ public class AclfFuncTest {
   	  		//System.out.println(caseBuilder.calMismatch(netVolt));
   		}
    	}
-  	
 }
 
