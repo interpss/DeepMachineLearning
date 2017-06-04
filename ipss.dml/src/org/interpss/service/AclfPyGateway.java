@@ -60,7 +60,7 @@ public class AclfPyGateway {
 		IpssCorePlugin.init();
 		
 		try {
-			this.trainCaseBuilder = FileUtilFunc.createMultiNetBuilder(filenames, buildername, busIdMappingFile, branchIdMappingFile);
+			this.trainCaseBuilder = UtilFunction.createMultiNetBuilder(filenames, buildername, busIdMappingFile, branchIdMappingFile);
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 			return new int[] {0, 0};
@@ -86,7 +86,7 @@ public class AclfPyGateway {
 		IpssCorePlugin.init();
 		
 		try {
-			this.trainCaseBuilder = FileUtilFunc.createSingleNetBuilder(filename, buildername);
+			this.trainCaseBuilder = UtilFunction.createSingleNetBuilder(filename, buildername);
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 			return new int[] {0, 0};
@@ -108,7 +108,7 @@ public class AclfPyGateway {
 		IpssCorePlugin.init();
 		
 		try {
-			this.trainCaseBuilder = FileUtilFunc.createSingleNetBuilder(filename, buildername, busIdMappingFile, branchIdMappingFile);
+			this.trainCaseBuilder = UtilFunction.createSingleNetBuilder(filename, buildername, busIdMappingFile, branchIdMappingFile);
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 			return new int[] {0, 0};
@@ -142,8 +142,8 @@ public class AclfPyGateway {
 			this.trainCaseBuilder.createTrainCase(i, points);
 			double[] input = this.trainCaseBuilder.getNetInput();
 			double[] output = this.trainCaseBuilder.getNetOutput();
-			trainSet[0][i] = this.array2String(input);
-			trainSet[1][i] = this.array2String(output);
+			trainSet[0][i] = UtilFunction.array2String(input);
+			trainSet[1][i] = UtilFunction.array2String(output);
 		}
 		return trainSet;
 	}
@@ -167,8 +167,8 @@ public class AclfPyGateway {
 		this.trainCaseBuilder.createTestCase();
 		double[] input = this.trainCaseBuilder.getNetInput();
 		double[] output = this.trainCaseBuilder.getNetOutput();	
-		data[0][0] = this.array2String(input);
-		data[1][0] = this.array2String(output);
+		data[0][0] = UtilFunction.array2String(input);
+		data[1][0] = UtilFunction.array2String(output);
 		
 		return data;
 	}	
@@ -194,20 +194,12 @@ public class AclfPyGateway {
 			
 		double[] input = this.trainCaseBuilder.getNetInput();
 		double[] output = this.trainCaseBuilder.getNetOutput();	
-		data[0][0] = this.array2String(input);
-		data[1][0] = this.array2String(output);
+		data[0][0] = UtilFunction.array2String(input);
+		data[1][0] = UtilFunction.array2String(output);
 		
 		return data;
 	}	
-	
-	private String array2String(double[] array){
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < array.length; i++) {
-			sb.append(String.valueOf(array[i]) + " ");
-		}
-		return sb.toString();
-		
-	}
+
 	/**
 	 * compute and return the mismatch info based on the network solution 
 	 * for bus voltage

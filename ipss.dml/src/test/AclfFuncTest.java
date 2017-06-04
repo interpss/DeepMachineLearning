@@ -29,7 +29,7 @@ package test;
 import static org.junit.Assert.assertTrue;
 
 import org.interpss.IpssCorePlugin;
-import org.interpss.service.FileUtilFunc;
+import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class AclfFuncTest {
 	public void testSingleNet() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createSingleNetBuilder(
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder(
   				       "testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder");
   		
   		// at this point, the caseBuilder.loadConfigureAclfNet() has been called and the 
@@ -82,7 +82,7 @@ public class AclfFuncTest {
 	public void testSingleNet1() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
   				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
   		 
   		caseBuilder.createTestCase();
@@ -100,7 +100,7 @@ public class AclfFuncTest {
 	public void testMultiNet() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createMultiNetBuilder("testdata/ieee14.ieee, testdata/ieee14-1.ieee", 
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/ieee14.ieee, testdata/ieee14-1.ieee", 
   				"BusVoltageTrainCaseBuilder",
   				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
   		
@@ -121,7 +121,7 @@ public class AclfFuncTest {
 	public void testMultiNetDir() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = FileUtilFunc.createMultiNetBuilder("testdata/cases", 
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/cases", 
   				"BusVoltageTrainCaseBuilder",
   				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
   		

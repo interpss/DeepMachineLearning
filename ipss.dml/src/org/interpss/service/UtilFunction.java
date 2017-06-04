@@ -42,7 +42,22 @@ import com.interpss.common.exp.InterpssException;
  * @author Mike
  *
  */
-public class FileUtilFunc {
+public class UtilFunction {
+	/**
+	 * convert a double[] to a String "x[0],x[1],..."
+	 * 
+	 * @param array
+	 * @return
+	 */
+	public static String array2String(double[] array){
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < array.length; i++) {
+			sb.append(String.valueOf(array[i]) + " ");
+		}
+		return sb.toString();
+		
+	}
+	
 	/**
 	 * get file names from the name/dir string
 	 * 
@@ -124,7 +139,7 @@ public class FileUtilFunc {
 	 */
 	public static ITrainCaseBuilder createMultiNetBuilder(String filenames, String buildername, 
 	           String busIdMappingFile, String branchIdMappingFile) throws InterpssException {
-		String[] aryNmes = FileUtilFunc.getFilenames(filenames);
+		String[] aryNmes = UtilFunction.getFilenames(filenames);
 		ITrainCaseBuilder trainCaseBuilder = TrainDataBuilderFactory.createMultiNetTrainCaseBuilder(aryNmes, buildername);
 
 		trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
