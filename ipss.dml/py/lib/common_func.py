@@ -51,8 +51,8 @@ def transfer2PyArrays(ary) :
     x = np.zeros((point,xSize))
     y = np.zeros((point,ySize))
     for i in range(point):
-        x[i] = np.array([ary[0][0].split()])
-        y[i] = np.array([ary[1][0].split()])
+        x[i] = np.array([ary[0][i].split()])
+        y[i] = np.array([ary[1][i].split()])
     return x, y
     
 #
