@@ -30,6 +30,7 @@ import org.interpss.service.train_data.multiNet.aclf.load_change.MultiNetBusVolt
 import org.interpss.service.train_data.singleNet.aclf.load_change.BranchContingencyMaxPLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.BranchPLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change.NNLFLoadChangeTrainCaseBuilder;
 
 /**
  * Training data builder factory
@@ -47,9 +48,11 @@ public class TrainDataBuilderFactory {
 	public static ITrainCaseBuilder createTrainCaseBuilder(String builderName) {
 		if (builderName.equals("BranchPLoadChangeTrainCaseBuilder"))
 			return new BranchPLoadChangeTrainCaseBuilder();
-		if (builderName.equals("BranchContingencyMaxPLoadChangeTrainCaseBuilder"))
+		else if (builderName.equals("BranchContingencyMaxPLoadChangeTrainCaseBuilder"))
 			return new BranchContingencyMaxPLoadChangeTrainCaseBuilder();
-		else
+		else if (builderName.equals("NNLFLoadChangeTrainCaseBuilder"))
+			return new NNLFLoadChangeTrainCaseBuilder();
+		else	
 			return new BusVoltLoadChangeTrainCaseBuilder();
 	}
 	
