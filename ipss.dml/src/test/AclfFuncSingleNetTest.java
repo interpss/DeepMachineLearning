@@ -108,9 +108,9 @@ public class AclfFuncSingleNetTest {
   		double[] netVolt = caseBuilder.getNetOutput();
   		
   		Mismatch mis = caseBuilder.calMismatch(netVolt);
+  		System.out.println("--->" + caseBuilder.calMismatch(netVolt));
   		assertTrue("netVolt is a Loadflow solution, therefore the mismatch should be very small! ", 
   				   mis.maxMis.abs() < 0.0001);
-  		//System.out.println(caseBuilder.calMismatch(netVolt));
    	}
   	
 }
