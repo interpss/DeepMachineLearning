@@ -14,9 +14,13 @@
     limitations under the License.
 '''
 
-#
-#
-#
+'''
+ Use NN-model to predict the bus voltage for a random selected scale-factor
+
+ Starting from the predict_voltage.py case, the following changes are made
+ 
+   - The NN-Model Loadflow method is used
+'''
 
 from datetime import datetime
 

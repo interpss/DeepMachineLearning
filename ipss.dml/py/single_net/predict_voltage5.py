@@ -20,7 +20,9 @@
  Starting from the predict_voltage1.py case, the following changes are made
  
    - The NN-Model Loadflow method is used
+   - ieee14-2 case is used, where PV bus limit are set to a very large number
 '''
+
 
 from datetime import datetime
 
@@ -36,7 +38,7 @@ train_points = 100
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/ieee14.ieee'
+filename = 'c:/temp/temp/ieee14-2.ieee'
 noBus, noBranch = cf.ipss_app.loadCase(filename, 'NNLFLoadChangeTrainCaseBuilder')
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 

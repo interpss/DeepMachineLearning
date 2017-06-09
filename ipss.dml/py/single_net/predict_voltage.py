@@ -14,9 +14,9 @@
     limitations under the License.
 '''
 
-#
-#
-#
+'''
+ Use NN-model to predict the bus voltage for a random selected scale-factor
+'''
 
 from datetime import datetime
 

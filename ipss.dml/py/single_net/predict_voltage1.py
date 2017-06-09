@@ -14,6 +14,10 @@
     limitations under the License.
 '''
 
+'''
+ Use NN-model to predict the bus voltage for a set of scale-factors
+'''
+
 from datetime import datetime
 
 import tensorflow as tf
@@ -23,7 +27,7 @@ sys.path.insert(0, '..')
 
 import lib.common_func as cf
 
-train_points = 50
+train_points = 100
 
 # 
 # load the IEEE-14Bus case
