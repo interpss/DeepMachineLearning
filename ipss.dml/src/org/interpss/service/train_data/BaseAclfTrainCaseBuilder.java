@@ -42,7 +42,7 @@ import org.interpss.numeric.datatype.Unit.UnitType;
 import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.pssl.simu.IpssAclf;
 import org.interpss.service.UtilFunction;
-import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
+import org.interpss.service.train_data.multiNet.NetOptPattern;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBranch;

@@ -24,7 +24,7 @@
   *
   */
 
-package org.interpss.service.train_data.multiNet.aclf.load_change;
+package org.interpss.service.train_data.multiNet;
 
 import java.util.List;
 

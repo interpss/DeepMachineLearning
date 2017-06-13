@@ -29,7 +29,7 @@ package test;
 import static org.junit.Assert.assertTrue;
 
 import org.interpss.service.UtilFunction;
-import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
+import org.interpss.service.train_data.multiNet.NetOptPattern;
 import org.junit.Test;
 
 public class UtilFuncTest {

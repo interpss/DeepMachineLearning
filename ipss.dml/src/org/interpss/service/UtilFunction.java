@@ -33,8 +33,8 @@ import java.util.List;
 
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.TrainDataBuilderFactory;
-import org.interpss.service.train_data.multiNet.aclf.load_change.IMultiNetTrainCaseBuilder;
-import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
+import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
+import org.interpss.service.train_data.multiNet.NetOptPattern;
 
 import com.interpss.common.exp.InterpssException;
 
