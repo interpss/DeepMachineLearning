@@ -31,6 +31,7 @@ import static org.junit.Assert.assertTrue;
 import org.interpss.IpssCorePlugin;
 import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.ITrainCaseBuilder;
+import org.interpss.service.train_data.multiNet.aclf.load_change.IMultiNetTrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
 import org.junit.Test;
 
@@ -38,6 +39,26 @@ import com.interpss.common.exp.InterpssException;
 import com.interpss.core.datatype.Mismatch;
 
 public class AclfFuncMultiNetTest {
+  	@Test 
+	public void testNetOptPattern() throws InterpssException {
+		IpssCorePlugin.init();
+		
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/ieee14.ieee, testdata/ieee14-1.ieee", 
+  				"BusVoltageTrainCaseBuilder",
+  				"c:/temp/temp/ieee14_busid2no.mapping", 
+  				"c:/temp/temp/ieee14_branchid2no.mapping",
+  				"c:/temp/temp/ieee14_netOpt.pattern");
+  		
+  		IMultiNetTrainCaseBuilder multiNetCaseBuilder = (IMultiNetTrainCaseBuilder)caseBuilder;
+  		assertTrue("", multiNetCaseBuilder.getNetOptPatterns().size() == 2);
+  		
+  		NetOptPattern p = multiNetCaseBuilder.getNetOptPatterns().get(0);
+  		assertTrue("", p.getName().equals("Pattern-1"));
+
+  		caseBuilder.loadConfigureAclfNet("testdata/ieee14.ieee");
+  		
+  		assertTrue("", p.isPattern(caseBuilder.getAclfNet()));
+   	}	
   	@Test 
 	public void testMultiNet() throws InterpssException {
 		IpssCorePlugin.init();
@@ -48,15 +69,24 @@ public class AclfFuncMultiNetTest {
   				"c:/temp/temp/ieee14_branchid2no.mapping",
   				"c:/temp/temp/ieee14_netOpt.pattern");
   		
-  		assertTrue("", caseBuilder.getNetOptPatterns().size() == 2);
+  		IMultiNetTrainCaseBuilder multiNetCaseBuilder = (IMultiNetTrainCaseBuilder)caseBuilder;
   		
-  		NetOptPattern p = caseBuilder.getNetOptPatterns().get(0);
+  		assertTrue("", multiNetCaseBuilder.getNetOptPatterns().size() == 2);
+  		
+  		NetOptPattern p = multiNetCaseBuilder.getNetOptPatterns().get(0);
   		assertTrue("", p.getName().equals("Pattern-1"));
   		assertTrue("", p.getMissingBusIds().size() == 1);
   		assertTrue("", p.getMissingBranchIds().size() == 2);
   		
   		for (int i = 0; i < 5; i++) {
   	 		caseBuilder.createTestCase();
+  	 		
+  	 		IMultiNetTrainCaseBuilder.AclfNetCase netCase = multiNetCaseBuilder.getCurNetCase();
+  	 		// after a training case is created, its associated Net Operation Pattern number could be
+  	 		// get in the following way.
+  	 		int noNetOptPattern = netCase.noNetOptPattern;
+  	  		assertTrue("", netCase.filename.equals("testdata/ieee14.ieee") && noNetOptPattern == 0 || 
+  	  		               netCase.filename.equals("testdata/ieee14-1.ieee") && noNetOptPattern == 1 ); 
   	  		
   	  		double[] netVolt = caseBuilder.getNetOutput();
   	  		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 15*2); 

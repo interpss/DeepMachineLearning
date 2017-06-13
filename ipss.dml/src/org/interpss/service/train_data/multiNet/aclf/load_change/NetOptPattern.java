@@ -28,17 +28,29 @@ package org.interpss.service.train_data.multiNet.aclf.load_change;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.interpss.core.aclf.AclfNetwork;
+
 /**
- * Class to represent Network operation concept
+ * Class to represent Network operation pattern concept. With the
+ * Bus/Branch id list stored in the mapping file as the reference, a 
+ * network operation pattern identifies the missing bus/branch ids.
  * 
  * @author Mike
  *
  */
 public class NetOptPattern {
+	/** pattern name */
 	private String name;
+	/** missing bus id list*/
 	private List<String> missingBusIds;
+	/** missing branch id list*/
 	private List<String> missingBranchIds;
 	
+	/**
+	 * constructor
+	 * 
+	 * @param name pattern name
+	 */
 	public NetOptPattern(String name) {
 		this.name = name;
 		this.missingBusIds = new ArrayList<>();
@@ -64,6 +76,25 @@ public class NetOptPattern {
 	 */
 	public List<String> getMissingBranchIds() {
 		return missingBranchIds;
+	}
+	
+	/**
+	 * check if the AclfNetwork object is this network operation pattern
+	 * 
+	 * @param net
+	 * @return
+	 */
+	public boolean isPattern(AclfNetwork net) {
+		boolean t = true;
+		for (String busid : this.getMissingBusIds()) {
+			if (net.getBus(busid) != null)
+				t = false;
+		}
+		for (String braid : this.getMissingBranchIds()) {
+			if (net.getBranch(braid) != null)
+				t = false;			
+		}
+		return t;
 	}
 	
 	public String toString() {

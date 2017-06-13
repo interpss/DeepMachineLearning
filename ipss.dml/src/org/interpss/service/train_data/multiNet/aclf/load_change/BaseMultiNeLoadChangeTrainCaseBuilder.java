@@ -25,10 +25,13 @@
   */
 package org.interpss.service.train_data.multiNet.aclf.load_change;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
+import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.BaseAclfTrainCaseBuilder;
 
 import com.interpss.common.exp.InterpssException;
@@ -38,11 +41,52 @@ import com.interpss.core.aclf.AclfBus;
  * 
  */  
 
-public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder {
-	protected String[] filenames;
+public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBuilder implements IMultiNetTrainCaseBuilder {
+	/** Network operation pattern list*/
+	protected List<NetOptPattern> netOptPatterns;
 	
+	/** for storing all training network cases*/
+	private AclfNetCase[] aryNetCases;
+	
+	/** the current network case info. It is updated whenever the createCase() is called*/
+	private AclfNetCase curNetCase;
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param names training network case file names 
+	 */
 	public BaseMultiNeLoadChangeTrainCaseBuilder(String[] names) {
-		this.filenames = names;
+		this.aryNetCases = new AclfNetCase[names.length];
+		for ( int i = 0; i < names.length; i++)
+			this.aryNetCases[i] = new AclfNetCase(names[i]);
+	}
+	
+	/**
+	 * @return the netOptPatterns
+	 */
+	public List<NetOptPattern> getNetOptPatterns() {
+		return netOptPatterns;
+	}	
+	
+	/**
+	 * @return the curNetCase
+	 */
+	@Override public AclfNetCase getCurNetCase() {
+		return curNetCase;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createNetOptPatternList(java.lang.String)
+	 */
+	@Override
+	public void createNetOptPatternList(String filename) {
+		this.netOptPatterns = new ArrayList<>();
+		loadTextFile(filename, line -> {
+			// Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
+			NetOptPattern p = UtilFunction.createNetOptPattern(line);
+			this.netOptPatterns.add(p);
+		});
 	}
 
 	/* (non-Javadoc)
@@ -89,8 +133,13 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTra
 		 * improved in the real-world situations. 
 		 */
 		try {
-			int n = new Random().nextInt(this.filenames.length);
-			loadConfigureAclfNet(this.filenames[n]);
+			int n = new Random().nextInt(this.aryNetCases.length);
+			this.curNetCase = this.aryNetCases[n];
+			loadConfigureAclfNet(this.curNetCase.filename);
+			if (this.curNetCase.noNetOptPattern == -1) {
+				// if the network case is loaded first time, its NetOptPattern number needs to be calculated
+				this.curNetCase.noNetOptPattern = getNetOptPatternNumber();
+			}
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 		}		
@@ -114,5 +163,21 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTra
 		
 		String result = this.runLF(this.getAclfNet());
 		//System.out.println(result);
+	}
+	
+	/**
+	 * calculate the current this.aclfNet object NetOptPattern number
+	 * 
+	 * @return
+	 * @throws InterpssException
+	 */
+	private int getNetOptPatternNumber() throws InterpssException{
+		int cnt = 0;
+		for (NetOptPattern pattern : this.netOptPatterns) {
+			if (pattern.isPattern(this.aclfNet))
+				return cnt;
+			cnt++;
+		}
+		throw new InterpssException("No net operation pattern found for " + this.getAclfNet().getId());
 	}
 }

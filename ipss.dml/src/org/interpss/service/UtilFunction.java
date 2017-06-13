@@ -33,6 +33,7 @@ import java.util.List;
 
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.TrainDataBuilderFactory;
+import org.interpss.service.train_data.multiNet.aclf.load_change.IMultiNetTrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
 
 import com.interpss.common.exp.InterpssException;
@@ -167,7 +168,8 @@ public class UtilFunction {
 
 		trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
 		trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
-		trainCaseBuilder.createNetOptPatternList(netOptPatternFile);
+		
+		((IMultiNetTrainCaseBuilder)trainCaseBuilder).createNetOptPatternList(netOptPatternFile);
 
 		return trainCaseBuilder;	
 	}	
