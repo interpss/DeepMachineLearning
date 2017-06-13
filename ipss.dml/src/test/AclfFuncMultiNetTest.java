@@ -81,7 +81,7 @@ public class AclfFuncMultiNetTest {
   		for (int i = 0; i < 5; i++) {
   	 		caseBuilder.createTestCase();
   	 		
-  	 		IMultiNetTrainCaseBuilder.AclfNetCase netCase = multiNetCaseBuilder.getCurNetCase();
+  	 		IMultiNetTrainCaseBuilder.NetworkCase netCase = multiNetCaseBuilder.getCurNetCase();
   	 		// after a training case is created, its associated Net Operation Pattern number could be
   	 		// get in the following way.
   	 		int noNetOptPattern = netCase.noNetOptPattern;

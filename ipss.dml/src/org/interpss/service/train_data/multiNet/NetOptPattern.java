@@ -33,7 +33,7 @@ import com.interpss.core.aclf.AclfNetwork;
 /**
  * Class to represent Network operation pattern concept. With the
  * Bus/Branch id list stored in the mapping file as the reference, a 
- * network operation pattern identifies the missing bus/branch ids.
+ * network operation pattern is defined using a set of missing bus/branch ids.
  * 
  * @author Mike
  *
@@ -41,8 +41,10 @@ import com.interpss.core.aclf.AclfNetwork;
 public class NetOptPattern {
 	/** pattern name */
 	private String name;
+	
 	/** missing bus id list*/
 	private List<String> missingBusIds;
+	
 	/** missing branch id list*/
 	private List<String> missingBranchIds;
 	
@@ -58,6 +60,8 @@ public class NetOptPattern {
 	}
 
 	/**
+	 * get the pattern name
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
@@ -65,6 +69,8 @@ public class NetOptPattern {
 	}
 
 	/**
+	 * get the missing bus id list
+	 * 
 	 * @return the missingBusIds
 	 */
 	public List<String> getMissingBusIds() {
@@ -72,6 +78,8 @@ public class NetOptPattern {
 	}
 
 	/**
+	 * get the missing branch id list
+	 * 
 	 * @return the missingBranchIds
 	 */
 	public List<String> getMissingBranchIds() {
@@ -79,7 +87,7 @@ public class NetOptPattern {
 	}
 	
 	/**
-	 * check if the AclfNetwork object is this network operation pattern
+	 * check if the AclfNetwork object is with this network operation pattern
 	 * 
 	 * @param net
 	 * @return

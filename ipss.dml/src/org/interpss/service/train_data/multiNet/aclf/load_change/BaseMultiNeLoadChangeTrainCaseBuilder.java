@@ -48,10 +48,10 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTra
 	protected List<NetOptPattern> netOptPatterns;
 	
 	/** for storing all training network cases*/
-	private AclfNetCase[] aryNetCases;
+	private NetworkCase[] aryNetCases;
 	
 	/** the current network case info. It is updated whenever the createCase() is called*/
-	private AclfNetCase curNetCase;
+	private NetworkCase curNetCase;
 	
 	/**
 	 * Constructor
@@ -59,9 +59,9 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTra
 	 * @param names training network case file names 
 	 */
 	public BaseMultiNeLoadChangeTrainCaseBuilder(String[] names) {
-		this.aryNetCases = new AclfNetCase[names.length];
+		this.aryNetCases = new NetworkCase[names.length];
 		for ( int i = 0; i < names.length; i++)
-			this.aryNetCases[i] = new AclfNetCase(names[i]);
+			this.aryNetCases[i] = new NetworkCase(names[i]);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTra
 	/**
 	 * @return the curNetCase
 	 */
-	@Override public AclfNetCase getCurNetCase() {
+	@Override public NetworkCase getCurNetCase() {
 		return curNetCase;
 	}
 

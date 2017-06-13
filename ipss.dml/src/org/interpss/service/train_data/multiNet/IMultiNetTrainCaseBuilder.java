@@ -36,24 +36,24 @@ import java.util.List;
  */ 
 public interface IMultiNetTrainCaseBuilder {
 	/**
-	 * Record to hold network case relavent info
+	 * Record to hold network case relevant info
 	 * 
 	 */
-	public static class AclfNetCase {
-		/** netCase filename */
+	public static class NetworkCase {
+		/** network case filename */
 		public String filename;
-		/** netCase Network Option pattern number, it is the sequence number in the netOptPatterns list */
-		public int noNetOptPattern = -1;
+		/** netCase Network Operation pattern number, it is the sequence number in the netOptPatterns list */
+		public int noNetOptPattern = -1;  // -1 indicating it is not initialzed
 		
-		public AclfNetCase(String name) { this.filename = name; }
+		public NetworkCase(String name) { this.filename = name; }
 	}
 	
 	/**
-	 * get the current NetCase object
+	 * get the current Network Case object
 	 * 
 	 * @return the curNetCase
 	 */
-	AclfNetCase getCurNetCase(); 	
+	NetworkCase getCurNetCase(); 	
 	
 	/**
 	 * create network operation pattern list 
@@ -64,7 +64,7 @@ public interface IMultiNetTrainCaseBuilder {
 	void createNetOptPatternList(String filename);
 	
 	/**
-	 * get the network operation patterns
+	 * get the network operation pattern list
 	 * 
 	 * @return
 	 */
