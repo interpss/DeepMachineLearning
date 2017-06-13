@@ -18,4 +18,5 @@ Bus9->Bus14(1) 16
 Bus10->Bus11(1) 17
 Bus12->Bus13(1) 18
 Bus13->Bus14(1) 19
-Bus13->Bus14(2) 20
+Bus9->Bus15(1) 20
+Bus13->Bus15(1) 21
