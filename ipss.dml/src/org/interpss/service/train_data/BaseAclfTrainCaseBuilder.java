@@ -312,7 +312,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	@Override
 	public void createBusId2NoMapping(String filename) {
 		this.busId2NoMapping = new HashMap<>();
-		loadMappingFile(filename, line -> {
+		loadTextFile(filename, line -> {
 			// Bus1 0
 			String[] strAry = line.split(" ");
 			this.busId2NoMapping.put(strAry[0], new Integer(strAry[1]));
@@ -327,7 +327,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	@Override
 	public void createBranchId2NoMapping(String filename) {
 		this.branchId2NoMapping = new HashMap<>();
-		loadMappingFile(filename, line -> {
+		loadTextFile(filename, line -> {
 			// Bus1->Bus2(1) 0
 			String[] strAry = line.split(" ");
 			this.branchId2NoMapping.put(strAry[0], new Integer(strAry[1]));
@@ -336,9 +336,10 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		this.noBranch = this.branchId2NoMapping.size();
 	}
 	
-	private void loadMappingFile(String filename, Consumer<String> processor) {
+	private void loadTextFile(String filename, Consumer<String> processor) {
 		try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-			stream.forEach(processor);
+			stream.filter(line -> {return !line.startsWith("#");})
+				  .forEach(processor);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

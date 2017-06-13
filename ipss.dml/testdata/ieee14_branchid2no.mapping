@@ -1,3 +1,5 @@
+# This is a comment line
+#
 Bus1->Bus2(1) 0
 Bus1->Bus5(1) 1
 Bus2->Bus3(1) 2
