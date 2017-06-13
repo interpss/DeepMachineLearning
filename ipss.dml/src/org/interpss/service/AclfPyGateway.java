@@ -56,11 +56,14 @@ public class AclfPyGateway {
 	 * @param branchIdMappingFile
 	 * @return an int[2] array, [bus nn¡¡model dimension, branch nn¡¡model dimension]
 	 */	
-	public int[] loadMultiCases(String filenames, String buildername, String busIdMappingFile, String branchIdMappingFile) {
+	public int[] loadMultiCases(String filenames, String buildername, 
+			                    String busIdMappingFile, String branchIdMappingFile,
+			                    String netOptPatternFile) {
 		IpssCorePlugin.init();
 		
 		try {
-			this.trainCaseBuilder = UtilFunction.createMultiNetBuilder(filenames, buildername, busIdMappingFile, branchIdMappingFile);
+			this.trainCaseBuilder = UtilFunction.createMultiNetBuilder(filenames, buildername, 
+					                   busIdMappingFile, branchIdMappingFile, netOptPatternFile);
 		} catch ( InterpssException e) {
 			e.printStackTrace();
 			return new int[] {0, 0};

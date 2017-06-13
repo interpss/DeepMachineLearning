@@ -31,6 +31,7 @@ import static org.junit.Assert.assertTrue;
 import org.interpss.IpssCorePlugin;
 import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.ITrainCaseBuilder;
+import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
@@ -43,7 +44,16 @@ public class AclfFuncMultiNetTest {
 		
   		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/ieee14.ieee, testdata/ieee14-1.ieee", 
   				"BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  				"c:/temp/temp/ieee14_busid2no.mapping", 
+  				"c:/temp/temp/ieee14_branchid2no.mapping",
+  				"c:/temp/temp/ieee14_netOpt.pattern");
+  		
+  		assertTrue("", caseBuilder.getNetOptPatterns().size() == 2);
+  		
+  		NetOptPattern p = caseBuilder.getNetOptPatterns().get(0);
+  		assertTrue("", p.getName().equals("Pattern-1"));
+  		assertTrue("", p.getMissingBusIds().size() == 1);
+  		assertTrue("", p.getMissingBranchIds().size() == 2);
   		
   		for (int i = 0; i < 5; i++) {
   	 		caseBuilder.createTestCase();
@@ -64,7 +74,9 @@ public class AclfFuncMultiNetTest {
 		
   		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/cases", 
   				"BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  				"c:/temp/temp/ieee14_busid2no.mapping", 
+  				"c:/temp/temp/ieee14_branchid2no.mapping",
+  				"c:/temp/temp/ieee14_netOpt.pattern");
   		
   		for (int i = 0; i < 5; i++) {
   	 		caseBuilder.createTestCase();

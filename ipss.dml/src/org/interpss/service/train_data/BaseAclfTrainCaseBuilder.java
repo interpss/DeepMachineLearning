@@ -30,7 +30,9 @@ import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -39,7 +41,8 @@ import org.interpss.CorePluginFunction;
 import org.interpss.numeric.datatype.Unit.UnitType;
 import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.pssl.simu.IpssAclf;
-import org.interpss.service.train_data.ITrainCaseBuilder;
+import org.interpss.service.UtilFunction;
+import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBranch;
@@ -68,6 +71,8 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	protected HashMap<String,Integer> busId2NoMapping;
 	/** Branch id to NN model branch array index mapping */
 	protected HashMap<String,Integer> branchId2NoMapping;
+	/** Network operation pattern list*/
+	protected List<NetOptPattern> netOptPatterns;
 	
 	/** cached base case data for creating training cases*/
 	protected BusData[] baseCaseData;
@@ -88,6 +93,13 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	 */
 	public BusData[] getBaseCaseData() {
 		return baseCaseData;
+	}
+
+	/**
+	 * @return the netOptPatterns
+	 */
+	public List<NetOptPattern> getNetOptPatterns() {
+		return netOptPatterns;
 	}
 
 	/* (non-Javadoc)
@@ -336,9 +348,23 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		this.noBranch = this.branchId2NoMapping.size();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.ITrainCaseBuilder#createNetOptPatternList(java.lang.String)
+	 */
+	@Override
+	public void createNetOptPatternList(String filename) {
+		this.netOptPatterns = new ArrayList<>();
+		loadTextFile(filename, line -> {
+			// Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
+			NetOptPattern p = UtilFunction.createNetOptPattern(line);
+			this.netOptPatterns.add(p);
+		});
+	}	
+	
 	private void loadTextFile(String filename, Consumer<String> processor) {
 		try (Stream<String> stream = Files.lines(Paths.get(filename))) {
-			stream.filter(line -> {return !line.startsWith("#");})
+			stream.filter(line -> {return !line.startsWith("#") && 
+					                      !line.trim().equals("");})
 				  .forEach(processor);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -28,18 +28,13 @@ package test;
 
 import static org.junit.Assert.assertTrue;
 
-import org.interpss.IpssCorePlugin;
 import org.interpss.service.UtilFunction;
-import org.interpss.service.train_data.ITrainCaseBuilder;
-import org.interpss.service.train_data.TrainDataBuilderFactory;
+import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
 import org.junit.Test;
-
-import com.interpss.common.exp.InterpssException;
-import com.interpss.core.datatype.Mismatch;
 
 public class UtilFuncTest {
   	@Test 
-	public void test() {
+	public void getFilenameTest() {
   		String[] aryStr = UtilFunction.getFilenames("s1, s2, s3");
   		
   		assertTrue("", aryStr.length == 3);
@@ -50,5 +45,17 @@ public class UtilFuncTest {
   		assertTrue("", aryStr[0].equals("c:/temp/temp/cases/ieee14-1.ieee"));
   		assertTrue("", aryStr[1].equals("c:/temp/temp/cases/ieee14.ieee"));
    	}
+  	
+  	@Test 
+	public void netOptPatternTest() {
+  		String line = "Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]";
+  		
+  		NetOptPattern p = UtilFunction.createNetOptPattern(line);
+		System.out.println(p);
+  		
+  		assertTrue("", p.getName().equals("Pattern-1"));
+  		assertTrue("", p.getMissingBusIds().size() == 1);
+  		assertTrue("", p.getMissingBranchIds().size() == 2);
+  	}  	
 }
 

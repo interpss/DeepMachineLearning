@@ -26,6 +26,10 @@
 
 package org.interpss.service.train_data;
 
+import java.util.List;
+
+import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
+
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.datatype.Mismatch;
 
@@ -71,6 +75,13 @@ public interface ITrainCaseBuilder {
 	BusData[] getBaseCaseData();
 	
 	/**
+	 * get the network operation patterns
+	 * 
+	 * @return
+	 */
+	List<NetOptPattern> getNetOptPatterns();
+	
+	/**
 	 * create BusId to model array number mapping relationship 
 	 * by loading the mapping info stored in the mapping file
 	 * 
@@ -85,6 +96,14 @@ public interface ITrainCaseBuilder {
 	 * @param filename BranchId to model array number mapping filename
 	 */
 	void createBranchId2NoMapping(String filename);
+	
+	/**
+	 * create network operation pattern list 
+	 * by loading the pattern info stored in the file
+	 * 
+	 * @param filename network operation pattern info filename
+	 */
+	void createNetOptPatternList(String filename);
 	
 	/**
 	 * get number of buses in the power network model

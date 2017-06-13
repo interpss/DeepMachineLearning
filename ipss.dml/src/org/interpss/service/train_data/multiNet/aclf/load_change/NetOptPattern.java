@@ -65,4 +65,10 @@ public class NetOptPattern {
 	public List<String> getMissingBranchIds() {
 		return missingBranchIds;
 	}
+	
+	public String toString() {
+		return "NetOptPattern: name " + this.name +
+				", missingBusIds " + this.missingBusIds.toString() + 
+				", missingBranchIds " + this.missingBranchIds.toString();
+	}
 }

@@ -33,6 +33,7 @@ import java.util.List;
 
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.TrainDataBuilderFactory;
+import org.interpss.service.train_data.multiNet.aclf.load_change.NetOptPattern;
 
 import com.interpss.common.exp.InterpssException;
 
@@ -43,6 +44,28 @@ import com.interpss.common.exp.InterpssException;
  *
  */
 public class UtilFunction {
+	public static NetOptPattern createNetOptPattern(String line) {
+		String[] lineStrAry = line.split(",");
+		String name = lineStrAry[0].trim();
+		NetOptPattern pattern = new NetOptPattern(name);
+		
+		String str = lineStrAry[1];
+		String busIds = str.substring(str.indexOf('[')+1, str.indexOf(']'));   //  missingBus [ Bus15 ]
+		//System.out.println(busIds);
+		String[] strAry = busIds.trim().split(" ");
+		for (String s : strAry) {
+			pattern.getMissingBusIds().add(s.trim());
+		}
+		
+		str = lineStrAry[2];
+		String branchIds = str.substring(str.indexOf('[')+1, str.indexOf(']'));   //  missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
+		//System.out.println(branchIds);
+		strAry = branchIds.trim().split(" ");
+		for (String s : strAry) {
+			pattern.getMissingBranchIds().add(s.trim());
+		}
+		return pattern;
+	}
 	/**
 	 * convert a double[] to a String "x[0],x[1],..."
 	 * 
@@ -138,12 +161,13 @@ public class UtilFunction {
 	 * @throws InterpssException
 	 */
 	public static ITrainCaseBuilder createMultiNetBuilder(String filenames, String buildername, 
-	           String busIdMappingFile, String branchIdMappingFile) throws InterpssException {
+	           String busIdMappingFile, String branchIdMappingFile, String netOptPatternFile) throws InterpssException {
 		String[] aryNmes = UtilFunction.getFilenames(filenames);
 		ITrainCaseBuilder trainCaseBuilder = TrainDataBuilderFactory.createMultiNetTrainCaseBuilder(aryNmes, buildername);
 
 		trainCaseBuilder.createBusId2NoMapping(busIdMappingFile);
 		trainCaseBuilder.createBranchId2NoMapping(branchIdMappingFile);
+		trainCaseBuilder.createNetOptPatternList(netOptPatternFile);
 
 		return trainCaseBuilder;	
 	}	
