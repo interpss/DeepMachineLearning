@@ -32,7 +32,7 @@ import java.util.Random;
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
 import org.interpss.service.UtilFunction;
-import org.interpss.service.train_data.BaseAclfTrainCaseBuilder;
+import org.interpss.service.train_data.impl.BaseAclfTrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.NetOptPattern;
 
@@ -64,11 +64,20 @@ public abstract class  BaseMultiNeLoadChangeTrainCaseBuilder extends BaseAclfTra
 			this.aryNetCases[i] = new NetworkCase(names[i]);
 	}
 	
-	/**
-	 * @return the netOptPatterns
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.IMultiNetTrainCaseBuilder#getNoNetOptPatterns()
 	 */
-	public List<NetOptPattern> getNetOptPatterns() {
-		return netOptPatterns;
+	@Override
+	public int getNoNetOptPatterns() {
+		return this.netOptPatterns.size();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.interpss.service.train_data.IMultiNetTrainCaseBuilder#getNoNetOptPatterns()
+	 */
+	@Override
+	public NetOptPattern getNetOptPattern(int n) {
+		return this.netOptPatterns.get(n);
 	}	
 	
 	/**

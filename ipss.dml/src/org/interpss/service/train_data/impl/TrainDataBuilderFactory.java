@@ -24,8 +24,9 @@
   *
   */
 
-package org.interpss.service.train_data;
+package org.interpss.service.train_data.impl;
 
+import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.aclf.load_change.MultiNetBusVoltLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.BranchContingencyMaxPLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.BranchPLoadChangeTrainCaseBuilder;

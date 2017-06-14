@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.interpss.service.train_data.ITrainCaseBuilder;
-import org.interpss.service.train_data.TrainDataBuilderFactory;
+import org.interpss.service.train_data.impl.TrainDataBuilderFactory;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.NetOptPattern;
 
@@ -45,11 +45,24 @@ import com.interpss.common.exp.InterpssException;
  *
  */
 public class UtilFunction {
+	/**
+	 * create a NetOptPattern object from a line in the pattern file.
+	 * 
+	 * format : Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
+	 *           <name>         <busId>                    <branchId>
+	 * 
+	 * @param line a pattern line
+	 * @return the NetOptPattern object
+	 */
 	public static NetOptPattern createNetOptPattern(String line) {
+		// split the line into three parts: <name> <busId> <branchId>
 		String[] lineStrAry = line.split(",");
+		
+		// process the name part
 		String name = lineStrAry[0].trim();
 		NetOptPattern pattern = new NetOptPattern(name);
 		
+		// process the bus id part
 		String str = lineStrAry[1];
 		String busIds = str.substring(str.indexOf('[')+1, str.indexOf(']'));   //  missingBus [ Bus15 ]
 		//System.out.println(busIds);
@@ -58,6 +71,7 @@ public class UtilFunction {
 			pattern.getMissingBusIds().add(s.trim());
 		}
 		
+		// process the branch id part
 		str = lineStrAry[2];
 		String branchIds = str.substring(str.indexOf('[')+1, str.indexOf(']'));   //  missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
 		//System.out.println(branchIds);
@@ -65,6 +79,7 @@ public class UtilFunction {
 		for (String s : strAry) {
 			pattern.getMissingBranchIds().add(s.trim());
 		}
+		
 		return pattern;
 	}
 	/**
@@ -118,7 +133,6 @@ public class UtilFunction {
 	 */
 	public static ITrainCaseBuilder createSingleNetBuilder(String filename, String buildername) throws InterpssException {
 		return 	createSingleNetBuilder(filename, buildername, null, null);
-
 	}
 	
 	/**
@@ -156,8 +170,9 @@ public class UtilFunction {
 	 * 
 	 * @param filenames Loadflow case filesnames "file1,file2,...". It could be a dir path.
 	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
-	 * @param busIdMappingFile
-	 * @param branchIdMappingFile
+	 * @param busIdMappingFile busId mapping filename
+	 * @param branchIdMappingFile branchId mapping filename
+	 * @param netOptPatternFile network operation pattern info filename
 	 * @return
 	 * @throws InterpssException
 	 */

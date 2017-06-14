@@ -50,9 +50,9 @@ public class AclfFuncMultiNetTest {
   				"c:/temp/temp/ieee14_netOpt.pattern");
   		
   		IMultiNetTrainCaseBuilder multiNetCaseBuilder = (IMultiNetTrainCaseBuilder)caseBuilder;
-  		assertTrue("", multiNetCaseBuilder.getNetOptPatterns().size() == 2);
+  		assertTrue("", multiNetCaseBuilder.getNoNetOptPatterns() == 2);
   		
-  		NetOptPattern p = multiNetCaseBuilder.getNetOptPatterns().get(0);
+  		NetOptPattern p = multiNetCaseBuilder.getNetOptPattern(0);
   		assertTrue("", p.getName().equals("Pattern-1"));
 
   		caseBuilder.loadConfigureAclfNet("testdata/ieee14.ieee");
@@ -71,9 +71,9 @@ public class AclfFuncMultiNetTest {
   		
   		IMultiNetTrainCaseBuilder multiNetCaseBuilder = (IMultiNetTrainCaseBuilder)caseBuilder;
   		
-  		assertTrue("", multiNetCaseBuilder.getNetOptPatterns().size() == 2);
+  		assertTrue("", multiNetCaseBuilder.getNoNetOptPatterns() == 2);
   		
-  		NetOptPattern p = multiNetCaseBuilder.getNetOptPatterns().get(0);
+  		NetOptPattern p = multiNetCaseBuilder.getNetOptPattern(0);
   		assertTrue("", p.getName().equals("Pattern-1"));
   		assertTrue("", p.getMissingBusIds().size() == 1);
   		assertTrue("", p.getMissingBranchIds().size() == 2);

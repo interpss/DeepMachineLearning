@@ -29,7 +29,7 @@ import java.util.Random;
 
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.service.train_data.BaseAclfTrainCaseBuilder;
+import org.interpss.service.train_data.impl.BaseAclfTrainCaseBuilder;
 
 import com.interpss.core.aclf.AclfBus;
 /**

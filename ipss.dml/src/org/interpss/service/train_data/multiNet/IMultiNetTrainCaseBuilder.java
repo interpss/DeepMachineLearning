@@ -49,6 +49,13 @@ public interface IMultiNetTrainCaseBuilder {
 	}
 	
 	/**
+	 * get the number of network operation patterns
+	 * 
+	 * @return
+	 */
+	int getNoNetOptPatterns();
+	
+	/**
 	 * get the current Network Case object
 	 * 
 	 * @return the curNetCase
@@ -64,9 +71,10 @@ public interface IMultiNetTrainCaseBuilder {
 	void createNetOptPatternList(String filename);
 	
 	/**
-	 * get the network operation pattern list
+	 * get the network operation pattern using the index number in the pattern file
 	 * 
+	 * @param n pattern index number
 	 * @return
 	 */
-	List<NetOptPattern> getNetOptPatterns();	
+	NetOptPattern getNetOptPattern(int n);	
 }

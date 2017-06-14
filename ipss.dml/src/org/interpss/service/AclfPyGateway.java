@@ -28,7 +28,7 @@ package org.interpss.service;
 
 import org.interpss.IpssCorePlugin;
 import org.interpss.service.train_data.ITrainCaseBuilder;
-import org.interpss.service.train_data.TrainDataBuilderFactory;
+import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
 
 import com.interpss.common.exp.InterpssException;
 
@@ -52,9 +52,10 @@ public class AclfPyGateway {
 	 * 
 	 * @param filenames Loadflow case filesnames "file1,file2,...". It could be a dir path.
 	 * @param buildername training set builder name (see details in TrainDataBuilderFactory.java)
-	 * @param busIdMappingFile
-	 * @param branchIdMappingFile
-	 * @return an int[2] array, [bus nn　model dimension, branch nn　model dimension]
+	 * @param busIdMappingFile busId mapping filename
+	 * @param branchIdMappingFile branchId mapping filename
+	 * @param netOptPatternFile network operation pattern info filename
+	 * @return an int[3] array, [bus nn　model dimension, branch nn　model dimension, no of NetOptPattern]
 	 */	
 	public int[] loadMultiCases(String filenames, String buildername, 
 			                    String busIdMappingFile, String branchIdMappingFile,
@@ -69,7 +70,9 @@ public class AclfPyGateway {
 			return new int[] {0, 0};
 		}
 		
-		return new int[] {this.trainCaseBuilder.getNoBus(), this.trainCaseBuilder.getNoBranch()};
+		return new int[] {this.trainCaseBuilder.getNoBus(), 
+				          this.trainCaseBuilder.getNoBranch(),
+				          ((IMultiNetTrainCaseBuilder)this.trainCaseBuilder).getNoNetOptPatterns()};
 	}
 	
 	
