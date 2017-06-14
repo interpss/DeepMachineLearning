@@ -24,7 +24,7 @@
   *
   */
 
-package test;
+package test.train_data;
 
 import static org.junit.Assert.assertTrue;
 

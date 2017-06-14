@@ -1,5 +1,5 @@
  /*
-  * @(#)AclfFuncTest.java   
+  * @(#)AclfFuncMultiNetTest.java   
   *
   * Copyright (C) 2006-2014 www.interpss.org
   *
@@ -24,7 +24,7 @@
   *
   */
 
-package test;
+package test.train_data;
 
 import static org.junit.Assert.assertTrue;
 
