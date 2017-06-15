@@ -36,7 +36,7 @@ public class NetCaseConfigTest {
 	public void loadFileTest() {
   		NetCaseConfiguration config = new NetCaseConfiguration();
   		
-  		config.createNetOptPatternList("c:/temp/temp/ieee14_netOpt.pattern");
+  		config.createNetOptPatternSet("c:/temp/temp/ieee14_netOpt.pattern");
   		config.createBusId2NoMapping("c:/temp/temp/ieee14_busid2no.mapping");
   		config.createBranchId2NoMapping("c:/temp/temp/ieee14_branchid2no.mapping");
   		
@@ -51,7 +51,9 @@ public class NetCaseConfigTest {
   		assertTrue("", config.getOptPattern("Pattern-1").getMissingBusIds().size() == 1);
   		assertTrue("", config.getOptPattern("Pattern-1").getMissingBranchIds().size() == 2);
   		
-  		
+  		config.saveNetOptPatternSet("temp/netOpt.pattern");
+  		config.saveBusId2NoMapping("temp/busid2no.mapping");
+  		config.saveBranchId2NoMapping("temp/branchid2no.mapping");
    	}
 }
 
