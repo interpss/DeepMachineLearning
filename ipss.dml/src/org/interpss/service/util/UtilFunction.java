@@ -24,23 +24,19 @@
   *
   */
 
-package org.interpss.service;
-
-import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
+package org.interpss.service.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.service.pattern.NetOptPattern;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.impl.TrainDataBuilderFactory;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
 
 import com.interpss.common.exp.InterpssException;
-import com.interpss.core.aclf.AclfNetwork;
 
 /**
  * Utility functions for the PyGateway
@@ -49,24 +45,6 @@ import com.interpss.core.aclf.AclfNetwork;
  *
  */
 public class UtilFunction {
-	/**
-	 * load AclfNetwork file in IEEE Common Format
-	 * 
-	 * @param filename
-	 * @return
-	 * @throws InterpssException
-	 */
-	public static AclfNetwork loadAclfNetIEEECDF(String filename) throws InterpssException {
-		AclfNetwork aclfNet = IpssAdapter.importAclfNet(filename)
-				.setFormat(IEEECommonFormat)
-				.load()
-				.getImportedObj();
-		//System.out.println(filename + " loaded");
-		
-		aclfNet.setId(filename);
-		return aclfNet;
-	}
-	
 	/**
 	 * create a NetOptPattern object from a line in the pattern file.
 	 * 

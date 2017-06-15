@@ -28,8 +28,8 @@ package test.train_data;
 
 import static org.junit.Assert.assertTrue;
 
-import org.interpss.service.UtilFunction;
 import org.interpss.service.pattern.NetOptPattern;
+import org.interpss.service.util.UtilFunction;
 import org.junit.Test;
 
 public class UtilFuncTest {

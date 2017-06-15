@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import org.interpss.service.UtilFunction;
+import org.interpss.service.util.UtilFunction;
 
 import com.interpss.core.aclf.AclfBranch;
 import com.interpss.core.aclf.AclfBus;

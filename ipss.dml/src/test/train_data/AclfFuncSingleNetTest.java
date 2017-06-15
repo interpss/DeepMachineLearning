@@ -29,8 +29,8 @@ package test.train_data;
 import static org.junit.Assert.assertTrue;
 
 import org.interpss.IpssCorePlugin;
-import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.ITrainCaseBuilder;
+import org.interpss.service.util.UtilFunction;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;

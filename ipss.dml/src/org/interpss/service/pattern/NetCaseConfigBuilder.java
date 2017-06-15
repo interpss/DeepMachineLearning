@@ -27,7 +27,8 @@ package org.interpss.service.pattern;
 
 import java.util.List;
 
-import org.interpss.service.UtilFunction;
+import org.interpss.service.util.NetCaseLoader;
+import org.interpss.service.util.UtilFunction;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBranch;
@@ -71,7 +72,7 @@ public class NetCaseConfigBuilder {
 		netCaseConfig.createOptPattern(filename);
 		
 		try {
-			AclfNetwork aclfNet = UtilFunction.loadAclfNetIEEECDF(filename);
+			AclfNetwork aclfNet = NetCaseLoader.loadAclfNet(filename);
 			
 			int cnt = 0;
 			for (AclfBus bus : aclfNet.getBusList()) {
@@ -92,7 +93,7 @@ public class NetCaseConfigBuilder {
 	private void buildAdditionalCase(String filename, NetCaseConfiguration netCaseConfig) {
 		try {
 			// load the net case file
-			AclfNetwork aclfNet = UtilFunction.loadAclfNetIEEECDF(filename);
+			AclfNetwork aclfNet = NetCaseLoader.loadAclfNet(filename);
 			
 			/*
 			 * find bus/branch in the aclfNet, which are missing in the current mapping relationship
