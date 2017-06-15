@@ -101,13 +101,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	 */
 	@Override
 	public void loadConfigureAclfNet(String filename) throws InterpssException {
-		this.aclfNet = IpssAdapter.importAclfNet(filename)
-				.setFormat(IEEECommonFormat)
-				.load()
-				.getImportedObj();
-		//System.out.println(filename + " loaded");
-		
-		this.aclfNet.setId(filename);
+		this.aclfNet = UtilFunction.loadAclfNetIEEECDF(filename);
 		
 		// set noBus/Branch in case the mapping relationships
 		// are not defined

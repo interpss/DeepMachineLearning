@@ -28,6 +28,7 @@ package test.train_data;
 
 import static org.junit.Assert.assertTrue;
 
+import org.interpss.service.pattern.NetCaseConfigBuilder;
 import org.interpss.service.pattern.NetCaseConfiguration;
 import org.junit.Test;
 
@@ -55,5 +56,12 @@ public class NetCaseConfigTest {
   		config.saveBusId2NoMapping("temp/busid2no.mapping");
   		config.saveBranchId2NoMapping("temp/branchid2no.mapping");
    	}
+  	
+  	@Test 
+	public void buidNetConfigTest() {
+  		NetCaseConfigBuilder builder = new NetCaseConfigBuilder("testdata/netConfigCases");
+  		System.out.println(builder);
+  		
+  	}
 }
 
