@@ -40,10 +40,10 @@ public class UtilFuncTest {
   		assertTrue("", aryStr.length == 3);
   		assertTrue("", aryStr[1].equals("s2"));
   		
-  		aryStr = UtilFunction.getFilenames("c:/temp/temp/cases");
+  		aryStr = UtilFunction.getFilenames("testdata/cases");
   		assertTrue("", aryStr.length == 2);
-  		assertTrue("", aryStr[0].equals("c:/temp/temp/cases/ieee14-1.ieee"));
-  		assertTrue("", aryStr[1].equals("c:/temp/temp/cases/ieee14.ieee"));
+  		assertTrue("", aryStr[0].equals("testdata/cases/ieee14-1.ieee"));
+  		assertTrue("", aryStr[1].equals("testdata/cases/ieee14.ieee"));
    	}
   	
   	@Test 

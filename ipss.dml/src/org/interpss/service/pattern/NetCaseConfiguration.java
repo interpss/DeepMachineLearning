@@ -267,6 +267,12 @@ public class NetCaseConfiguration {
 		}		
 	}
 	
+	/**
+	 * find busId in the AclfNet missing in the busId mapping set
+	 * 
+	 * @param aclfNet
+	 * @return
+	 */
 	public List<String> findBusIdsMissingInMapping(AclfNetwork aclfNet) {
 		List<String> list = new ArrayList<>();
 		
@@ -282,6 +288,12 @@ public class NetCaseConfiguration {
 		return list;
 	}
 	
+	/**
+	 * find branchId in the AclfNet missing in the busId mapping set
+	 * 
+	 * @param aclfNet
+	 * @return
+	 */
 	public List<String> findBranchIdsMissingInMapping(AclfNetwork aclfNet) {
 		List<String> list = new ArrayList<>();
 		
@@ -296,6 +308,12 @@ public class NetCaseConfiguration {
 		return list;
 	}	
 	
+	/**
+	 * find busId stored in the mapping set missing in the AclfNetwork
+	 * 
+	 * @param aclfNet
+	 * @return
+	 */
 	public List<String> findBusIdsMissingInNetwork(AclfNetwork aclfNet) {
 		List<String> list = new ArrayList<>();
 		
@@ -309,6 +327,12 @@ public class NetCaseConfiguration {
 		return list;
 	}	
 	
+	/**
+	 * find branchId stored in the mapping set missing in the AclfNetwork
+	 * 
+	 * @param aclfNet
+	 * @return
+	 */
 	public List<String> findBranchIdsMissingInNetwork(AclfNetwork aclfNet) {
 		List<String> list = new ArrayList<>();
 		
@@ -321,6 +345,13 @@ public class NetCaseConfiguration {
 		return list;
 	}
 	
+	/**
+	 * check if the AclfNetwork network operation pattern  
+	 * already exists in this NetCaseConfiguration 
+	 * 
+	 * @param aclfNet
+	 * @return
+	 */
 	public boolean hasNetOptPattern(AclfNetwork aclfNet) {
 		for (NetOptPattern pattern : this.netOptPatterns.values())
 			if (pattern.isPattern(aclfNet))

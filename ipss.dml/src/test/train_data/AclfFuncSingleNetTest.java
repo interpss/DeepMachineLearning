@@ -82,8 +82,9 @@ public class AclfFuncSingleNetTest {
 	public void testSingleNet1() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder(
+  				"testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
+  				"testdata/ieee14_busid2no.mapping", "testdata/ieee14_branchid2no.mapping");
   		 
   		caseBuilder.createTestCase();
   		

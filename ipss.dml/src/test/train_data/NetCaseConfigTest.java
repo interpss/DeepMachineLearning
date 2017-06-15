@@ -38,9 +38,9 @@ public class NetCaseConfigTest {
 	public void loadFileTest() {
   		NetCaseConfiguration config = new NetCaseConfiguration();
   		
-  		config.createNetOptPatternSet("c:/temp/temp/ieee14_netOpt.pattern");
-  		config.createBusId2NoMapping("c:/temp/temp/ieee14_busid2no.mapping");
-  		config.createBranchId2NoMapping("c:/temp/temp/ieee14_branchid2no.mapping");
+  		config.createNetOptPatternSet("testdata/ieee14_netOpt.pattern");
+  		config.createBusId2NoMapping("testdata/ieee14_busid2no.mapping");
+  		config.createBranchId2NoMapping("testdata/ieee14_branchid2no.mapping");
   		
   		assertTrue("", config.getNoBuses() == 15);
   		assertTrue("", config.getBusIndex("Bus15") == 14);
@@ -62,10 +62,14 @@ public class NetCaseConfigTest {
 	public void buidNetConfigTest() {
 		IpssCorePlugin.init();
 		
-  		NetCaseConfigBuilder builder = new NetCaseConfigBuilder("c:/temp/temp/netConfigCases");
+  		NetCaseConfigBuilder builder = new NetCaseConfigBuilder("testdata/netConfigCases");
   		System.out.println(builder);
   		
   		NetCaseConfiguration config = builder.build();
+  		
+ 		assertTrue("", config.getNoOptPatterns() == 2);
+  		assertTrue("", config.getNoBuses() == 15);
+  		assertTrue("", config.getNoBranches() == 22);
 
   		config.saveNetOptPatternSet("temp/netOpt.pattern");
   		config.saveBusId2NoMapping("temp/busid2no.mapping");

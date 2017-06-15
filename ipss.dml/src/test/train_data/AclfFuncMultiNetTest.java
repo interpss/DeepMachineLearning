@@ -45,9 +45,9 @@ public class AclfFuncMultiNetTest {
 		
   		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/ieee14.ieee, testdata/ieee14-1.ieee", 
   				"BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", 
-  				"c:/temp/temp/ieee14_branchid2no.mapping",
-  				"c:/temp/temp/ieee14_netOpt.pattern");
+  				"testdata/ieee14_busid2no.mapping", 
+  				"testdata/ieee14_branchid2no.mapping",
+  				"testdata/ieee14_netOpt.pattern");
   		
   		IMultiNetTrainCaseBuilder multiNetCaseBuilder = (IMultiNetTrainCaseBuilder)caseBuilder;
   		assertTrue("", multiNetCaseBuilder.getNoNetOptPatterns() == 2);
@@ -65,9 +65,9 @@ public class AclfFuncMultiNetTest {
 		
   		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/ieee14.ieee, testdata/ieee14-1.ieee", 
   				"BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", 
-  				"c:/temp/temp/ieee14_branchid2no.mapping",
-  				"c:/temp/temp/ieee14_netOpt.pattern");
+  				"testdata/ieee14_busid2no.mapping", 
+  				"testdata/ieee14_branchid2no.mapping",
+  				"testdata/ieee14_netOpt.pattern");
   		
   		IMultiNetTrainCaseBuilder multiNetCaseBuilder = (IMultiNetTrainCaseBuilder)caseBuilder;
   		
@@ -105,9 +105,9 @@ public class AclfFuncMultiNetTest {
 		
   		ITrainCaseBuilder caseBuilder = UtilFunction.createMultiNetBuilder("testdata/cases", 
   				"BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", 
-  				"c:/temp/temp/ieee14_branchid2no.mapping",
-  				"c:/temp/temp/ieee14_netOpt.pattern");
+  				"testdata/ieee14_busid2no.mapping", 
+  				"testdata/ieee14_branchid2no.mapping",
+  				"testdata/ieee14_netOpt.pattern");
   		
   		for (int i = 0; i < 5; i++) {
   	 		caseBuilder.createTestCase();
