@@ -37,17 +37,46 @@ import java.util.stream.Stream;
 import org.interpss.service.UtilFunction;
 
 /**
+ * Class for storing network case configuration info, including:
+ * 
+ *  1) Network operation pattern list
+ *  2) Bus id to NN model bus array index mapping
+ *  3) Branch id to NN model bus array index mapping
  * 
  * @author Mike
  *
  */
 public class NetCaseConfiguration {
 	/** Network operation pattern list*/
-	protected List<NetOptPattern> netOptPatterns;
+	protected HashMap<String,NetOptPattern> netOptPatterns;
 	/** Bus id to NN model bus array index mapping */
 	protected HashMap<String,Integer> busId2NoMapping;
 	/** Branch id to NN model branch array index mapping */
 	protected HashMap<String,Integer> branchId2NoMapping;	
+	
+	public int getNoBuses() {
+		return this.busId2NoMapping.size();
+	}
+
+	public int getNoBranches() {
+		return this.branchId2NoMapping.size();
+	}
+	
+	public int getNoOptPatterns() {
+		return this.netOptPatterns.size();
+	}
+	
+	public NetOptPattern getOptPattern(String name) {
+		return this.netOptPatterns.get(name);
+	}
+
+	public int getBusIndex(String busId) {
+		return this.busId2NoMapping.get(busId);
+	}
+
+	public int getBranchIndex(String branchId) {
+		return this.branchId2NoMapping.get(branchId);
+	}
 	
 	public void createBusId2NoMapping(String filename) {
 		this.busId2NoMapping = new HashMap<>();
@@ -68,11 +97,11 @@ public class NetCaseConfiguration {
 	}
 	
 	public void createNetOptPatternList(String filename) {
-		this.netOptPatterns = new ArrayList<>();
+		this.netOptPatterns = new HashMap<>();
 		loadTextFile(filename, line -> {
 			// Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
 			NetOptPattern p = UtilFunction.createNetOptPattern(line);
-			this.netOptPatterns.add(p);
+			this.netOptPatterns.put(p.getName(), p);
 		});
 	}	
 	

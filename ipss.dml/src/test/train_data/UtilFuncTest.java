@@ -1,5 +1,5 @@
  /*
-  * @(#)AclfFuncTest.java   
+  * @(#)UtilFuncTest.java   
   *
   * Copyright (C) 2006-2014 www.interpss.org
   *
