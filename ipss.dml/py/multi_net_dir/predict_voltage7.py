@@ -23,7 +23,7 @@ sys.path.insert(0, '..')
 
 import lib.common_func as cf
 
-train_points = 50
+train_points = 100
 
 # 
 # load the IEEE-14Bus case
@@ -31,25 +31,26 @@ train_points = 50
 filename = 'c:/temp/temp/cases'  # here all LF case files are put in the dir
 busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
 branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
-noBus, noBranch = cf.ipss_app.loadMultiCases(filename, 'BusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
+netOptPatternFilename = 'c:/temp/temp/ieee14_netOpt.pattern'
+noBus, noBranch, noPattern = cf.ipss_app.loadMultiCases(filename, 'MultiNetBusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename, netOptPatternFilename)
 
-print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
+print(filename, ' loaded,  no of Buses, Branches, Pattern:', noBus, ', ', noBranch, ', ', noPattern)
 
 # define model size
 size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W = tf.Variable(tf.zeros([size,size]))
+W = tf.Variable(tf.zeros([size + noPattern,size]))
 b = tf.Variable(tf.zeros([size]))
 
-W1 = tf.Variable(tf.zeros([size,size]))
-b1 = tf.Variable(tf.zeros([size]))
+# W1 = tf.Variable(tf.zeros([size,size]))
+# b1 = tf.Variable(tf.zeros([size]))
 
-W2 = tf.Variable(tf.zeros([size,size]))
-b2 = tf.Variable(tf.zeros([size]))
+# W2 = tf.Variable(tf.zeros([size,size]))
+# b2 = tf.Variable(tf.zeros([size]))
 
-init = tf.initialize_all_variables()
+
 
 # define model
 
@@ -60,16 +61,16 @@ def nn_model(data):
     return output
 
 # define loss 
-x = tf.placeholder(tf.float32, [None, size])
+x = tf.placeholder(tf.float32, [None, size + noPattern])
 y = tf.placeholder(tf.float32)
 
 error = tf.square(nn_model(x) - y)
 loss = tf.reduce_sum(error)
 
 # define training optimization
-optimizer = tf.train.GradientDescentOptimizer(cf.learning_rate)
+optimizer = tf.train.AdagradOptimizer(0.3)
 train = optimizer.minimize(loss)
-
+init = tf.initialize_all_variables()
 # run the computation graph
 with tf.Session() as sess :
     sess.run(init)
@@ -80,7 +81,7 @@ with tf.Session() as sess :
     print('Begin training: ', datetime.now())
     
     # retrieve training set
-    trainSet = cf.ipss_app.getTrainSet(100)
+    trainSet = cf.ipss_app.getTrainSet(train_points)
     train_x, train_y = cf.transfer2PyArrays(trainSet)
     
     # run the training part

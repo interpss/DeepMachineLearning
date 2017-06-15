@@ -146,12 +146,21 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			}
 		}
 		
+		for (AclfBus bus : getAclfNet().getBusList()) {
+			if(bus.isGenPV())
+				bus.getPVBusLimit().setStatus(false);
+		}
+		
 		//System.out.println(this.runLF());
 	}
 	
 	protected double[] getNetInputPQ(AclfNetwork aclfNet) {
 		double[] input = new double[2*this.noBus];
-		
+		getNetInputPQ(input);
+		return input;
+	}
+	
+	protected double[] getNetInputPQ(double[] input){
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
@@ -180,11 +189,6 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 
 	protected double[] getNetOutputVoltage(AclfNetwork aclfNet) {
 		double[] output = new double[2*this.noBus];
-		for (int i = 0; i < this.noBus; i++) {
-			output[i] = 1.0;
-			output[i+this.noBus] = 0.0;
-		}
-			
 		
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {

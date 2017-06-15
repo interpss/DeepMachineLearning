@@ -49,6 +49,9 @@ public class MultiNetBusVoltLoadChangeTrainCaseBuilder extends BaseMultiNeLoadCh
 	 */
 	@Override
 	public double[] getNetInput() {
-		return this.getNetInputPQ(this.getAclfNet());
+		double[] input = new double[2 * this.noBus + this.netOptPatterns.size()];
+		input[2 * this.noBus + this.getCurNetCase().noNetOptPattern] = 1;
+		getNetInputPQ(input);
+		return input;
 	}
 }
