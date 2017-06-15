@@ -28,11 +28,17 @@ package org.interpss.service.pattern;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.interpss.service.UtilFunction;
+
+import com.interpss.core.aclf.AclfBranch;
+import com.interpss.core.aclf.AclfBus;
+import com.interpss.core.aclf.AclfNetwork;
 
 /**
  * Class for storing network case configuration info, including:
@@ -46,11 +52,11 @@ import org.interpss.service.UtilFunction;
  */
 public class NetCaseConfiguration {
 	/** Network operation pattern list*/
-	protected HashMap<String,NetOptPattern> netOptPatterns;
+	HashMap<String,NetOptPattern> netOptPatterns;
 	/** Bus id to NN model bus array index mapping */
-	protected HashMap<String,Integer> busId2NoMapping;
+	HashMap<String,Integer> busId2NoMapping;
 	/** Branch id to NN model branch array index mapping */
-	protected HashMap<String,Integer> branchId2NoMapping;	
+	HashMap<String,Integer> branchId2NoMapping;	
 	
 	/**
 	 * default constructor
@@ -99,6 +105,18 @@ public class NetCaseConfiguration {
 	}
 
 	/**
+	 * create a new network operation pattern
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public NetOptPattern createOptPattern(String name) {
+		NetOptPattern p = new NetOptPattern(name);
+		this.netOptPatterns.put(name, p);
+		return p;
+	}
+	
+	/**
 	 * get bus NN-model index by busId
 	 * 
 	 * @param busId
@@ -106,6 +124,20 @@ public class NetCaseConfiguration {
 	 */
 	public int getBusIndex(String busId) {
 		return this.busId2NoMapping.get(busId);
+	}
+	
+	/**
+	 * add the busId to the bus mapping set, and to
+	 * the missingBusIdList of all existing network operation patterns
+	 * 
+	 * @param busId
+	 */
+	public void addBus2Mapping(String busId) {
+		int i = this.busId2NoMapping.size();
+		this.busId2NoMapping.put(busId, i);
+		this.netOptPatterns.forEach((n,v) -> {
+			v.getMissingBusIds().add(busId);
+		});
 	}
 
 	/**
@@ -116,6 +148,20 @@ public class NetCaseConfiguration {
 	 */
 	public int getBranchIndex(String branchId) {
 		return this.branchId2NoMapping.get(branchId);
+	}
+
+	/**
+	 * add the branchId to the branch mapping set, and to
+	 * the missingBranchIdList of all existing network operation patterns
+	 * 
+	 * @param busId
+	 */
+	public void addBranch2Mapping(String branchId) {
+		int i = this.branchId2NoMapping.size();
+		this.branchId2NoMapping.put(branchId, i);
+		this.netOptPatterns.forEach((n,v) -> {
+			v.getMissingBranchIds().add(branchId);
+		});
 	}
 	
 	/**
@@ -219,5 +265,66 @@ public class NetCaseConfiguration {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
+	}
+	
+	public List<String> findBusIdsMissingInMapping(AclfNetwork aclfNet) {
+		List<String> list = new ArrayList<>();
+		
+		aclfNet.getBusList().forEach(bus -> {
+			if (bus.isActive()) {
+				if (this.busId2NoMapping.get(bus.getId()) == null) {
+					// the bus is not in the mapping list
+					list.add(bus.getId());
+				}
+			}
+		});
+		
+		return list;
+	}
+	
+	public List<String> findBranchIdsMissingInMapping(AclfNetwork aclfNet) {
+		List<String> list = new ArrayList<>();
+		
+		aclfNet.getBranchList().forEach(branch -> {
+			if (branch.isActive()) {
+				if (this.branchId2NoMapping.get(branch.getId()) == null) {
+					// the branch is not in the mapping list
+					list.add(branch.getId());
+				}
+			}
+		});		
+		return list;
+	}	
+	
+	public List<String> findBusIdsMissingInNetwork(AclfNetwork aclfNet) {
+		List<String> list = new ArrayList<>();
+		
+		this.busId2NoMapping.forEach((id, v) -> {
+			AclfBus bus = aclfNet.getBus(id);
+			if (bus == null || !bus.isActive()) {
+				list.add(id);
+			}
+		});		
+		
+		return list;
+	}	
+	
+	public List<String> findBranchIdsMissingInNetwork(AclfNetwork aclfNet) {
+		List<String> list = new ArrayList<>();
+		
+		this.branchId2NoMapping.forEach((id, v) -> {
+			AclfBranch branch = aclfNet.getBranch(id);
+			if (branch == null || !branch.isActive()) {
+				list.add(id);
+			}
+		});		
+		return list;
+	}
+	
+	public boolean hasNetOptPattern(AclfNetwork aclfNet) {
+		for (NetOptPattern pattern : this.netOptPatterns.values())
+			if (pattern.isPattern(aclfNet))
+				return true;
+		return false;
 	}
 }

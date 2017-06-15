@@ -25,7 +25,14 @@
   */
 package org.interpss.service.pattern;
 
+import java.util.List;
+
 import org.interpss.service.UtilFunction;
+
+import com.interpss.common.exp.InterpssException;
+import com.interpss.core.aclf.AclfBranch;
+import com.interpss.core.aclf.AclfBus;
+import com.interpss.core.aclf.AclfNetwork;
 
 /**
  * 
@@ -34,17 +41,20 @@ import org.interpss.service.UtilFunction;
  */
 public class NetCaseConfigBuilder {
 	private String[] filenames;
+	//private NetOptPattern basePattern;
+	
+	private NetCaseConfiguration netCaseConfig;
 	
 	public NetCaseConfigBuilder(String dir) {
 		this.filenames = UtilFunction.getFilenames(dir);
 	}
 	
 	public NetCaseConfiguration build() {
-		NetCaseConfiguration config = new NetCaseConfiguration();
+		netCaseConfig = new NetCaseConfiguration();
 		
 		if (this.filenames.length == 0 ) {
 			System.out.println("There is no file in the directory!");
-			return config;
+			return netCaseConfig;
 		}
 		
 		buildBaseCase(this.filenames[0]);
@@ -53,14 +63,73 @@ public class NetCaseConfigBuilder {
 			buildAdditionalCase(this.filenames[i]);
 		}
 		
-		return config;
+		return netCaseConfig;
 	}
 	
 	private void buildBaseCase(String filename) {
+		this.netCaseConfig.createOptPattern(filename);
 		
+		try {
+			AclfNetwork aclfNet = UtilFunction.loadAclfNetIEEECDF(filename);
+			
+			int cnt = 0;
+			for (AclfBus bus : aclfNet.getBusList()) {
+				if (bus.isActive())
+					this.netCaseConfig.busId2NoMapping.put(bus.getId(), cnt++);
+			}
+			
+			cnt = 0;
+			for (AclfBranch branch : aclfNet.getBranchList()) {
+				if (branch.isActive())
+					this.netCaseConfig.branchId2NoMapping.put(branch.getId(), cnt++);
+			}
+		} catch (InterpssException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void buildAdditionalCase(String filename) {
+		try {
+			AclfNetwork aclfNet = UtilFunction.loadAclfNetIEEECDF(filename);
+			
+			List<String> busListMissingInMapping = this.netCaseConfig.findBusIdsMissingInMapping(aclfNet);
+			List<String> branchListMissingInMapping = this.netCaseConfig.findBranchIdsMissingInMapping(aclfNet);
+
+			System.out.println("Filename: " + filename +
+			           ", missing Bus in Mapping: " + busListMissingInMapping.size() + 
+			           ", missing Branch in Mapping: " + branchListMissingInMapping.size());
+	
+
+			busListMissingInMapping.forEach(busId -> {
+				this.netCaseConfig.addBus2Mapping(busId);
+			});
+	
+			branchListMissingInMapping.forEach(branchId -> {
+				this.netCaseConfig.addBranch2Mapping(branchId);
+			});
+
+			if (!this.netCaseConfig.hasNetOptPattern(aclfNet)) {
+				List<String> busListMissingInAclfNet = this.netCaseConfig.findBusIdsMissingInNetwork(aclfNet);
+				List<String> branchListMissingInAclfNet = this.netCaseConfig.findBranchIdsMissingInNetwork(aclfNet);
+
+				System.out.println("Filename: " + filename +
+				           ", missing Bus in AclfNet: " + busListMissingInAclfNet.size() + 
+				           ", missing Branch in AclfNet: " + branchListMissingInAclfNet.size());
+				
+				if (busListMissingInAclfNet.size() > 0 || branchListMissingInAclfNet.size() > 0) {
+					NetOptPattern pattern = this.netCaseConfig.createOptPattern(filename);
+			
+					busListMissingInAclfNet.forEach(id -> {
+						pattern.getMissingBusIds().add(id);
+					});
+					branchListMissingInAclfNet.forEach(id -> {
+						pattern.getMissingBranchIds().add(id);
+					});
+				}
+			}
+		} catch (InterpssException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

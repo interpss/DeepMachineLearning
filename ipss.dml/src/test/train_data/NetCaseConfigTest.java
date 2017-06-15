@@ -28,6 +28,7 @@ package test.train_data;
 
 import static org.junit.Assert.assertTrue;
 
+import org.interpss.IpssCorePlugin;
 import org.interpss.service.pattern.NetCaseConfigBuilder;
 import org.interpss.service.pattern.NetCaseConfiguration;
 import org.junit.Test;
@@ -59,9 +60,16 @@ public class NetCaseConfigTest {
   	
   	@Test 
 	public void buidNetConfigTest() {
-  		NetCaseConfigBuilder builder = new NetCaseConfigBuilder("testdata/netConfigCases");
+		IpssCorePlugin.init();
+		
+  		NetCaseConfigBuilder builder = new NetCaseConfigBuilder("c:/temp/temp/netConfigCases");
   		System.out.println(builder);
   		
+  		NetCaseConfiguration config = builder.build();
+
+  		config.saveNetOptPatternSet("temp/netOpt.pattern");
+  		config.saveBusId2NoMapping("temp/busid2no.mapping");
+  		config.saveBranchId2NoMapping("temp/branchid2no.mapping");
   	}
 }
 
