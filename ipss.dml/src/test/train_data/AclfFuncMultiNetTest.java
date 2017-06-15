@@ -30,9 +30,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.interpss.IpssCorePlugin;
 import org.interpss.service.UtilFunction;
+import org.interpss.service.pattern.NetOptPattern;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
-import org.interpss.service.train_data.multiNet.NetOptPattern;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
@@ -74,6 +74,7 @@ public class AclfFuncMultiNetTest {
   		assertTrue("", multiNetCaseBuilder.getNoNetOptPatterns() == 2);
   		
   		NetOptPattern p = multiNetCaseBuilder.getNetOptPattern(0);
+  		System.out.println("--->" + p);
   		assertTrue("", p.getName().equals("Pattern-1"));
   		assertTrue("", p.getMissingBusIds().size() == 1);
   		assertTrue("", p.getMissingBranchIds().size() == 2);

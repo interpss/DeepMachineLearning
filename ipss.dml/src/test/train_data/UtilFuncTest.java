@@ -29,7 +29,7 @@ package test.train_data;
 import static org.junit.Assert.assertTrue;
 
 import org.interpss.service.UtilFunction;
-import org.interpss.service.train_data.multiNet.NetOptPattern;
+import org.interpss.service.pattern.NetOptPattern;
 import org.junit.Test;
 
 public class UtilFuncTest {
@@ -48,7 +48,9 @@ public class UtilFuncTest {
   	
   	@Test 
 	public void netOptPatternTest() {
-  		String line = "Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]";
+  		String line = "Pattern-1, missingBusIds [Bus15], missingBranchIds [Bus9->Bus15(1), Bus13->Bus15(1)]";
+  		
+		//System.out.println(line.split(",", 2)[0]);
   		
   		NetOptPattern p = UtilFunction.createNetOptPattern(line);
 		System.out.println(p);

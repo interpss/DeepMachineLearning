@@ -28,6 +28,8 @@ package org.interpss.service.train_data.multiNet;
 
 import java.util.List;
 
+import org.interpss.service.pattern.NetOptPattern;
+
 /**
  * A training case builder interface for the multi-network cases
  * 

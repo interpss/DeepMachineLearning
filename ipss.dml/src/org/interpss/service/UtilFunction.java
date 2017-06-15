@@ -31,10 +31,10 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.interpss.service.pattern.NetOptPattern;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.impl.TrainDataBuilderFactory;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
-import org.interpss.service.train_data.multiNet.NetOptPattern;
 
 import com.interpss.common.exp.InterpssException;
 
@@ -48,7 +48,7 @@ public class UtilFunction {
 	/**
 	 * create a NetOptPattern object from a line in the pattern file.
 	 * 
-	 * format : Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
+	 * format : Pattern-1, missingBusIds [Bus15], missingBranchIds [Bus9->Bus15(1), Bus13->Bus15(1)]
 	 *           <name>         <busId>                    <branchId>
 	 * 
 	 * @param line a pattern line
@@ -56,27 +56,30 @@ public class UtilFunction {
 	 */
 	public static NetOptPattern createNetOptPattern(String line) {
 		// split the line into three parts: <name> <busId> <branchId>
-		String[] lineStrAry = line.split(",");
+		String[] lineStrAry = line.split(",", 2);
 		
 		// process the name part
 		String name = lineStrAry[0].trim();
 		NetOptPattern pattern = new NetOptPattern(name);
 		
+		// the remaining part: missingBusIds [Bus15], missingBranchIds [Bus9->Bus15(1), Bus13->Bus15(1)]
+		String[] idStrAry = lineStrAry[1].split("],");
+
 		// process the bus id part
-		String str = lineStrAry[1];
-		String busIds = str.substring(str.indexOf('[')+1, str.indexOf(']'));   //  missingBus [ Bus15 ]
-		//System.out.println(busIds);
-		String[] strAry = busIds.trim().split(" ");
-		for (String s : strAry) {
+		String str = idStrAry[0];
+		String busIds = str.substring(str.indexOf('[')+1);   //  missingBus [ Bus15
+		//System.out.println("####" + busIds);
+		// Bus15, Bus14 ...
+		for (String s : busIds.trim().split(",")) {
 			pattern.getMissingBusIds().add(s.trim());
 		}
 		
 		// process the branch id part
-		str = lineStrAry[2];
+		str = idStrAry[1];
 		String branchIds = str.substring(str.indexOf('[')+1, str.indexOf(']'));   //  missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]
-		//System.out.println(branchIds);
-		strAry = branchIds.trim().split(" ");
-		for (String s : strAry) {
+		//System.out.println("####" + branchIds);
+		// Bus9->Bus15(1) Bus13->Bus15(1) ...
+		for (String s : branchIds.trim().split(",")) {
 			pattern.getMissingBranchIds().add(s.trim());
 		}
 		
