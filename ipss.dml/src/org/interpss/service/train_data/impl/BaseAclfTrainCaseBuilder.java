@@ -131,6 +131,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 				BusData busdata = this.baseCaseData[i];
 				busdata.id = bus.getId();
 				if (bus.isGen()) {
+					busdata.genP = bus.getGenP();
 					bus.getGenPQ();
 					bus.getContributeGenList().clear();
 				}

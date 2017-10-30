@@ -58,6 +58,7 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 		} catch (InterpssException | ReferenceBusException | IpssNumericException e) {
 			e.printStackTrace();
 		}
+		System.out.println(output);
 		
 		return output;
 	}

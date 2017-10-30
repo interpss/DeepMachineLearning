@@ -27,6 +27,8 @@ package org.interpss.service.train_data.singleNet.aclf.load_change;
 
 import java.util.Random;
 
+import org.apache.commons.math3.complex.Complex;
+import org.interpss.display.AclfOutFunc;
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
 import org.interpss.service.train_data.impl.BaseAclfTrainCaseBuilder;
@@ -98,5 +100,50 @@ public abstract class BaseLoadChangeTrainCaseBuilder extends BaseAclfTrainCaseBu
 		
 		String result = this.runLF(this.getAclfNet());
 		//System.out.println(result);
+	}
+	
+	/**
+	 * The bus load is scaled by the random factor
+	 * 
+	 * @param factor the scaling factor
+	 */
+	public void createRandomCase() {
+		double intTotalLoadP = 0;
+		double TotalLoadP = 0;
+		int i = 0;
+		System.out.println("Total system load: " + ComplexFunc.toStr(getAclfNet().totalLoad(UnitType.PU)));
+		for (AclfBus bus : getAclfNet().getBusList()) {
+			if (bus.isActive()) {
+				if ( this.busId2NoMapping != null )
+					i = this.busId2NoMapping.get(bus.getId());				
+				if (!bus.isSwing() && !bus.isGenPV()) {  
+					double factor = 0.5 + new Random().nextFloat();
+					bus.setLoadP(this.baseCaseData[i].loadP *factor );
+					bus.setLoadQ(this.baseCaseData[i].loadQ *factor);
+					intTotalLoadP += this.baseCaseData[i].loadP;
+					TotalLoadP += this.baseCaseData[i].loadP * factor;
+				}
+				i++;
+			}
+		}
+		double dP = TotalLoadP- intTotalLoadP;
+		double factor = TotalLoadP/ intTotalLoadP;
+		i = 0;
+		for (AclfBus bus : getAclfNet().getBusList()) {
+			if (bus.isActive()) {
+				if ( this.busId2NoMapping != null )
+					i = this.busId2NoMapping.get(bus.getId());				
+				if (bus.isGenPV()) {  
+					bus.setGenP(this.baseCaseData[i].genP+dP/5);
+				}
+				i++;
+			}
+		}
+		System.out.println("Total system load: " + ComplexFunc.toStr(getAclfNet().totalLoad(UnitType.PU))+", factor: " + factor);
+
+//		System.out.println(aclfNet.net2String());
+		String result = this.runLF(this.getAclfNet());
+		
+//		System.out.println(result);
 	}
 }

@@ -54,4 +54,10 @@ public class MultiNetBusVoltLoadChangeTrainCaseBuilder extends BaseMultiNeLoadCh
 		getNetInputPQ(input);
 		return input;
 	}
+
+	@Override
+	public void createRandomCase() {
+		// TODO Auto-generated method stub
+		
+	}
 }

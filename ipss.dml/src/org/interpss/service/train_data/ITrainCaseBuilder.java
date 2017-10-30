@@ -48,6 +48,7 @@ public interface ITrainCaseBuilder {
 		
 		public String id;
 		public double loadP = 0.0, loadQ = 0.0;
+		public double genP = 0.0;
 		public int type = PQ;
 		
 		public boolean isSwing() { return this.type == Swing; }
@@ -120,6 +121,11 @@ public interface ITrainCaseBuilder {
 	 * create a new test case for evaluating the model accuracy
 	 */
 	void createTestCase();
+	
+	/**
+	 * create a new test case for evaluating the model accuracy
+	 */
+	void createRandomCase();
 
 	/**
 	 * create a new test case based on a factor value for evaluating the model accuracy

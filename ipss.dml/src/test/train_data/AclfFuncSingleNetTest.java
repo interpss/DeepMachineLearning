@@ -28,6 +28,8 @@ package test.train_data;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.interpss.IpssCorePlugin;
 import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.ITrainCaseBuilder;
@@ -113,5 +115,23 @@ public class AclfFuncSingleNetTest {
   				   mis.maxMis.abs() < 0.0001);
    	}
   	
+  	@Test 
+	public void testSingleRandomNet() throws InterpssException {
+		IpssCorePlugin.init();
+		
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
+  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  		 
+  		caseBuilder.createRandomCase();
+  		double[] netPQ = caseBuilder.getNetInput();
+  		System.out.println(Arrays.toString(netPQ));
+  		double[] netVolt = caseBuilder.getNetOutput();
+  		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 15*2); 
+  		
+  		Mismatch mis = caseBuilder.calMismatch(netVolt);
+  		assertTrue("netVolt is a Loadflow solution, therefore the mismatch should be very small! ", 
+  				   mis.maxMis.abs() < 0.0001);
+  		//System.out.println(caseBuilder.calMismatch(netVolt));
+   	}
 }
 
