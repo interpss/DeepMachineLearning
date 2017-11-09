@@ -1,5 +1,5 @@
  /*
-  * @(#)AclfFuncTest.java   
+  * @(#)UtilFuncTest.java   
   *
   * Copyright (C) 2006-2014 www.interpss.org
   *
@@ -28,8 +28,8 @@ package test.train_data;
 
 import static org.junit.Assert.assertTrue;
 
-import org.interpss.service.UtilFunction;
-import org.interpss.service.train_data.multiNet.NetOptPattern;
+import org.interpss.service.pattern.NetOptPattern;
+import org.interpss.service.util.UtilFunction;
 import org.junit.Test;
 
 public class UtilFuncTest {
@@ -40,15 +40,17 @@ public class UtilFuncTest {
   		assertTrue("", aryStr.length == 3);
   		assertTrue("", aryStr[1].equals("s2"));
   		
-  		aryStr = UtilFunction.getFilenames("c:/temp/temp/cases");
+  		aryStr = UtilFunction.getFilenames("testdata/cases");
   		assertTrue("", aryStr.length == 2);
-  		assertTrue("", aryStr[0].equals("c:/temp/temp/cases/ieee14-1.ieee"));
-  		assertTrue("", aryStr[1].equals("c:/temp/temp/cases/ieee14.ieee"));
+  		assertTrue("", aryStr[0].equals("testdata/cases/ieee14-1.ieee"));
+  		assertTrue("", aryStr[1].equals("testdata/cases/ieee14.ieee"));
    	}
   	
   	@Test 
 	public void netOptPatternTest() {
-  		String line = "Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1) Bus13->Bus15(1) ]";
+  		String line = "Pattern-1, missingBusIds [Bus15], missingBranchIds [Bus9->Bus15(1), Bus13->Bus15(1)]";
+  		
+		//System.out.println(line.split(",", 2)[0]);
   		
   		NetOptPattern p = UtilFunction.createNetOptPattern(line);
 		System.out.println(p);

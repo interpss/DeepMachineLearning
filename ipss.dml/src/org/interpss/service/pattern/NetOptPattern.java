@@ -23,7 +23,7 @@
   *   ================
   *
   */
-package org.interpss.service.train_data.multiNet;
+package org.interpss.service.pattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +106,7 @@ public class NetOptPattern {
 	}
 	
 	public String toString() {
-		return "NetOptPattern: name " + this.name +
+		return  this.name +
 				", missingBusIds " + this.missingBusIds.toString() + 
 				", missingBranchIds " + this.missingBranchIds.toString();
 	}

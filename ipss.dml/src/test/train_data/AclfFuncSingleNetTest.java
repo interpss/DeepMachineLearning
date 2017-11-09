@@ -31,8 +31,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 
 import org.interpss.IpssCorePlugin;
-import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.ITrainCaseBuilder;
+import org.interpss.service.util.UtilFunction;
 import org.junit.Test;
 
 import com.interpss.common.exp.InterpssException;
@@ -84,8 +84,9 @@ public class AclfFuncSingleNetTest {
 	public void testSingleNet1() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder(
+  				"testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
+  				"testdata/ieee14_busid2no.mapping", "testdata/ieee14_branchid2no.mapping");
   		 
   		caseBuilder.createTestCase();
   		

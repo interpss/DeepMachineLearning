@@ -29,6 +29,7 @@ package org.interpss.service;
 import org.interpss.IpssCorePlugin;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
+import org.interpss.service.util.UtilFunction;
 
 import com.interpss.common.exp.InterpssException;
 

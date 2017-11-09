@@ -25,26 +25,19 @@
   */
 package org.interpss.service.train_data.impl;
 
-import static org.interpss.pssl.plugin.IpssAdapter.FileFormat.IEEECommonFormat;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.apache.commons.math3.complex.Complex;
 import org.interpss.CorePluginFunction;
 import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.pssl.plugin.IpssAdapter;
 import org.interpss.pssl.simu.IpssAclf;
-import org.interpss.service.UtilFunction;
 import org.interpss.service.train_data.ITrainCaseBuilder;
-import org.interpss.service.train_data.ITrainCaseBuilder.BusData;
-import org.interpss.service.train_data.multiNet.NetOptPattern;
+import org.interpss.service.util.NetCaseLoader;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBranch;
@@ -101,13 +94,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 	 */
 	@Override
 	public void loadConfigureAclfNet(String filename) throws InterpssException {
-		this.aclfNet = IpssAdapter.importAclfNet(filename)
-				.setFormat(IEEECommonFormat)
-				.load()
-				.getImportedObj();
-		//System.out.println(filename + " loaded");
-		
-		this.aclfNet.setId(filename);
+		this.aclfNet = NetCaseLoader.loadAclfNet(filename);
 		
 		// set noBus/Branch in case the mapping relationships
 		// are not defined

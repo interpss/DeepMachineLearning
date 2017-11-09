@@ -31,10 +31,10 @@ import java.util.Random;
 
 import org.interpss.numeric.datatype.ComplexFunc;
 import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.service.UtilFunction;
+import org.interpss.service.pattern.NetOptPattern;
 import org.interpss.service.train_data.impl.BaseAclfTrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
-import org.interpss.service.train_data.multiNet.NetOptPattern;
+import org.interpss.service.util.UtilFunction;
 
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBus;

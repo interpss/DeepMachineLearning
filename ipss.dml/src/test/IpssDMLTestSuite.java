@@ -30,6 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import test.train_data.AclfFuncMultiNetTest;
 import test.train_data.AclfFuncSingleNetTest;
+import test.train_data.NetCaseConfigTest;
 import test.train_data.UtilFuncTest;
 
 @RunWith(Suite.class)
@@ -38,6 +39,8 @@ import test.train_data.UtilFuncTest;
 	
 	AclfFuncMultiNetTest.class,
 	AclfFuncSingleNetTest.class,
+	
+	NetCaseConfigTest.class,
 })
 public class IpssDMLTestSuite {
 }
