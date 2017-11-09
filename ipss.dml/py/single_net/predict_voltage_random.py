@@ -15,11 +15,11 @@
 '''
 
 '''
- Use NN-model to predict the bus voltage for a random selected scale-factor
+ Use NN-model to predict the bus voltage for a set of scale-factors
 '''
 
 from datetime import datetime
-
+import numpy as np
 import tensorflow as tf
 
 import sys
@@ -27,13 +27,13 @@ sys.path.insert(0, '..')
 
 import lib.common_func as cf
 
-train_points = 1000
+train_points = 200
 
 # 
 # load the IEEE-14Bus case
 #
 filename = 'c:/temp/temp/ieee14.ieee'
-noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeTrainCaseBuilder')
+noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeRandomTrainCaseBuilder')
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -41,16 +41,15 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W = tf.Variable(tf.zeros([size,size]))
-W2 = tf.Variable(tf.zeros([size,size]))
-W3 = tf.Variable(tf.zeros([size,size]))
-b = tf.Variable(tf.zeros([size]))
-b2 = tf.Variable(tf.zeros([size]))
-b3 = tf.Variable(tf.zeros([size]))
+W1 = tf.Variable(tf.zeros([size,size]))
+b1 = tf.Variable(tf.zeros([size]))
+
+
+
 # define model
 
 def nn_model(data):
-    output = tf.matmul(tf.matmul(data, W) + b, W2) + b2
+    output = tf.matmul(data, W1) + b1
     return output
 
 # define loss 
@@ -59,41 +58,33 @@ y = tf.placeholder(tf.float32)
 
 error = tf.square(nn_model(x) - y)
 loss = tf.reduce_sum(error)
+
 # define training optimization
-optimizer = tf.train.AdagradOptimizer(0.1)
+optimizer = tf.train.AdagradOptimizer(0.3)
 train = optimizer.minimize(loss)
-
 init = tf.global_variables_initializer()
-
-tf.summary.histogram('y',y)
-tf.summary.histogram('x',x)
-tf.summary.scalar('loss',loss)
-merged_summary_op = tf.summary.merge_all()
 # run the computation graph
 with tf.Session() as sess :
     sess.run(init)
-    summary_writer = tf.summary.FileWriter('D://logs//1',sess.graph)
+    
     # run the training part
     # =====================
- 
+    
     print('Begin training: ', datetime.now())
-     
+    
     # retrieve training set
-    trainSet = cf.ipss_app.getRandomTrainSet(train_points)
+    trainSet = cf.ipss_app.getTrainSet(train_points)
     train_x, train_y = cf.transfer2PyArrays(trainSet)
+    train_x,aver_x,ran_x = cf.regularization(train_x);
     
-    #print2DArray(train_x, 'train_xSet', 'train_x')
-    #print2DArray(train_y, 'train_ySet', 'train_y')
-    
+    train_y,aver_y,ran_y = cf.regularization(train_y);
     # run the training part
     for i in range(cf.train_steps):
+        if (i % 1000 == 0) : print('Training step: ', i) 
         sess.run(train, {x:train_x, y:train_y})
-        summary_str = sess.run(merged_summary_op,{x:train_x, y:train_y})
-        summary_writer.add_summary(summary_str, i)
-        if (i % 1000 == 0) : 
-            print('Training step: ', i) 
 
     print('End training: ', datetime.now())
+    
     '''
     print('W1: ', sess.run(W1))
     print('b1: ', sess.run(b1))
@@ -103,14 +94,14 @@ with tf.Session() as sess :
     # =========================
     
     # retrieve a test case
-    for factor in [0.45, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.55] :
+    for i in range(100) :
     #for factor in [0.45, 1.0, 1.55] :
-        testCase = cf.ipss_app.getTestCase(factor)
+        testCase = cf.ipss_app.getTestCase()
         test_x, test_y = cf.transfer2PyArrays(testCase)        
-           
+        test_x =  np.divide(np.subtract(test_x,aver_x),ran_x)
         # compute model output (network voltage)
         model_y = sess.run(nn_model(x), {x:test_x})
         #printArray(model_y, 'model_y')
        
-        netVoltage = cf.transfer2JavaDblAry(model_y[0], size)
+        netVoltage = cf.transfer2JavaDblAry(model_y[0]*ran_y+aver_y, size)
         print('model out mismatch: ', cf.ipss_app.getMismatchInfo(netVoltage))

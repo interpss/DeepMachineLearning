@@ -28,7 +28,7 @@ ipss_app = gateway.entry_point
 # define configuration parameters
 #
 learning_rate = 0.001
-train_steps = 10000
+train_steps = 1000
 
 # 
 # function to transfer data from a tensor array to a Java double array
@@ -54,7 +54,15 @@ def transfer2PyArrays(ary) :
         x[i] = np.array([ary[0][i].split()])
         y[i] = np.array([ary[1][i].split()])
     return x, y
-    
+
+def regularization(ary) :
+    aver = (np.divide(np.sum(ary,axis=0),len(ary)))
+    ran = (np.max(ary,axis=0)-np.min(ary,axis=0))
+    for i in range(len(ran)):
+        if(ran[i]==0):ran[i]=1
+    sub = np.subtract(ary,aver)
+    ary = np.divide(sub,ran)
+    return ary ,aver ,ran
 #
 # Output functions
 #    
