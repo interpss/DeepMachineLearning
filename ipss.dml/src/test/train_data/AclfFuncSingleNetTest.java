@@ -119,14 +119,13 @@ public class AclfFuncSingleNetTest {
 	public void testSingleRandomNet() throws InterpssException {
 		IpssCorePlugin.init();
 		
-  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltageTrainCaseBuilder",
-  				"c:/temp/temp/ieee14_busid2no.mapping", "c:/temp/temp/ieee14_branchid2no.mapping");
+  		ITrainCaseBuilder caseBuilder = UtilFunction.createSingleNetBuilder("testdata/ieee14.ieee", "BusVoltLoadChangeRandomTrainCaseBuilder");
   		 
-  		caseBuilder.createRandomCase();
+  		caseBuilder.createTestCase();
   		double[] netPQ = caseBuilder.getNetInput();
   		System.out.println(Arrays.toString(netPQ));
   		double[] netVolt = caseBuilder.getNetOutput();
-  		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 15*2); 
+  		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 14*2); 
   		
   		Mismatch mis = caseBuilder.calMismatch(netVolt);
   		assertTrue("netVolt is a Loadflow solution, therefore the mismatch should be very small! ", 

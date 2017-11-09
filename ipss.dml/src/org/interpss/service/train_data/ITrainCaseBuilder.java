@@ -121,11 +121,6 @@ public interface ITrainCaseBuilder {
 	 * create a new test case for evaluating the model accuracy
 	 */
 	void createTestCase();
-	
-	/**
-	 * create a new test case for evaluating the model accuracy
-	 */
-	void createRandomCase();
 
 	/**
 	 * create a new test case based on a factor value for evaluating the model accuracy

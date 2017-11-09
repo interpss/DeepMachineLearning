@@ -154,19 +154,6 @@ public class AclfPyGateway {
 		return trainSet;
 	}
 	
-	public String[][] getRandomTrainSet(int points) {
-		String[][] trainSet = new String[2][points];
-		for (int i = 0; i < points; i++) {
-			this.trainCaseBuilder.createRandomCase();
-			double[] input = this.trainCaseBuilder.getNetInput();
-			double[] output = this.trainCaseBuilder.getNetOutput();
-			trainSet[0][i] = UtilFunction.array2String(input);
-			trainSet[1][i] = UtilFunction.array2String(output);
-		}
-		return trainSet;
-	}
-	
-
 	/**
 	 * create and return a random test case, 
 	 * 
