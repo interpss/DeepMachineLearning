@@ -18,6 +18,7 @@ public class BusVoltLoadChangeRandomTrainCaseBuilder extends BusVoltLoadChangeTr
 	@Override
 	public void createTestCase() {
 		int i = 0;
+		double dp = 0;
 		for (AclfBus bus : getAclfNet().getBusList()) {
 			if (bus.isActive()) {
 				if ( this.busId2NoMapping != null )
@@ -26,12 +27,15 @@ public class BusVoltLoadChangeRandomTrainCaseBuilder extends BusVoltLoadChangeTr
 					double factor= 2*new Random().nextFloat();
 					bus.setLoadP(this.baseCaseData[i].loadP * factor);
 					bus.setLoadQ(this.baseCaseData[i].loadQ * factor);
+					dp +=bus.getLoadP()-this.baseCaseData[i].loadP;
 					System.out.println("Bus id :"+bus.getId()+ 
 							   ", load factor: " + factor);
 				}
 				i++;
 			}
 		}
+		AclfBus bus = getAclfNet().getBus("Bus2");
+		bus.setGenP(dp + bus.getGenP()*new Random().nextFloat());
 //		System.out.println("Total system load: " + ComplexFunc.toStr(getAclfNet().totalLoad(UnitType.PU)) +
 //						   ", factor: " + factor);
 		
@@ -61,7 +65,7 @@ public class BusVoltLoadChangeRandomTrainCaseBuilder extends BusVoltLoadChangeTr
 				}
 				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
 //					AclfPVGenBus pv = bus.toPVBus();
-//					input[2*i] = bus.getGenP() - bus.getLoadP();
+					input[2*i] = bus.getGenP();
 //					input[2*i+1] = pv.getDesiredVoltMag();
 				}
 				else {
