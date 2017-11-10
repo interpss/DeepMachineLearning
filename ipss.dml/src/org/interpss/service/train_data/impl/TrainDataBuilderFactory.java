@@ -30,9 +30,9 @@ import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.aclf.load_change.MultiNetBusVoltLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.BranchContingencyMaxPLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.BranchPLoadChangeTrainCaseBuilder;
-import org.interpss.service.train_data.singleNet.aclf.load_change.BusVoltLoadChangeRandomTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.NNLFLoadChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change_random.BusVoltLoadChangeRandomTrainCaseBuilder;
 
 /**
  * Training data builder factory

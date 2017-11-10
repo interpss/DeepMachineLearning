@@ -27,7 +27,7 @@ sys.path.insert(0, '..')
 
 import lib.common_func as cf
 
-train_points = 200
+train_points = 1000
 
 # 
 # load the IEEE-14Bus case
@@ -92,9 +92,10 @@ with tf.Session() as sess :
     
     # run the verification part
     # =========================
-    
+    testSize=100
+    mismatchSet = np.zeros((testSize,2))
     # retrieve a test case
-    for i in range(100) :
+    for i in range(testSize) :
     #for factor in [0.45, 1.0, 1.55] :
         testCase = cf.ipss_app.getTestCase()
         test_x, test_y = cf.transfer2PyArrays(testCase)        
@@ -104,4 +105,7 @@ with tf.Session() as sess :
         #printArray(model_y, 'model_y')
        
         netVoltage = cf.transfer2JavaDblAry(model_y[0]*ran_y+aver_y, size)
-        print('model out mismatch: ', cf.ipss_app.getMismatchInfo(netVoltage))
+        mismatchSet[i] = np.array([cf.ipss_app.getMismatch(netVoltage)[0],cf.ipss_app.getMismatch(netVoltage)[1]])
+    train_m,aver_m,ran_m = cf.regularization(mismatchSet);
+    print('model out mismatch(aver): ', aver_m)
+    print('model out mismatch(range): ', ran_m)

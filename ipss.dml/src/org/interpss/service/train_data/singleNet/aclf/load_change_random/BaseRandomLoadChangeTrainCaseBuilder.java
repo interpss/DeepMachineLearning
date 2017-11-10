@@ -1,15 +1,43 @@
-package org.interpss.service.train_data.singleNet.aclf.load_change;
+package org.interpss.service.train_data.singleNet.aclf.load_change_random;
 
 import java.util.Random;
 
-import org.interpss.numeric.datatype.Unit.UnitType;
 import org.interpss.service.train_data.ITrainCaseBuilder.BusData;
+import org.interpss.service.train_data.singleNet.aclf.load_change.BaseLoadChangeTrainCaseBuilder;
 
 import com.interpss.core.aclf.AclfBus;
-import com.interpss.core.aclf.adpter.AclfPVGenBus;
-import com.interpss.core.aclf.adpter.AclfSwingBus;
 
-public class BusVoltLoadChangeRandomTrainCaseBuilder extends BusVoltLoadChangeTrainCaseBuilder {
+public abstract class BaseRandomLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder{
+
+	@Override
+	public double[] getNetInput() {
+		double[] input = new double[2*this.noBus];
+		int i = 0;
+		for (AclfBus bus : aclfNet.getBusList()) {
+			if (bus.isActive()) {
+				if (this.busId2NoMapping != null) 
+					i = this.busId2NoMapping.get(bus.getId());
+				BusData busdata = this.baseCaseData[i];
+				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
+//					AclfSwingBus swing = bus.toSwingBus();
+//					input[2*i] = swing.getDesiredVoltAng(UnitType.Rad);
+//					input[2*i+1] = swing.getDesiredVoltMag(UnitType.PU);
+				}
+				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
+//					AclfPVGenBus pv = bus.toPVBus();
+					input[2*i] = bus.getGenP();
+					input[2*i+1] = bus.getGenP()*bus.getGenP();
+				}
+				else {
+					input[2*i] = bus.getLoadP();
+					input[2*i+1] = bus.getLoadP()*bus.getLoadP();
+				}
+				i++;
+			}
+		}
+		return input;
+	}
+
 	/**
 	 * The bus load is scaled by the scaling factor
 	 * 
@@ -49,33 +77,5 @@ public class BusVoltLoadChangeRandomTrainCaseBuilder extends BusVoltLoadChangeTr
 		createTestCase();
 	}
 	
-	@Override
-	public double[] getNetInput() {
-		double[] input = new double[2*this.noBus];
-		int i = 0;
-		for (AclfBus bus : aclfNet.getBusList()) {
-			if (bus.isActive()) {
-				if (this.busId2NoMapping != null) 
-					i = this.busId2NoMapping.get(bus.getId());
-				BusData busdata = this.baseCaseData[i];
-				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
-//					AclfSwingBus swing = bus.toSwingBus();
-//					input[2*i] = swing.getDesiredVoltAng(UnitType.Rad);
-//					input[2*i+1] = swing.getDesiredVoltMag(UnitType.PU);
-				}
-				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
-//					AclfPVGenBus pv = bus.toPVBus();
-					input[2*i] = bus.getGenP();
-					input[2*i+1] = bus.getGenP()*bus.getGenP();
-				}
-				else {
-					input[2*i] = bus.getLoadP();
-					input[2*i+1] = bus.getLoadP()*bus.getLoadP();
-				}
-				i++;
-			}
-		}
-		return input;
-	}
-	
+
 }
