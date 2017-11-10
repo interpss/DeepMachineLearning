@@ -56,8 +56,8 @@ public abstract class BaseRandomLoadChangeTrainCaseBuilder extends BaseLoadChang
 					bus.setLoadP(this.baseCaseData[i].loadP * factor);
 					bus.setLoadQ(this.baseCaseData[i].loadQ * factor);
 					dp +=bus.getLoadP()-this.baseCaseData[i].loadP;
-					System.out.println("Bus id :"+bus.getId()+ 
-							   ", load factor: " + factor);
+//					System.out.println("Bus id :"+bus.getId()+ 
+//							   ", load factor: " + factor);
 				}
 				i++;
 			}
