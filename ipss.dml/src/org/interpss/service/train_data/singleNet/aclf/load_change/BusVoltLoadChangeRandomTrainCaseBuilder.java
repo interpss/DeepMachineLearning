@@ -66,7 +66,7 @@ public class BusVoltLoadChangeRandomTrainCaseBuilder extends BusVoltLoadChangeTr
 				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
 //					AclfPVGenBus pv = bus.toPVBus();
 					input[2*i] = bus.getGenP();
-//					input[2*i+1] = pv.getDesiredVoltMag();
+					input[2*i+1] = bus.getGenP()*bus.getGenP();
 				}
 				else {
 					input[2*i] = bus.getLoadP();

@@ -26,6 +26,7 @@
 
 package org.interpss.service;
 
+import org.apache.commons.math3.complex.Complex;
 import org.interpss.IpssCorePlugin;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.train_data.multiNet.IMultiNetTrainCaseBuilder;
@@ -217,6 +218,18 @@ public class AclfPyGateway {
 	public String getMismatchInfo(double[] netVolt) {
 		return this.trainCaseBuilder.calMismatch(netVolt).toString();
 	}	
+	
+	/**
+	 * compute and return the mismatch based on the network solution 
+	 * for bus voltage
+	 * 
+	 * @param netVolt network bus voltage solution
+	 * @return mismatch info string
+	 */
+	public double[] getMismatch(double[] netVolt) {
+		Complex maxMis= this.trainCaseBuilder.calMismatch(netVolt).maxMis;
+		return new double[] {maxMis.getReal(),maxMis.getImaginary()};
+	}
 	
 	/**
 	 * main method to start the service
