@@ -97,7 +97,7 @@ with tf.Session() as sess :
     test_x =  np.divide(np.subtract(test_x,aver_x),ran_x)
         # compute model output (network voltage)
     model_y = sess.run(nn_model(x), {x:test_x})*ran_y+aver_y
-    mis = np.abs((model_y - test_y)/test_y)
+    mis = np.abs((model_y - test_y))
     train_m,aver_m,ran_m = cf.regularization(mis)
-    print('max case max error(%): ', np.max(ran_m)*100)
-    print('aver case max error(%): ', np.average(np.max(mis, axis =1))*100)
+    print('max case max error(pu): ', np.max([ran_m[0]]))
+    print('aver case max error(pu): ', np.average(np.max(mis, axis =1)))
