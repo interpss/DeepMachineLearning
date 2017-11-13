@@ -11,7 +11,7 @@ public abstract class BaseRandomLoadChangeTrainCaseBuilder extends BaseLoadChang
 
 	@Override
 	public double[] getNetInput() {
-		double[] input = new double[2*this.noBus];
+		double[] input = new double[4*this.noBus];
 		int i = 0;
 		for (AclfBus bus : aclfNet.getBusList()) {
 			if (bus.isActive()) {
@@ -25,12 +25,16 @@ public abstract class BaseRandomLoadChangeTrainCaseBuilder extends BaseLoadChang
 				}
 				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
 //					AclfPVGenBus pv = bus.toPVBus();
-					input[2*i] = bus.getGenP();
-					input[2*i+1] = bus.getGenP()*bus.getGenP();
+					if (bus.getGenP() !=0 ) {
+						input[4 * i] = bus.getGenP();
+						input[4 * i + 1] = bus.getGenP() * bus.getGenP();
+					}
 				}
 				else {
-					input[2*i] = bus.getLoadP();
-					input[2*i+1] = bus.getLoadP()*bus.getLoadP();
+					input[4*i] = bus.getLoadP();
+					input[4*i+1] = bus.getLoadQ();
+					input[4 * i + 2] = bus.getLoadP() * bus.getLoadP();
+//					input[4 * i + 3] = bus.getLoadQ() * bus.getLoadQ();
 				}
 				i++;
 			}
@@ -54,7 +58,7 @@ public abstract class BaseRandomLoadChangeTrainCaseBuilder extends BaseLoadChang
 				if (!bus.isSwing() && !bus.isGenPV()) { 
 					double factor= 2*new Random().nextFloat();
 					bus.setLoadP(this.baseCaseData[i].loadP * factor);
-					bus.setLoadQ(this.baseCaseData[i].loadQ * factor);
+					bus.setLoadQ(this.baseCaseData[i].loadQ * factor * (0.8 + 0.4 * new Random().nextFloat()));
 					dp +=bus.getLoadP()-this.baseCaseData[i].loadP;
 //					System.out.println("Bus id :"+bus.getId()+ 
 //							   ", load factor: " + factor);
@@ -70,6 +74,7 @@ public abstract class BaseRandomLoadChangeTrainCaseBuilder extends BaseLoadChang
 		//System.out.println(aclfNet.net2String());
 		
 		String result = this.runLF(this.getAclfNet());
+		System.out.println(result);
 	}
 	
 	@Override

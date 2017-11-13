@@ -14,11 +14,14 @@
     limitations under the License.
 '''
 
-from datetime import datetime
+'''
+ Use NN-model to predict the bus voltage for a set of scale-factors
+'''
 
-import tensorflow as tf
+from datetime import datetime
 import numpy as np
- 
+import tensorflow as tf
+
 import sys
 sys.path.insert(0, '..')
 
@@ -30,8 +33,7 @@ train_points = 1000
 # load the IEEE-14Bus case
 #
 filename = 'c:/temp/temp/ieee14.ieee'
-intAry = cf.ipss_app.loadCase(filename, 'BranchContingencyMaxPLoadRandomChangeTrainCaseBuilder')
-noBus, noBranch = intAry
+noBus, noBranch = cf.ipss_app.loadCase(filename, 'InterfacePowerRandomChangeTrainCaseBuilder')
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -39,16 +41,19 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,noBranch]))
-b1 = tf.Variable(tf.zeros([noBranch]))
+W1 = tf.Variable(tf.zeros([size*2,6]))
+b1 = tf.Variable(tf.zeros([6]))
+
+
+
 # define model
 
 def nn_model(data):
-    output =tf.matmul(data, W1) +b1
+    output = tf.matmul(data, W1) + b1
     return output
 
 # define loss 
-x = tf.placeholder(tf.float32, [None, size])
+x = tf.placeholder(tf.float32, [None, size*2])
 y = tf.placeholder(tf.float32)
 
 error = tf.square(nn_model(x) - y)
@@ -64,39 +69,49 @@ with tf.Session() as sess :
     
     # run the training part
     # =====================
- 
+    
     print('Begin training: ', datetime.now())
-     
+    
     # retrieve training set
     trainSet = cf.ipss_app.getTrainSet(train_points)
     train_x, train_y = cf.transfer2PyArrays(trainSet)
+    train_x,aver_x,ran_x = cf.regularization(train_x);
     
-    #print2DArray(train_x, 'train_xSet', 'train_x')
-    #print2DArray(train_y, 'train_ySet', 'train_y')
-
-    train_x,aver_x,ran_x = cf.regularization(train_x)
-    
-    train_y,aver_y,ran_y = cf.regularization(train_y)
+    train_y,aver_y,ran_y = cf.regularization(train_y);
     # run the training part
     for i in range(cf.train_steps):
         if (i % 1000 == 0) : print('Training step: ', i) 
         sess.run(train, {x:train_x, y:train_y})
 
     print('End training: ', datetime.now())
- 
+    
+    '''
+    print('W1: ', sess.run(W1))
+    print('b1: ', sess.run(b1))
+    '''
+    
     # run the verification part
     # =========================
-    
+    testSize=100
+    misSet = np.zeros((testSize,6))
     # retrieve a test case
-    # retrieve a test case
-    
+    for i in range(testSize) :
     #for factor in [0.45, 1.0, 1.55] :
-    testCase = cf.ipss_app.getTrainSet(100)
-    test_x, test_y = cf.transfer2PyArrays(testCase)        
-    test_x =  np.divide(np.subtract(test_x,aver_x),ran_x)
+        testCase = cf.ipss_app.getTestCase()
+        test_x, test_y = cf.transfer2PyArrays(testCase)        
+        test_x =  np.divide(np.subtract(test_x,aver_x),ran_x)
         # compute model output (network voltage)
-    model_y = sess.run(nn_model(x), {x:test_x})*ran_y+aver_y
-    mis = np.abs((model_y - test_y))
-    train_m,aver_m,ran_m = cf.regularization(mis)
-    print('max case max error(pu): ', np.max(ran_m))
-    print('aver case max error(pu): ', np.average(np.max(mis, axis =1)))
+        model_y = sess.run(nn_model(x), {x:test_x})
+        #printArray(model_y, 'model_y')
+        misSet[i] =  np.abs(model_y[0]*ran_y+aver_y-test_y[0])
+       
+#         netVoltage = cf.transfer2JavaDblAry(model_y[0]*ran_y+aver_y, size)
+#         mismatchSet[i] = np.array([cf.ipss_app.getMismatch(netVoltage)[0],cf.ipss_app.getMismatch(netVoltage)[1]])
+#     train_mm,aver_mm,ran_mm = cf.regularization(mismatchSet);
+    train_m,aver_m,ran_m = cf.regularization(misSet);
+#     print('model out mismatch(aver): ', aver_mm)
+#     print('model out mismatch(range): ', ran_mm)
+#     print('aver case max error: ', aver_m)
+#     print('max case max error : ', ran_m )
+    print('max case max error : ', np.max(ran_m) )
+    print('aver case max error : ', np.average(np.max(misSet, axis =1)) )

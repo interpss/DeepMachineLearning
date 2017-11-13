@@ -59,7 +59,7 @@ def regularization(ary) :
     aver = (np.divide(np.sum(ary,axis=0),len(ary)))
     ran = (np.max(ary,axis=0)-np.min(ary,axis=0))
     for i in range(len(ran)):
-        if(ran[i]==0):ran[i]=1
+        if(ran[i]==0):ran[i]=0.00001
     sub = np.subtract(ary,aver)
     ary = np.divide(sub,ran)
     return ary ,aver ,ran

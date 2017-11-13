@@ -41,7 +41,7 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,size]))
+W1 = tf.Variable(tf.zeros([size*2,size]))
 b1 = tf.Variable(tf.zeros([size]))
 
 
@@ -53,7 +53,7 @@ def nn_model(data):
     return output
 
 # define loss 
-x = tf.placeholder(tf.float32, [None, size])
+x = tf.placeholder(tf.float32, [None, size*2])
 y = tf.placeholder(tf.float32)
 
 error = tf.square(nn_model(x) - y)
@@ -94,6 +94,7 @@ with tf.Session() as sess :
     # =========================
     testSize=100
     mismatchSet = np.zeros((testSize,2))
+    misSet = np.zeros((testSize,size))
     # retrieve a test case
     for i in range(testSize) :
     #for factor in [0.45, 1.0, 1.55] :
@@ -103,9 +104,15 @@ with tf.Session() as sess :
         # compute model output (network voltage)
         model_y = sess.run(nn_model(x), {x:test_x})
         #printArray(model_y, 'model_y')
+        misSet[i] =  np.abs(model_y[0]*ran_y+aver_y-test_y[0])
        
-        netVoltage = cf.transfer2JavaDblAry(model_y[0]*ran_y+aver_y, size)
-        mismatchSet[i] = np.array([cf.ipss_app.getMismatch(netVoltage)[0],cf.ipss_app.getMismatch(netVoltage)[1]])
-    train_m,aver_m,ran_m = cf.regularization(mismatchSet);
-    print('model out mismatch(aver): ', aver_m)
-    print('model out mismatch(range): ', ran_m)
+#         netVoltage = cf.transfer2JavaDblAry(model_y[0]*ran_y+aver_y, size)
+#         mismatchSet[i] = np.array([cf.ipss_app.getMismatch(netVoltage)[0],cf.ipss_app.getMismatch(netVoltage)[1]])
+#     train_mm,aver_mm,ran_mm = cf.regularization(mismatchSet);
+    train_m,aver_m,ran_m = cf.regularization(misSet);
+#     print('model out mismatch(aver): ', aver_mm)
+#     print('model out mismatch(range): ', ran_mm)
+#     print('aver case max error: ', aver_m)
+#     print('max case max error : ', ran_m )
+    print('max case max error : ', np.max(ran_m) )
+    print('aver case max error : ', np.average(np.max(misSet, axis =1)) )

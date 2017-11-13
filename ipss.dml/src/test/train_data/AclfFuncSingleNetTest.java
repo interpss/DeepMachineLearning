@@ -124,7 +124,7 @@ public class AclfFuncSingleNetTest {
   		 
   		caseBuilder.createTestCase();
   		double[] netPQ = caseBuilder.getNetInput();
-  		System.out.println(Arrays.toString(netPQ));
+//  		System.out.println(Arrays.toString(netPQ));
   		double[] netVolt = caseBuilder.getNetOutput();
   		assertTrue("The length is decided by the info in the mapping file", netVolt.length == 14*2); 
   		
