@@ -55,7 +55,7 @@ def transfer2PyArrays(ary) :
         y[i] = np.array([ary[1][i].split()])
     return x, y
 
-def regularization(ary) :
+def normalization(ary) :
     aver = (np.divide(np.sum(ary,axis=0),len(ary)))
     ran = (np.max(ary,axis=0)-np.min(ary,axis=0))
     for i in range(len(ran)):

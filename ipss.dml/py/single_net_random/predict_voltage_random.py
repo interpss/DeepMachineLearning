@@ -75,9 +75,9 @@ with tf.Session() as sess :
     # retrieve training set
     trainSet = cf.ipss_app.getTrainSet(train_points)
     train_x, train_y = cf.transfer2PyArrays(trainSet)
-    train_x,aver_x,ran_x = cf.regularization(train_x);
+    train_x,aver_x,ran_x = cf.normalization(train_x);
     
-    train_y,aver_y,ran_y = cf.regularization(train_y);
+    train_y,aver_y,ran_y = cf.normalization(train_y);
     # run the training part
     for i in range(cf.train_steps):
         if (i % 1000 == 0) : print('Training step: ', i) 
@@ -108,8 +108,8 @@ with tf.Session() as sess :
        
 #         netVoltage = cf.transfer2JavaDblAry(model_y[0]*ran_y+aver_y, size)
 #         mismatchSet[i] = np.array([cf.ipss_app.getMismatch(netVoltage)[0],cf.ipss_app.getMismatch(netVoltage)[1]])
-#     train_mm,aver_mm,ran_mm = cf.regularization(mismatchSet);
-    train_m,aver_m,ran_m = cf.regularization(misSet);
+#     train_mm,aver_mm,ran_mm = cf.normalization(mismatchSet);
+    train_m,aver_m,ran_m = cf.normalization(misSet);
 #     print('model out mismatch(aver): ', aver_mm)
 #     print('model out mismatch(range): ', ran_mm)
 #     print('aver case max error: ', aver_m)
