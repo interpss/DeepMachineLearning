@@ -39,6 +39,7 @@ where, [W] - weight matrix
 ## Links and References
 
 * [Project Wiki](https://github.com/interpss/DeepMachineLearning/wiki)
+* [Application of Machine Learning to Power Grid Analysis](https://github.com/interpss/DeepMachineLearning/blob/master/ipss.dml/doc/IEEE%20PES%20Webinar%20-%20Application%20of%20ML%20to%20Power%20System%20Analysis.pdf) IEEE PES Webinar 2017-11-21
 
 ## License
 
