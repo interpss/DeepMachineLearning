@@ -79,8 +79,8 @@ with tf.Session() as sess :
     
     train_y,aver_y,ran_y = cf.normalization(train_y);
     # run the training part
-    for i in range(cf.train_steps):
-        if (i % 1000 == 0) : print('Training step: ', i) 
+    for i in range(1000):
+        if (i % 100 == 0) : print('Training step: ', i) 
         sess.run(train, {x:train_x, y:train_y})
 
     print('End training: ', datetime.now())
