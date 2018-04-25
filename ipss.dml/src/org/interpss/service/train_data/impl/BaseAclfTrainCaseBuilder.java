@@ -35,18 +35,27 @@ import java.util.stream.Stream;
 import org.apache.commons.math3.complex.Complex;
 import org.interpss.CorePluginFunction;
 import org.interpss.numeric.datatype.Unit.UnitType;
+import org.interpss.numeric.exp.IpssNumericException;
 import org.interpss.pssl.simu.IpssAclf;
+import org.interpss.pssl.simu.IpssDclf;
+import org.interpss.pssl.simu.IpssDclf.DclfAlgorithmDSL;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.util.NetCaseLoader;
 
+import com.interpss.CoreObjectFactory;
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.aclf.AclfBranch;
 import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;
 import com.interpss.core.aclf.adpter.AclfPVGenBus;
 import com.interpss.core.aclf.adpter.AclfSwingBus;
+import com.interpss.core.aclf.contingency.BranchOutageType;
+import com.interpss.core.aclf.contingency.Contingency;
 import com.interpss.core.algo.AclfMethod;
 import com.interpss.core.datatype.Mismatch;
+import com.interpss.core.dclf.common.ReferenceBusException;
+import com.interpss.core.dclf.solver.HashMapCacheDclfSolver;
+import com.interpss.core.net.Branch;
 
 /**
  * Base class for implementing Aclf training case creation builder.
@@ -218,6 +227,35 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 				i++;
 			}
 		}
+		return output;
+	}
+	
+	protected double[] getNetBranchContingencyMaxP(AclfNetwork aclfNet) {
+		double[] output = new double[this.noBranch];
+		int cnt = 0;
+		for (Branch bra : this.aclfNet.getBranchList()) {
+			bra.setSortNumber(cnt++);
+		}
+		//IpssCorePlugin.init();  this statement should put in the main function
+		try {
+			DclfAlgorithmDSL algoDsl = IpssDclf.createDclfAlgorithm(getAclfNet());
+			algoDsl.getAlgorithm().setDclfSolver(new HashMapCacheDclfSolver(getAclfNet()));
+			algoDsl.runDclfAnalysis();
+			getAclfNet().getBranchList().stream()
+					.filter(branch -> !branch.getFromAclfBus().isRefBus() && !branch.getToAclfBus().isRefBus())
+					.forEach(branch -> CoreObjectFactory.createContingency(branch.getId(), branch.getId(),
+							BranchOutageType.OPEN, getAclfNet()));
+
+			getAclfNet().getContingencyList().forEach(cont -> {
+				algoDsl.contingencyAanlysis((Contingency) cont, (contBranch, postContFlow) -> {
+					if (output[contBranch.getSortNumber()] < Math.abs(postContFlow/getAclfNet().getBaseMva()))
+						output[contBranch.getSortNumber()] = Math.abs(postContFlow/getAclfNet().getBaseMva());
+				});
+			});
+		} catch (InterpssException | ReferenceBusException | IpssNumericException e) {
+			e.printStackTrace();
+		}
+		
 		return output;
 	}
 	
