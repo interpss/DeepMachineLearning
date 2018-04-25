@@ -28,9 +28,9 @@ train_points = 50
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/cases'     # here all LF case files are put in the dir
-busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
-branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
+filename = 'testdata/cases'     # here all LF case files are put in the dir
+busIdMappingFilename = 'testdata/ieee14_busid2no.mapping'
+branchIdMappingFilename = 'testdata/ieee14_branchid2no.mapping'
 noBus, noBranch = cf.ipss_app.loadMultiCases(filename, 'MultiNetBusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
 
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)

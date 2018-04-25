@@ -29,9 +29,9 @@ train_points = 50
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/ieee14-1.ieee'
-busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
-branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
+filename = 'testdata/ieee14-1.ieee'
+busIdMappingFilename = 'testdata/ieee14_busid2no.mapping'
+branchIdMappingFilename = 'testdata/ieee14_branchid2no.mapping'
 intAry = cf.ipss_app.loadCase(filename, 'BranchPLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
 noBus, noBranch = intAry
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
