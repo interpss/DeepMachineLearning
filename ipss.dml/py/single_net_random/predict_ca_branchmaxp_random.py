@@ -29,13 +29,13 @@ train_points = 1000
 # 
 # load the IEEE-14Bus case
 #
-filename = 'testdata/ieee14.ieee'
+filename = 'c:/temp/temp/ieee14.ieee'
 intAry = cf.ipss_app.loadCase(filename, 'BranchContingencyMaxPLoadRandomChangeTrainCaseBuilder')
 noBus, noBranch = intAry
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
-size = noBus * 4
+size = noBus * 2
 #print('size: ', size)
 
 # define model variables
@@ -78,8 +78,8 @@ with tf.Session() as sess :
     
     train_y,aver_y,ran_y = cf.normalization(train_y)
     # run the training part
-    for i in range(1000):
-        if (i % 100 == 0) : print('Training step: ', i) 
+    for i in range(cf.train_steps):
+        if (i % 1000 == 0) : print('Training step: ', i) 
         sess.run(train, {x:train_x, y:train_y})
 
     print('End training: ', datetime.now())

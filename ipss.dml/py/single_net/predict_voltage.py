@@ -32,7 +32,7 @@ train_points = 50
 # 
 # load the IEEE-14Bus case
 #
-filename = 'testdata/ieee14.ieee'
+filename = 'testdata/cases/ieee14.ieee'
 noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeTrainCaseBuilder')
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 

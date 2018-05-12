@@ -28,7 +28,7 @@ ipss_app = gateway.entry_point
 # define configuration parameters
 #
 learning_rate = 0.001
-train_steps = 10000
+train_steps = 1000
 
 # 
 # function to transfer data from a tensor array to a Java double array
