@@ -29,7 +29,7 @@ train_points = 1000
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/ieee14.ieee'
+filename = 'testdata/ieee14.ieee'
 intAry = cf.ipss_app.loadCase(filename, 'BranchContingencyMaxPLoadRandomChangeTrainCaseBuilder')
 noBus, noBranch = intAry
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
