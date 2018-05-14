@@ -19,8 +19,6 @@ import com.interpss.core.dclf.common.ReferenceBusException;
 
 public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder {
 
-	private static int i;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -38,29 +36,7 @@ public class BranchContingencyMaxPLoadChangeTrainCaseBuilder extends BaseLoadCha
 	 */
 	@Override
 	public double[] getNetOutput() {
-		double[] output = new double[this.noBranch];
-		//IpssCorePlugin.init();  this statement should put in the main function
-		try {
-			DclfAlgorithmDSL algoDsl = IpssDclf.createDclfAlgorithm(getAclfNet()).runDclfAnalysis();
-			getAclfNet().getBranchList().stream()
-					.filter(branch -> !branch.getFromAclfBus().isRefBus() && !branch.getToAclfBus().isRefBus())
-					.forEach(branch -> CoreObjectFactory.createContingency(branch.getId(), branch.getId(),
-							BranchOutageType.OPEN, getAclfNet()));
-
-			getAclfNet().getContingencyList().forEach(cont -> {
-				i = 0;
-				algoDsl.contingencyAanlysis((Contingency) cont, (contBranch, postContFlow) -> {
-					if (output[i] < Math.abs(postContFlow/getAclfNet().getBaseMva()))
-						output[i] = Math.abs(postContFlow/getAclfNet().getBaseMva());
-					i++;
-				});
-			});
-		} catch (InterpssException | ReferenceBusException | IpssNumericException e) {
-			e.printStackTrace();
-		}
-		System.out.println(output);
-		
-		return output;
+		return this.getNetBranchContingencyMaxP(this.aclfNet);
 	}
 
 }
