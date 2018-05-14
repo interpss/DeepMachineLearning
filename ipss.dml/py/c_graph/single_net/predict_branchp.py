@@ -14,20 +14,13 @@
     limitations under the License.
 '''
 
-'''
- Use NN-model to predict the bus voltage for a random selected scale-factor
-
- Starting from the predict_voltage.py case, the following changes are made
- 
-   - The NN-Model Loadflow method is used
-'''
-
 from datetime import datetime
 
 import tensorflow as tf
-
+import numpy as np
+ 
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 
@@ -36,8 +29,9 @@ train_points = 50
 # 
 # load the IEEE-14Bus case
 #
-filename = 'testdata/cases/ieee14.ieee'
-noBus, noBranch = cf.ipss_app.loadCase(filename, 'NNLFLoadChangeTrainCaseBuilder')
+filename = 'c:/temp/temp/ieee14.ieee'
+intAry = cf.ipss_app.loadCase(filename, 'BranchPLoadChangeTrainCaseBuilder')
+noBus, noBranch = intAry
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -45,15 +39,16 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W = tf.Variable(tf.zeros([size,size]))
-b = tf.Variable(tf.zeros([size]))
+W1 = tf.Variable(tf.zeros([size,noBranch]))
+
+b1 = tf.Variable(tf.zeros([noBranch]))
 
 init = tf.initialize_all_variables()
 
 # define model
 
 def nn_model(data):
-    output = tf.matmul(data, W) + b
+    output = tf.matmul(data, W1) + b1
     return output
 
 # define loss 
@@ -82,17 +77,16 @@ with tf.Session() as sess :
     
     #print2DArray(train_x, 'train_xSet', 'train_x')
     #print2DArray(train_y, 'train_ySet', 'train_y')
-    
+
     # run the training part
     for i in range(cf.train_steps):
         if (i % 1000 == 0) : print('Training step: ', i) 
         sess.run(train, {x:train_x, y:train_y})
 
     print('End training: ', datetime.now())
-    '''
-    print('W1: ', sess.run(W1))
-    print('b1: ', sess.run(b1))
-    '''
+    
+    #print('W1: ', sess.run(W1))
+    #print('b1: ', sess.run(b1))
  
     # run the verification part
     # =========================
@@ -100,12 +94,12 @@ with tf.Session() as sess :
     # retrieve a test case
     testCase = cf.ipss_app.getTestCase();
     test_x, test_y = cf.transfer2PyArrays(testCase)
+    
     #printArray(test_x, 'test_x')
     #printArray(test_y, 'test_y')
     
     # compute model output (network voltage)
     model_y = sess.run(nn_model(x), {x:test_x})
     #printArray(model_y[0], 'model_y')
-    
-    netVoltage = cf.transfer2JavaDblAry(model_y[0], size)
-    print('model out mismatch: ', cf.ipss_app.getMismatchInfo(netVoltage))
+
+    print('max error: ', np.sqrt(np.max(np.abs(np.square(model_y - test_y)))))

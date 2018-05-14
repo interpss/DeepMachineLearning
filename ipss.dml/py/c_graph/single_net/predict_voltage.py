@@ -23,7 +23,7 @@ from datetime import datetime
 import tensorflow as tf
 
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 

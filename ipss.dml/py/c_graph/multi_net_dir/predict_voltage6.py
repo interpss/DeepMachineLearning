@@ -14,32 +14,25 @@
     limitations under the License.
 '''
 
-'''
- Use NN-model to predict the bus voltage for a set of scale-factors
-
- Starting from the predict_voltage1.py case, the following changes are made
- 
-   - The NN-Model Loadflow method is used
-   - ieee14-2 case is used, where PV bus limit are set to a very large number
-'''
-
-
 from datetime import datetime
 
 import tensorflow as tf
 
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 
-train_points = 100
+train_points = 50
 
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/ieee14-2.ieee'
-noBus, noBranch = cf.ipss_app.loadCase(filename, 'NNLFLoadChangeTrainCaseBuilder')
+filename = 'c:/temp/temp/cases'     # here all LF case files are put in the dir
+busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
+branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
+noBus, noBranch = cf.ipss_app.loadMultiCases(filename, 'MultiNetBusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
+
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -98,14 +91,14 @@ with tf.Session() as sess :
     # =========================
     
     # retrieve a test case
-    for factor in [0.45, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.55] :
-    #for factor in [0.45, 1.0, 1.55] :
-        testCase = cf.ipss_app.getTestCase(factor)
-        test_x, test_y = cf.transfer2PyArrays(testCase)        
-           
-        # compute model output (network voltage)
-        model_y = sess.run(nn_model(x), {x:test_x})
-        #printArray(model_y, 'model_y')
-       
-        netVoltage = cf.transfer2JavaDblAry(model_y[0], size)
-        print('model out mismatch: ', cf.ipss_app.getMismatchInfo(netVoltage))
+    testCase = cf.ipss_app.getTestCase();
+    test_x, test_y = cf.transfer2PyArrays(testCase)
+    #printArray(test_x, 'test_x')
+    #printArray(test_y, 'test_y')
+    
+    # compute model output (network voltage)
+    model_y = sess.run(nn_model(x), {x:test_x})
+    #printArray(model_y[0], 'model_y')
+    
+    netVoltage = cf.transfer2JavaDblAry(model_y[0], size)
+    print('model out mismatch: ', cf.ipss_app.getMismatchInfo(netVoltage))

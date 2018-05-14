@@ -17,10 +17,9 @@
 from datetime import datetime
 
 import tensorflow as tf
-import numpy as np
- 
+
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 
@@ -29,9 +28,11 @@ train_points = 50
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/ieee14.ieee'
-intAry = cf.ipss_app.loadCase(filename, 'BranchPLoadChangeTrainCaseBuilder')
-noBus, noBranch = intAry
+filename = 'c:/temp/temp/ieee14.ieee,c:/temp/temp/ieee14-1.ieee'
+busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
+branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
+noBus, noBranch = cf.ipss_app.loadMultiCases(filename, 'MultiNetBusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
+
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -39,9 +40,8 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,noBranch]))
-
-b1 = tf.Variable(tf.zeros([noBranch]))
+W1 = tf.Variable(tf.zeros([size,size]))
+b1 = tf.Variable(tf.zeros([size]))
 
 init = tf.initialize_all_variables()
 
@@ -68,16 +68,13 @@ with tf.Session() as sess :
     
     # run the training part
     # =====================
- 
+    
     print('Begin training: ', datetime.now())
-     
+    
     # retrieve training set
     trainSet = cf.ipss_app.getTrainSet(train_points)
     train_x, train_y = cf.transfer2PyArrays(trainSet)
     
-    #print2DArray(train_x, 'train_xSet', 'train_x')
-    #print2DArray(train_y, 'train_ySet', 'train_y')
-
     # run the training part
     for i in range(cf.train_steps):
         if (i % 1000 == 0) : print('Training step: ', i) 
@@ -85,21 +82,23 @@ with tf.Session() as sess :
 
     print('End training: ', datetime.now())
     
-    #print('W1: ', sess.run(W1))
-    #print('b1: ', sess.run(b1))
- 
+    '''
+    print('W1: ', sess.run(W1))
+    print('b1: ', sess.run(b1))
+    '''
+    
     # run the verification part
     # =========================
     
-    for factor in [0.7, 1.0, 1.2] :
-        # retrieve a test case
-        testCase = cf.ipss_app.getTestCase(factor)
-        test_x, test_y = cf.transfer2PyArrays(testCase)
-        #printArray(test_x, 'test_x')
-        #printArray(test_y, 'test_y')
+    # retrieve a test case
+    testCase = cf.ipss_app.getTestCase();
+    test_x, test_y = cf.transfer2PyArrays(testCase)
+    #printArray(test_x, 'test_x')
+    #printArray(test_y, 'test_y')
     
-        # compute model output (network voltage)
-        model_y = sess.run(nn_model(x), {x:test_x})
-        #printArray(model_y[0], 'model_y')
-
-        print('max error: ', np.sqrt(np.max(np.abs(np.square(model_y - test_y)))))
+    # compute model output (network voltage)
+    model_y = sess.run(nn_model(x), {x:test_x})
+    #printArray(model_y[0], 'model_y')
+    
+    netVoltage = cf.transfer2JavaDblAry(model_y[0], size)
+    print('model out mismatch: ', cf.ipss_app.getMismatchInfo(netVoltage))

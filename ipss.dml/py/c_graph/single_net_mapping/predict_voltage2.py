@@ -19,7 +19,7 @@ from datetime import datetime
 import tensorflow as tf
 
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 
@@ -28,11 +28,10 @@ train_points = 50
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/cases'     # here all LF case files are put in the dir
+filename = 'c:/temp/temp/ieee14-1.ieee'
 busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
 branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
-noBus, noBranch = cf.ipss_app.loadMultiCases(filename, 'MultiNetBusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
-
+noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -40,15 +39,15 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,size]))
-b1 = tf.Variable(tf.zeros([size]))
+W = tf.Variable(tf.zeros([size,size]))
+b = tf.Variable(tf.zeros([size]))
 
 init = tf.initialize_all_variables()
 
 # define model
 
 def nn_model(data):
-    output = tf.matmul(data, W1) + b1
+    output = tf.matmul(data, W) + b
     return output
 
 # define loss 
@@ -68,12 +67,15 @@ with tf.Session() as sess :
     
     # run the training part
     # =====================
-    
+ 
     print('Begin training: ', datetime.now())
-    
+     
     # retrieve training set
     trainSet = cf.ipss_app.getTrainSet(train_points)
     train_x, train_y = cf.transfer2PyArrays(trainSet)
+    
+    #print2DArray(train_x, 'train_xSet', 'train_x')
+    #print2DArray(train_y, 'train_ySet', 'train_y')
     
     # run the training part
     for i in range(cf.train_steps):
@@ -81,12 +83,11 @@ with tf.Session() as sess :
         sess.run(train, {x:train_x, y:train_y})
 
     print('End training: ', datetime.now())
-    
     '''
     print('W1: ', sess.run(W1))
     print('b1: ', sess.run(b1))
     '''
-    
+ 
     # run the verification part
     # =========================
     

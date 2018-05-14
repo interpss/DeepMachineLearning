@@ -19,7 +19,7 @@ from datetime import datetime
 import tensorflow as tf
 
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 
@@ -28,10 +28,10 @@ train_points = 50
 # 
 # load the IEEE-14Bus case
 #
-filename = 'c:/temp/temp/ieee14-1.ieee'
+filename = 'c:/temp/temp/ieee14.ieee,c:/temp/temp/ieee14-1.ieee'
 busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
 branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
-noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
+noBus, noBranch = cf.ipss_app.loadMultiCases(filename, 'BusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
 
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
@@ -40,15 +40,23 @@ size = noBus * 2
 #print('size: ', size)
 
 # define model variables
+W = tf.Variable(tf.zeros([size,size]))
+b = tf.Variable(tf.zeros([size]))
+
 W1 = tf.Variable(tf.zeros([size,size]))
 b1 = tf.Variable(tf.zeros([size]))
+
+W2 = tf.Variable(tf.zeros([size,size]))
+b2 = tf.Variable(tf.zeros([size]))
 
 init = tf.initialize_all_variables()
 
 # define model
 
 def nn_model(data):
-    output = tf.matmul(data, W1) + b1
+    #l1 = tf.matmul(data, W1) + b1
+    #l2 = tf.matmul(l1, W2) + b2
+    output = tf.matmul(data, W) + b
     return output
 
 # define loss 
@@ -72,7 +80,7 @@ with tf.Session() as sess :
     print('Begin training: ', datetime.now())
     
     # retrieve training set
-    trainSet = cf.ipss_app.getTrainSet(train_points)
+    trainSet = cf.ipss_app.getTrainSet(100)
     train_x, train_y = cf.transfer2PyArrays(trainSet)
     
     # run the training part

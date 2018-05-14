@@ -20,7 +20,7 @@ import tensorflow as tf
 import numpy as np
  
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 

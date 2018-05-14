@@ -14,26 +14,25 @@
     limitations under the License.
 '''
 
-'''
- Use NN-model to predict the bus voltage for a set of scale-factors
-'''
-
 from datetime import datetime
 
 import tensorflow as tf
 
 import sys
-sys.path.insert(0, '..')
+sys.path.insert(0, '../..')
 
 import lib.common_func as cf
 
-train_points = 100
+train_points = 50
 
 # 
 # load the IEEE-14Bus case
 #
-filename = 'testdata/cases/ieee14.ieee'
-noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeTrainCaseBuilder')
+filename = 'c:/temp/temp/ieee14-1.ieee'
+busIdMappingFilename = 'c:/temp/temp/ieee14_busid2no.mapping'
+branchIdMappingFilename = 'c:/temp/temp/ieee14_branchid2no.mapping'
+noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeTrainCaseBuilder', busIdMappingFilename, branchIdMappingFilename)
+
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
