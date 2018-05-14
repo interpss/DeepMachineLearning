@@ -37,11 +37,11 @@ noBus, noBranch = cf.ipss_app.loadCase(filename, 'InterfacePowerRandomChangeTrai
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
-size = noBus * 2
+size = noBus * 4
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size*2,6]))
+W1 = tf.Variable(tf.zeros([size,6]))
 b1 = tf.Variable(tf.zeros([6]))
 
 
