@@ -91,12 +91,17 @@ with tf.Session() as sess :
     # retrieve a test case
     
     #for factor in [0.45, 1.0, 1.55] :
-    testCase = cf.ipss_app.getTrainSet(100)
-    test_x, test_y = cf.transfer2PyArrays(testCase)        
-    test_x =  np.divide(np.subtract(test_x,aver_x),ran_x)
+    testSize=100
+    misSet = np.zeros((testSize,noBranch))
+    # retrieve a test case
+    for i in range(testSize) :
+    #for factor in [0.45, 1.0, 1.55] :
+        testCase = cf.ipss_app.getTestCase()
+        test_x, test_y = cf.transfer2PyArrays(testCase)        
+        test_x =  np.divide(np.subtract(test_x,aver_x),ran_x)
         # compute model output (network voltage)
-    model_y = sess.run(nn_model(x), {x:test_x})*ran_y+aver_y
-    mis = np.abs((model_y - test_y))
-    train_m,aver_m,ran_m = cf.normalization(mis)
-    print('max case max error(pu): ', np.max(ran_m))
-    print('aver case max error(pu): ', np.average(np.max(mis, axis =1)))
+        model_y = sess.run(nn_model(x), {x:test_x})
+        #printArray(model_y, 'model_y')
+        misSet[i] =  np.abs(model_y[0]*ran_y+aver_y-test_y[0])
+    print('max case max error(pu): ', np.max(misSet))
+    print('aver case max error(pu): ', np.average(misSet))

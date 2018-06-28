@@ -33,7 +33,7 @@ train_points = 1000
 # load the IEEE-14Bus case
 #
 filename = 'testdata/ieee14.ieee'
-noBus, noBranch = cf.ipss_app.loadCase(filename, 'InterfacePowerLoadRandomChangeTrainCaseBuilder')
+noBus, noBranch = cf.ipss_app.loadCase(filename, 'BranchQLoadRandomChangeTrainCaseBuilder')
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -41,8 +41,8 @@ size = noBus * 4
 #print('size: ', size)
 
 # define model variables
-W1 = tf.Variable(tf.zeros([size,6]))
-b1 = tf.Variable(tf.zeros([6]))
+W1 = tf.Variable(tf.zeros([size,noBranch]))
+b1 = tf.Variable(tf.zeros([noBranch]))
 
 
 
@@ -93,7 +93,7 @@ with tf.Session() as sess :
     # run the verification part
     # =========================
     testSize=100
-    misSet = np.zeros((testSize,6))
+    misSet = np.zeros((testSize,noBranch))
     # retrieve a test case
     for i in range(testSize) :
     #for factor in [0.45, 1.0, 1.55] :
@@ -104,6 +104,6 @@ with tf.Session() as sess :
         model_y = sess.run(nn_model(x), {x:test_x})
         #printArray(model_y, 'model_y')
         misSet[i] =  np.abs(model_y[0]*ran_y+aver_y-test_y[0])
-       
+
     print('max case max error : ', np.max(misSet) )
     print('aver case max error : ', np.average(misSet) )

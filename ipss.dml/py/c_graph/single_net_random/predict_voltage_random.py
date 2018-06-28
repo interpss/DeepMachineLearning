@@ -33,7 +33,7 @@ train_points = 1000
 # load the IEEE-14Bus case
 #
 filename = 'testdata/ieee14.ieee'
-noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadChangeRandomTrainCaseBuilder')
+noBus, noBranch = cf.ipss_app.loadCase(filename, 'BusVoltLoadRandomChangeTrainCaseBuilder')
 print(filename, ' loaded,  no of Buses, Branches:', noBus, ', ', noBranch)
 
 # define model size
@@ -79,7 +79,7 @@ with tf.Session() as sess :
     
     train_y,aver_y,ran_y = cf.normalization(train_y);
     # run the training part
-    for i in range(cf.train_steps):
+    for i in range(1000):
         if (i % 1000 == 0) : print('Training step: ', i) 
         sess.run(train, {x:train_x, y:train_y})
 
@@ -93,7 +93,7 @@ with tf.Session() as sess :
     # run the verification part
     # =========================
     testSize=100
-    mismatchSet = np.zeros((testSize,2))
+    
     misSet = np.zeros((testSize,size))
     # retrieve a test case
     for i in range(testSize) :
@@ -105,14 +105,8 @@ with tf.Session() as sess :
         model_y = sess.run(nn_model(x), {x:test_x})
         #printArray(model_y, 'model_y')
         misSet[i] =  np.abs(model_y[0]*ran_y+aver_y-test_y[0])
-       
-#         netVoltage = cf.transfer2JavaDblAry(model_y[0]*ran_y+aver_y, size)
-#         mismatchSet[i] = np.array([cf.ipss_app.getMismatch(netVoltage)[0],cf.ipss_app.getMismatch(netVoltage)[1]])
-#     train_mm,aver_mm,ran_mm = cf.normalization(mismatchSet);
-    train_m,aver_m,ran_m = cf.normalization(misSet);
-#     print('model out mismatch(aver): ', aver_mm)
-#     print('model out mismatch(range): ', ran_mm)
-#     print('aver case max error: ', aver_m)
-#     print('max case max error : ', ran_m )
-    print('max case max error : ', np.max(ran_m) )
-    print('aver case max error : ', np.average(np.max(misSet, axis =1)) )
+
+    print('max case max error : ', np.max(misSet) )
+    print('aver case max error : ', np.average(misSet))
+    
+    

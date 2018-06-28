@@ -2,7 +2,7 @@ package org.interpss.service.train_data.singleNet.aclf.load_change_random;
 
 import org.apache.commons.math3.complex.Complex;
 
-public class InterfacePowerRandomChangeTrainCaseBuilder extends BaseRandomLoadChangeTrainCaseBuilder{
+public class InterfacePowerLoadRandomChangeTrainCaseBuilder extends BaseLoadRandomChangeTrainCaseBuilder{
 
 	@Override
 	public double[] getNetOutput() {

@@ -33,8 +33,10 @@ import org.interpss.service.train_data.singleNet.aclf.load_change.BranchPLoadCha
 import org.interpss.service.train_data.singleNet.aclf.load_change.BusVoltLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change.NNLFLoadChangeTrainCaseBuilder;
 import org.interpss.service.train_data.singleNet.aclf.load_change_random.BranchContingencyMaxPLoadRandomChangeTrainCaseBuilder;
-import org.interpss.service.train_data.singleNet.aclf.load_change_random.BusVoltLoadChangeRandomTrainCaseBuilder;
-import org.interpss.service.train_data.singleNet.aclf.load_change_random.InterfacePowerRandomChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change_random.BranchPLoadRandomChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change_random.BranchQLoadRandomChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change_random.BusVoltLoadRandomChangeTrainCaseBuilder;
+import org.interpss.service.train_data.singleNet.aclf.load_change_random.InterfacePowerLoadRandomChangeTrainCaseBuilder;
 
 /**
  * Training data builder factory
@@ -56,12 +58,16 @@ public class TrainDataBuilderFactory {
 			return new BranchContingencyMaxPLoadChangeTrainCaseBuilder();
 		else if (builderName.equals("NNLFLoadChangeTrainCaseBuilder"))
 			return new NNLFLoadChangeTrainCaseBuilder();
-		else if (builderName.equals("BusVoltLoadChangeRandomTrainCaseBuilder"))
-			return new BusVoltLoadChangeRandomTrainCaseBuilder();
+		else if (builderName.equals("BusVoltLoadRandomChangeTrainCaseBuilder"))
+			return new BusVoltLoadRandomChangeTrainCaseBuilder();
 		else if (builderName.equals("BranchContingencyMaxPLoadRandomChangeTrainCaseBuilder"))
 			return new BranchContingencyMaxPLoadRandomChangeTrainCaseBuilder();
-		else if (builderName.equals("InterfacePowerRandomChangeTrainCaseBuilder"))
-			return new InterfacePowerRandomChangeTrainCaseBuilder();
+		else if (builderName.equals("InterfacePowerLoadRandomChangeTrainCaseBuilder"))
+			return new InterfacePowerLoadRandomChangeTrainCaseBuilder();
+		else if (builderName.equals("BranchPLoadRandomChangeTrainCaseBuilder"))
+			return new BranchPLoadRandomChangeTrainCaseBuilder();
+		else if (builderName.equals("BranchQLoadRandomChangeTrainCaseBuilder"))
+			return new BranchQLoadRandomChangeTrainCaseBuilder();
 		else	
 			return new BusVoltLoadChangeTrainCaseBuilder();
 	}

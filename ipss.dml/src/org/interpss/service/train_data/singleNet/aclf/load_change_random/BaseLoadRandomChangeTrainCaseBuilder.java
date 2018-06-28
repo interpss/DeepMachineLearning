@@ -7,7 +7,7 @@ import org.interpss.service.train_data.singleNet.aclf.load_change.BaseLoadChange
 
 import com.interpss.core.aclf.AclfBus;
 
-public abstract class BaseRandomLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder{
+public abstract class BaseLoadRandomChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuilder{
 
 	@Override
 	public double[] getNetInput() {
