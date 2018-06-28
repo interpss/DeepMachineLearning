@@ -1,4 +1,4 @@
-# TensorFlow Based Deep Learning For Power System Analysis
+# TensorFlow Based Machine Learning For Power System Analysis
 
 This project is for exploring application of Deep Learning (DL) to power system analysis. Google's [TensorFlow](https://www.tensorflow.org/) is used as ML engine, while InterPSS is used to provide power system analysis/simulation model service: 1) to generate training data to train the neural network (NN) model; 2) provide service for checking model prediction accuracy. 
 
