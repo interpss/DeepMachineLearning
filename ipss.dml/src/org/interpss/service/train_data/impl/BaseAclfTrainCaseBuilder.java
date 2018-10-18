@@ -246,7 +246,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 							BranchOutageType.OPEN, getAclfNet()));
 
 			getAclfNet().getContingencyList().forEach(cont -> {
-				algoDsl.contingencyAanlysis((Contingency) cont, (contBranch, postContFlow) -> {
+				algoDsl.ca((Contingency) cont, (contBranch, postContFlow) -> {
 					if (output[contBranch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
 						output[contBranch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
 				});
