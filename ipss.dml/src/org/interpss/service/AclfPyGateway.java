@@ -43,7 +43,7 @@ import py4j.GatewayServer;
  *
  */ 
 public class AclfPyGateway {
-	private ITrainCaseBuilder trainCaseBuilder;
+	public ITrainCaseBuilder trainCaseBuilder;
 	
 	/*
 	 *  Multi-Network object functions

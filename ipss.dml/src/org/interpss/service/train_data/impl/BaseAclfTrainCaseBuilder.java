@@ -193,20 +193,20 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 					i = this.busId2NoMapping.get(bus.getId());
 				BusData busdata = this.baseCaseData[i];
 				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
-//					AclfSwingBus swing = bus.toSwingBus();
-//					Complex gen = swing.getGenResults(UnitType.PU);
-//					output[i] = gen.getImaginary();
-//					output[this.noBus+i] = gen.getReal();
+					AclfSwingBus swing = bus.toSwingBus();
+					Complex gen = swing.getGenResults(UnitType.PU);
+					output[i] = gen.getImaginary();
+					output[this.noBus+i] = gen.getReal();
 				}
 				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
-//					AclfPVGenBus pv = bus.toPVBus();
-//					Complex gen = pv.getGenResults(UnitType.PU);
-//					output[i] = gen.getImaginary() - bus.getLoadQ();
-//					output[this.noBus+i] = bus.getVoltageAng();
+					AclfPVGenBus pv = bus.toPVBus();
+					Complex gen = pv.getGenResults(UnitType.PU);
+					output[i] = gen.getImaginary() - bus.getLoadQ();
+					output[this.noBus+i] = bus.getVoltageAng();
 				}
 				else {
 					output[i] = bus.getVoltageMag();
-//					output[this.noBus+i] = bus.getVoltageAng();
+					output[this.noBus+i] = bus.getVoltageAng();
 				}				
 				i++;
 			}
@@ -246,7 +246,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 							BranchOutageType.OPEN, getAclfNet()));
 
 			getAclfNet().getContingencyList().forEach(cont -> {
-				algoDsl.contingencyAanlysis((Contingency) cont, (contBranch, postContFlow) -> {
+				algoDsl.ca((Contingency) cont, (contBranch, postContFlow) -> {
 					if (output[contBranch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
 						output[contBranch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
 				});
