@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="/ipss.lib.3rdPty/lib/eclipse/org.eclipse.emf.ecore.xmi.jar"/>
 	<classpathentry kind="lib" path="/ipss.lib.3rdPty/lib/eclipse/org.eclipse.emf.jar"/>
 	<classpathentry kind="lib" path="lib/libtensorflow-1.11.0.jar"/>
+	<classpathentry kind="lib" path="lib/libtensorflow_jni-1.11.0.jar"/>
 	<classpathentry kind="output" path="runtime"/>
 </classpath>
