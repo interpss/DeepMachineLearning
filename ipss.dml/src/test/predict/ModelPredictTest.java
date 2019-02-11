@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import org.ieee.odm.common.ODMException;
-import org.interpss.service.AclfPyGateway;
+import org.interpss.service.AclfTrainDataGenerator;
 import org.junit.Test;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
@@ -17,7 +17,7 @@ import com.interpss.common.exp.IpssCacheException;
 public class ModelPredictTest {
 	@Test
 	public void test() throws IOException, InterruptedException, IpssCacheException, ODMException, ExecutionException {
-		AclfPyGateway gateway = new AclfPyGateway();
+		AclfTrainDataGenerator gateway = new AclfTrainDataGenerator();
 		//read case
 		String filename = "testdata/cases/ieee14.ieee";
 		gateway.loadCase(filename, "BusVoltLoadChangeTrainCaseBuilder");

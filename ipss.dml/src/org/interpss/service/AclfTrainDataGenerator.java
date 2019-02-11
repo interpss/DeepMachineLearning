@@ -34,15 +34,13 @@ import org.interpss.service.util.UtilFunction;
 
 import com.interpss.common.exp.InterpssException;
 
-import py4j.GatewayServer;
-
 /**
  * InterPSS AC Loadflow training data service gateway
  * 
  * @author Mike
  *
  */ 
-public class AclfPyGateway {
+public class AclfTrainDataGenerator {
 	public ITrainCaseBuilder trainCaseBuilder;
 	
 	/*
@@ -230,17 +228,4 @@ public class AclfPyGateway {
 		Complex maxMis= this.trainCaseBuilder.calMismatch(netVolt).maxMis;
 		return new double[] {maxMis.getReal(),maxMis.getImaginary()};
 	}
-	
-	/**
-	 * main method to start the service
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		AclfPyGateway app = new AclfPyGateway();
-		// app is now the gateway.entry_point
-		GatewayServer server = new GatewayServer(app);
-		System.out.println("Starting Py4J " + app.getClass().getTypeName() + " ...");
-		server.start();
-	}	
 }

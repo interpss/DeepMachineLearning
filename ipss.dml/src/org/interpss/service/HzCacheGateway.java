@@ -17,7 +17,7 @@ import com.hazelcast.core.ItemListener;
 import com.interpss.common.exp.InterpssException;
 import com.interpss.common.exp.IpssCacheException;
 
-public class CacheInstance {
+public class HzCacheGateway {
 	public static void main(String[] args)
 			throws IOException, InterpssException, IpssNumericException, IpssCacheException {
 		Config config = new Config();
@@ -52,12 +52,13 @@ public class CacheInstance {
 		public void itemAdded(ItemEvent<Object> event) {
 			System.out.println("Item added: " + event);
 			IMap<Object, Object> generateMap = hz.getMap("generate-map");
-			AclfPyGateway gateway = new AclfPyGateway();
+			
+			AclfTrainDataGenerator dataGen = new AclfTrainDataGenerator();
 			//read case
 			String filename = generateMap.get("Path").toString();
-			gateway.loadCase(filename, generateMap.get("Builder").toString());
+			dataGen.loadCase(filename, generateMap.get("Builder").toString());
 			int trainPoint= (int) generateMap.get("Train_Points");
-			String[][] tranSet = gateway.getTrainSet(trainPoint);
+			String[][] tranSet = dataGen.getTrainSet(trainPoint);
 			hz.getMap("data-map").put("input",tranSet[0]);
 			hz.getMap("data-map").put("output", tranSet[1]);
 			hz.getQueue("finish-queue").add("finish");
