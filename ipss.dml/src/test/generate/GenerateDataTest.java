@@ -94,4 +94,25 @@ public class GenerateDataTest {
 //		System.out.println(AclfOutFunc.loadFlowSummary(dsNet));
 	    return simuCtx.getDStabilityNet();
 	}
+	
+	public double[][][][] getMatrix(BaseDStabNetwork<?,?> dsNet) {
+		double[] voltageArray = dsNet.getBusList().stream().mapToDouble(bus -> bus.getDesiredVoltMag()).toArray();
+		double[] pArray = dsNet.getBusList().stream().mapToDouble(bus -> bus.powerIntoNet().getReal()).toArray();
+		double[] qArray = dsNet.getBusList().stream().mapToDouble(bus -> bus.powerIntoNet().getImaginary()).toArray();
+		double[] pFormArray = dsNet.getBranchList().stream().mapToDouble(branch->branch.powerFrom2To().getReal()).toArray();
+		double[] qFormArray = dsNet.getBranchList().stream().mapToDouble(branch->branch.powerFrom2To().getImaginary()).toArray();
+		double[] pToArray = dsNet.getBranchList().stream().mapToDouble(branch->branch.powerTo2From().getReal()).toArray();
+		double[] qToArray = dsNet.getBranchList().stream().mapToDouble(branch->branch.powerTo2From().getImaginary()).toArray();
+	    return null;
+	}
+	
+	public double[][] getMatrix(double[] vector) {
+		double[][] matrix = new double[vector.length][vector.length];
+		for (int i = 0; i < vector.length; i++) {
+			matrix[i][i] = vector[i];
+		}
+		return null;
+	}
+	
+	
 }
