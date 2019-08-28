@@ -1,0 +1,8 @@
+# This is a comment line 
+# missing BusId/BranchId are space delimited
+# Pattern name (Pattern-1, ...) has to be unique, cannot include char ','
+#
+Pattern-1, missingBus [ Bus15 ], missingBranch [ Bus9->Bus15(1), Bus13->Bus15(1) ]
+Pattern-2, missingBus [ Bus14 ], missingBranch [ Bus9->Bus14(1), Bus13->Bus14(1) ]
+   
+   
