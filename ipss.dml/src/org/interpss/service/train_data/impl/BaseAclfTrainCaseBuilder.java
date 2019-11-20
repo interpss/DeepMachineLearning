@@ -244,12 +244,11 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 					.filter(branch -> !branch.getFromAclfBus().isRefBus() && !branch.getToAclfBus().isRefBus())
 					.forEach(branch -> CoreObjectFactory.createContingency(branch.getId(), branch.getId(),
 							BranchOutageType.OPEN, getAclfNet()));
-
 			getAclfNet().getContingencyList().forEach(cont -> {
-//				algoDsl.contingencyAanlysis((Contingency) cont, (contBranch, postContFlow) -> {
-//					if (output[contBranch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
-//						output[contBranch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
-//				});
+				algoDsl.ca((Contingency) cont, (contBranch, postContFlow) -> {
+					if (output[contBranch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
+						output[contBranch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
+				});
 			});
 		} catch (InterpssException | ReferenceBusException | IpssNumericException e) {
 			e.printStackTrace();

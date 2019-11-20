@@ -14,7 +14,7 @@ TensorFlow is an open source software library by Google for numerical computatio
 
 * **Power System Analysis Model Service**
 
-The Power System Model Service module provides service to the TensorFlow DL engine. The analysis model is based on [InterPSS](www.interpss.org) written in Java. The default TensorFlow programming language is Python. [Py4J](https://www.py4j.org/) is used to bridge the communication between TensorFlow Python runtime environment and InterPSS Java runtime environment. 
+The Power System Model Service module provides service to the TensorFlow DL engine. The analysis model is based on [InterPSS](www.interpss.org) written in Java. The default TensorFlow programming language is Python. [Hazelcast Python Cient](https://hazelcast.org/) lib or [Py4J](https://www.py4j.org/) could be used to bridge the communication between TensorFlow Python runtime environment and InterPSS Java runtime environment. 
 
 * **Training Case Generator**
 
