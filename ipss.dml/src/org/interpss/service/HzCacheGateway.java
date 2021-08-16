@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.interpss.numeric.exp.IpssNumericException;
 
+import com.hazelcast.collection.ItemEvent;
+import com.hazelcast.collection.ItemListener;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.DistributedObject;
@@ -11,9 +13,7 @@ import com.hazelcast.core.DistributedObjectEvent;
 import com.hazelcast.core.DistributedObjectListener;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
-import com.hazelcast.core.ItemEvent;
-import com.hazelcast.core.ItemListener;
+import com.hazelcast.map.IMap;
 import com.interpss.common.exp.InterpssException;
 import com.interpss.common.exp.IpssCacheException;
 

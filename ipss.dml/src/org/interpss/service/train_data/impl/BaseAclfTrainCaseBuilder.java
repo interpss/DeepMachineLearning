@@ -25,36 +25,39 @@
   */
 package org.interpss.service.train_data.impl;
 
+import static com.interpss.core.DclfAlgoObjectFactory.createCaOutageBranch;
+import static com.interpss.core.DclfAlgoObjectFactory.createContingency;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.apache.commons.math3.complex.Complex;
 import org.interpss.CorePluginFunction;
 import org.interpss.numeric.datatype.Unit.UnitType;
-import org.interpss.numeric.exp.IpssNumericException;
 import org.interpss.pssl.simu.IpssAclf;
-import org.interpss.pssl.simu.IpssDclf;
-import org.interpss.pssl.simu.IpssDclf.DclfAlgorithmDSL;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.util.NetCaseLoader;
 
-import com.interpss.CoreObjectFactory;
 import com.interpss.common.exp.InterpssException;
+import com.interpss.core.DclfAlgoObjectFactory;
 import com.interpss.core.aclf.AclfBranch;
 import com.interpss.core.aclf.AclfBus;
 import com.interpss.core.aclf.AclfNetwork;
-import com.interpss.core.aclf.adpter.AclfPVGenBus;
-import com.interpss.core.aclf.adpter.AclfSwingBus;
-import com.interpss.core.aclf.contingency.BranchOutageType;
+import com.interpss.core.aclf.adpter.AclfPVGenBusAdapter;
+import com.interpss.core.aclf.adpter.AclfSwingBusAdapter;
 import com.interpss.core.aclf.contingency.Contingency;
-import com.interpss.core.algo.AclfMethod;
+import com.interpss.core.algo.AclfMethodType;
+import com.interpss.core.algo.dclf.CaBranchOutageType;
+import com.interpss.core.algo.dclf.ContingencyAnalysisAlgorithm;
+import com.interpss.core.algo.dclf.solver.HashMapCacheDclfSolver;
+import com.interpss.core.algo.parallel.ContingencyAnalysisMonad;
 import com.interpss.core.datatype.Mismatch;
-import com.interpss.core.dclf.common.ReferenceBusException;
-import com.interpss.core.dclf.solver.HashMapCacheDclfSolver;
 
 /**
  * Base class for implementing Aclf training case creation builder.
@@ -127,7 +130,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 				busdata.id = bus.getId();
 				if (bus.isGen()) {
 					busdata.genP = bus.getGenP();
-					bus.getGenPQ();
+					//bus.calGenPQ();
 					bus.getContributeGenList().clear();
 				}
 				
@@ -164,12 +167,12 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 					i = this.busId2NoMapping.get(bus.getId());
 				BusData busdata = this.baseCaseData[i];
 				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
-					AclfSwingBus swing = bus.toSwingBus();
+					AclfSwingBusAdapter swing = bus.toSwingBus();
 					input[i] = swing.getDesiredVoltAng(UnitType.Rad);
 					input[this.noBus+i] = swing.getDesiredVoltMag(UnitType.PU);
 				}
 				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
-					AclfPVGenBus pv = bus.toPVBus();
+					AclfPVGenBusAdapter pv = bus.toPVBus();
 					input[i] = bus.getGenP() - bus.getLoadP();
 					input[this.noBus+i] = pv.getDesiredVoltMag();
 				}
@@ -193,13 +196,13 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 					i = this.busId2NoMapping.get(bus.getId());
 				BusData busdata = this.baseCaseData[i];
 				if (busdata.isSwing() /*bus.isSwing()*/) {  // Swing Bus
-					AclfSwingBus swing = bus.toSwingBus();
+					AclfSwingBusAdapter swing = bus.toSwingBus();
 					Complex gen = swing.getGenResults(UnitType.PU);
 					output[i] = gen.getImaginary();
 					output[this.noBus+i] = gen.getReal();
 				}
 				else if (busdata.isPV() /*bus.isGenPV()*/) {  // PV bus
-					AclfPVGenBus pv = bus.toPVBus();
+					AclfPVGenBusAdapter pv = bus.toPVBus();
 					Complex gen = pv.getGenResults(UnitType.PU);
 					output[i] = gen.getImaginary() - bus.getLoadQ();
 					output[this.noBus+i] = bus.getVoltageAng();
@@ -237,20 +240,30 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		}
 		// IpssCorePlugin.init(); this statement should put in the main function
 		try {
-			DclfAlgorithmDSL algoDsl = IpssDclf.createDclfAlgorithm(getAclfNet());
-			algoDsl.getAlgorithm().setDclfSolver(new HashMapCacheDclfSolver(getAclfNet()));
-			algoDsl.runDclfAnalysis();
+			ContingencyAnalysisAlgorithm dclfAlgo = DclfAlgoObjectFactory.createContingencyAnalysisAlgorithm(getAclfNet());
+			dclfAlgo.setDclfSolver(new HashMapCacheDclfSolver(dclfAlgo));
+			dclfAlgo.calculateDclf();
+			
+			List<Contingency> contList = new ArrayList<>();
 			getAclfNet().getBranchList().stream()
 					.filter(branch -> !branch.getFromAclfBus().isRefBus() && !branch.getToAclfBus().isRefBus())
-					.forEach(branch -> CoreObjectFactory.createContingency(branch.getId(), branch.getId(),
-							BranchOutageType.OPEN, getAclfNet()));
-			getAclfNet().getContingencyList().forEach(cont -> {
-				algoDsl.ca((Contingency) cont, (contBranch, postContFlow) -> {
-					if (output[contBranch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
-						output[contBranch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
-				});
+					.forEach(branch -> {
+						Contingency cont = createContingency("contId:"+branch.getId());
+						cont.setOutageBranch(createCaOutageBranch(dclfAlgo.getDclfAlgoBranch(branch.getId()), CaBranchOutageType.OPEN));
+						contList.add(cont);
+					});
+			
+			contList.stream()
+				.forEach(contingency -> {
+					ContingencyAnalysisMonad.of(dclfAlgo, contingency)
+						.ca(resultRec -> {
+							AclfBranch branch = resultRec.aclfBranch;
+							double postContFlow = resultRec.getPostFlowMW();
+							if (output[branch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
+								output[branch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
+						});
 			});
-		} catch (InterpssException | ReferenceBusException | IpssNumericException e) {
+		} catch (InterpssException e) {
 			e.printStackTrace();
 		}
 
@@ -288,7 +301,7 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			}
 		}
 		
-		return aclfNet.maxMismatch(AclfMethod.NR);
+		return aclfNet.maxMismatch(AclfMethodType.NR);
 	};
 	
 	/* (non-Javadoc)
@@ -315,12 +328,12 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 		String rntStr = "";
 		try {
 		  	IpssAclf.createAclfAlgo(aclfNet)
-  					.lfMethod(AclfMethod.NR)
+  					.lfMethod(AclfMethodType.NR)
   					.nonDivergent(true)
   					.runLoadflow();	
 		  	
 		  	System.out.println("Run Aclf " + (aclfNet.isLfConverged()? " converged, " : " diverged, ") 
-		  			+ aclfNet.maxMismatch(AclfMethod.NR).toString());
+		  			+ aclfNet.maxMismatch(AclfMethodType.NR).toString());
 		  	
 		  	rntStr = CorePluginFunction.aclfResultSummary.apply(aclfNet).toString();
 		  	//System.out.println(rntStr);

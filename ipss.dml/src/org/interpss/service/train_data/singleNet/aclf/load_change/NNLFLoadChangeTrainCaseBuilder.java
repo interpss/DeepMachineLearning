@@ -26,7 +26,7 @@
 package org.interpss.service.train_data.singleNet.aclf.load_change;
 
 import com.interpss.core.aclf.AclfBus;
-import com.interpss.core.algo.AclfMethod;
+import com.interpss.core.algo.AclfMethodType;
 import com.interpss.core.datatype.Mismatch;
 
 /**
@@ -80,6 +80,6 @@ public class NNLFLoadChangeTrainCaseBuilder extends BaseLoadChangeTrainCaseBuild
 			}
 		}
 		
-		return aclfNet.maxMismatch(AclfMethod.NN_MODEL);
+		return aclfNet.maxMismatch(AclfMethodType.NN_MODEL);
 	};	
 }
