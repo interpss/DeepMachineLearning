@@ -44,6 +44,7 @@ import org.interpss.pssl.simu.IpssAclf;
 import org.interpss.service.train_data.ITrainCaseBuilder;
 import org.interpss.service.util.NetCaseLoader;
 
+import com.interpss.algo.parallel.ContingencyAnalysisMonad;
 import com.interpss.common.exp.InterpssException;
 import com.interpss.core.DclfAlgoObjectFactory;
 import com.interpss.core.aclf.AclfBranch;
@@ -56,7 +57,6 @@ import com.interpss.core.algo.AclfMethodType;
 import com.interpss.core.algo.dclf.CaBranchOutageType;
 import com.interpss.core.algo.dclf.ContingencyAnalysisAlgorithm;
 import com.interpss.core.algo.dclf.solver.HashMapCacheDclfSolver;
-import com.interpss.core.algo.parallel.ContingencyAnalysisMonad;
 import com.interpss.core.datatype.Mismatch;
 
 /**
@@ -239,33 +239,29 @@ public abstract class BaseAclfTrainCaseBuilder implements ITrainCaseBuilder {
 			bra.setSortNumber(cnt++);
 		}
 		// IpssCorePlugin.init(); this statement should put in the main function
-		try {
-			ContingencyAnalysisAlgorithm dclfAlgo = DclfAlgoObjectFactory.createContingencyAnalysisAlgorithm(getAclfNet());
-			dclfAlgo.setDclfSolver(new HashMapCacheDclfSolver(dclfAlgo));
-			dclfAlgo.calculateDclf();
-			
-			List<Contingency> contList = new ArrayList<>();
-			getAclfNet().getBranchList().stream()
-					.filter(branch -> !branch.getFromAclfBus().isRefBus() && !branch.getToAclfBus().isRefBus())
-					.forEach(branch -> {
-						Contingency cont = createContingency("contId:"+branch.getId());
-						cont.setOutageBranch(createCaOutageBranch(dclfAlgo.getDclfAlgoBranch(branch.getId()), CaBranchOutageType.OPEN));
-						contList.add(cont);
+		ContingencyAnalysisAlgorithm dclfAlgo = DclfAlgoObjectFactory.createContingencyAnalysisAlgorithm(getAclfNet());
+		dclfAlgo.setDclfSolver(new HashMapCacheDclfSolver(dclfAlgo));
+		dclfAlgo.calculateDclf();
+		
+		List<Contingency> contList = new ArrayList<>();
+		getAclfNet().getBranchList().stream()
+				.filter(branch -> !branch.getFromAclfBus().isRefBus() && !branch.getToAclfBus().isRefBus())
+				.forEach(branch -> {
+					Contingency cont = createContingency("contId:"+branch.getId());
+					cont.setOutageBranch(createCaOutageBranch(dclfAlgo.getDclfAlgoBranch(branch.getId()), CaBranchOutageType.OPEN));
+					contList.add(cont);
+				});
+		
+		contList.stream()
+			.forEach(contingency -> {
+				ContingencyAnalysisMonad.of(dclfAlgo, contingency)
+					.ca(resultRec -> {
+						AclfBranch branch = resultRec.aclfBranch;
+						double postContFlow = resultRec.getPostFlowMW();
+						if (output[branch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
+							output[branch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
 					});
-			
-			contList.stream()
-				.forEach(contingency -> {
-					ContingencyAnalysisMonad.of(dclfAlgo, contingency)
-						.ca(resultRec -> {
-							AclfBranch branch = resultRec.aclfBranch;
-							double postContFlow = resultRec.getPostFlowMW();
-							if (output[branch.getSortNumber()] < Math.abs(postContFlow / getAclfNet().getBaseMva()))
-								output[branch.getSortNumber()] = Math.abs(postContFlow / getAclfNet().getBaseMva());
-						});
-			});
-		} catch (InterpssException e) {
-			e.printStackTrace();
-		}
+		});
 
 		return output;
 	}
