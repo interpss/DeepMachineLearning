@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import com.interpss.CoreCommonFactory;
 import com.interpss.core.CoreObjectFactory;
-import com.interpss.SimuObjectFactory;
+import com.interpss.simu.SimuObjectFactory;
 import com.interpss.common.exp.InterpssException;
 import com.interpss.common.msg.IPSSMsgHub;
 import com.interpss.common.util.IpssLogger;
