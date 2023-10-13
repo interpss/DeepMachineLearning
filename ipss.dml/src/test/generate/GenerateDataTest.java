@@ -20,18 +20,18 @@ import org.interpss.mapper.odm.ODMDStabParserMapper;
 import org.interpss.numeric.util.PerformanceTimer;
 import org.junit.Test;
 
-import com.interpss.CoreCommonFactory;
-import com.interpss.core.CoreObjectFactory;
-import com.interpss.simu.SimuObjectFactory;
+import com.interpss.common.CoreCommonFactory;
 import com.interpss.common.exp.InterpssException;
 import com.interpss.common.msg.IPSSMsgHub;
 import com.interpss.common.util.IpssLogger;
+import com.interpss.core.CoreObjectFactory;
 import com.interpss.core.aclf.AclfGenCode;
 import com.interpss.core.algo.LoadflowAlgorithm;
 import com.interpss.dstab.BaseDStabNetwork;
 import com.interpss.dstab.DStabBus;
 import com.interpss.simu.SimuContext;
 import com.interpss.simu.SimuCtxType;
+import com.interpss.simu.SimuObjectFactory;
 
 public class GenerateDataTest {
 	double vm_max = 1.06;
